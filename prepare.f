@@ -1,5 +1,5 @@
 C       10        20        30        40        50        60        70    76
-C Prepare SHETRAN files
+C Prepare SHETRAN files from library files
 
 	PROGRAM ShetranPrepare 
       
