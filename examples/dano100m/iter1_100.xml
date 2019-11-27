@@ -1,0 +1,49 @@
+<?xml version=1.0?><ShetranInput>
+<ProjectFile>Dano</ProjectFile>
+<CatchmentName>Dano100</CatchmentName>
+<DEMMeanFileName>dem_100.txt</DEMMeanFileName>   This is used to caculate the elevations of the grid squares
+<DEMminFileName>dem_100.txt</DEMMinFileName>  This is used to caculate the location and elevations of the river channels. If it is not avilable the mean dem can be used here.
+<MaskFileName>ws_100.txt</MaskFileName>
+<VegMap>soil_100.txt</VegMap> Vegetation / land-use map. The number of categories must correspond to those in Vegetation details
+<SoilMap>lu_100.txt</SoilMap> Soil category map. the number of categories must correspond to those in Soil details
+<LakeMap></LakeMap>  No lakes
+<PrecipMap>rain_thies100.txt</PrecipMap> Spatial distibution of precipitation stations
+<PeMap>evap_thies100.txt</PeMap> Spatial distibution of PE stations
+<VegetationDetails><VegetationDetail>Veg Type #, Vegetation Type, Canopy storage capacity (mm), Leaf area index, Maximum rooting depth(m), AE/PE at field capacity, Strickler overland flow coefficient</VegetationDetail>
+<VegetationDetail>1,         NatVeget,         0.4,         2.7,         1.8,    1, 1.0</VegetationDetail>
+<VegetationDetail>2,         Fallow,         0.4,         2.7,         1.8,    1,  1.0</VegetationDetail>
+<VegetationDetail>3,         Urban,         0.4,         2.7,         1.8,    1, 5.0</VegetationDetail>
+<VegetationDetail>4,         Forest,         0.4,         2.7,         1.8,    1, 0.5</VegetationDetail>
+</VegetationDetails>
+<SoilProperties>
+<SoilProperty>Soil Number,Soil Type, Saturated Water Content, Residual Water Content, Saturated Conductivity (m/day), vanGenuchten- alpha (cm-1), vanGenuchten-n</SoilProperty>
+<SoilProperty>1,SiltLoam(10%Sand:10%Clay), 0.452,  0.093,  0.163,  5.15E-03,  1.681</SoilProperty>
+</SoilProperties>
+<SoilDetails>
+<SoilDetail>Soil Category, Soil Layer, Soil Type, Depth at base of layer (m)</SoilDetail>
+<SoilDetail>1,  1,  1,  1.0  </SoilDetail>
+<SoilDetail>2,  1,  1,  2.0  </SoilDetail>
+<SoilDetail>3,  1,  1,  1.5  </SoilDetail>
+<SoilDetail>4,  1,  1,  1.2  </SoilDetail>
+<SoilDetail>5,  1,  1,  1.4  </SoilDetail>
+<SoilDetail>6,  1,  1,  1.3  </SoilDetail>
+<SoilDetail>7,  1,  1,  1.3  </SoilDetail>
+</SoilDetails>
+<InitialConditions>0.5</InitialConditions>  Initial water table depth below ground. 
+<PrecipitationTimeSeriesData>rain.csv</PrecipitationTimeSeriesData> Precipitation time series. Units are in mm in the timestep length in PrecipitationTimeStep. In this case mm/day 
+<PrecipitationTimeStep>1</PrecipitationTimeStep>  Timestep in hours
+<EvaporationTimeSeriesData>evap.csv</EvaporationTimeSeriesData> PE  time series. Units are in mm in the timestep length in EvaporationTimeStep. In this case mmm/day 
+<EvaporationTimeStep>24</EvaporationTimeStep>  Timestep in hours
+<StartDay>01</StartDay>
+<StartMonth>01</StartMonth>
+<StartYear>2013</StartYear>
+<EndDay>01</EndDay>
+<EndMonth>01</EndMonth>
+<EndYear>2014</EndYear>
+<RiverGridSquaresAccumulated>20</RiverGridSquaresAccumulated>  Number of upstream grid squares needed to produce a river channel. A larger number will have fewer river channels
+<DropFromGridToChannelDepth>4</DropFromGridToChannelDepth> The standard and minimum value is 2 if there are numerical problems with error 1060 this can be increased
+<MinimumDropBetweenChannels>0.1</MinimumDropBetweenChannels> This depends on the grid size and how steep the catchment is. A value of 1 is a sensible starting point but more gently sloping catchments it can be reduced.
+<RegularTimestep>1.0</RegularTimestep> This is the standard Shetran timestep it is autmatically reduced in rain. The standard value is 1 hour. The maximum allowed value is 2 hours
+<IncreasingTimestep>0.01</IncreasingTimestep> speed of increase in timestep after rainfall back to the standard timestep. The standard value is 0.05. If if there are numerical problems with error 1060 it can be reduced to 0.01 but the simulation will take longer.
+<SimulatedDischargeTimestep>1.0</SimulatedDischargeTimestep> This timestep for simulastion discharge at the outlet. Make it the same as the measured discharge
+</ShetranInput>
