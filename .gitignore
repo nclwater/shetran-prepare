@@ -9,6 +9,11 @@
 *.sln
 program
 prepare
+start/start/helpmessages
+*.exe
+*.u2d
+*.vfproj
+
 
 
 *.rsuser
