@@ -10,6 +10,7 @@
 program
 prepare
 start/start/helpmessages
+examples-test
 *.exe
 *.u2d
 *.vfproj

@@ -6,7 +6,7 @@ use xmlparse
 IMPLICIT NONE
 
 INTEGER(4)                :: res,i,length
-CHARACTER(128), PARAMETER :: exename1='shetran-prepare-2.2.9.exe'
+CHARACTER(128), PARAMETER :: exename1='shetran-prepare-2.2.10.exe'
 CHARACTER(128), PARAMETER :: exename2='sv4.4.5x64.exe'
 CHARACTER(512)            :: filnam, exedir
 CHARACTER(1024)           :: c
