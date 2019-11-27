@@ -6,6 +6,7 @@
 # User-specific files
 #sb added - is it working
 *.dll
+*.sln
 
 
 *.rsuser
