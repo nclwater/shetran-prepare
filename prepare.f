@@ -1,7 +1,7 @@
 C       10        20        30        40        50        60        70    76
 C Prepare SHETRAN files
 
-	PROGRAM prepare 
+	PROGRAM ShetranPrepare 
       
       USE DFLIB, ONLY : SPLITPATHQQ      
       implicit none
