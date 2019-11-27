@@ -7,6 +7,7 @@
 #sb added- test
 *.dll
 *.sln
+program
 
 
 *.rsuser
