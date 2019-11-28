@@ -1,7 +1,7 @@
 C       10        20        30        40        50        60        70    76
-C Prepare SHETRAN files from library files
+C Prepare SHETRAN files
 
-	PROGRAM ShetranPrepare 
+	PROGRAM prepare 
       
       USE DFLIB, ONLY : SPLITPATHQQ      
       implicit none
@@ -41,10 +41,10 @@ c width = streamwidthfac1* maf^streamwidthfac2
       parameter (stricklerlake=3.0)
 
 
-      CHARACTER*300 FILFRD,FILOCD,FILETD,FILVSD,FILVIS,FILSMD
-      CHARACTER*300 FILFRD2,FILOCD2,FILETD2,FILVSD2,FILVIS2,FILSMD2
-      CHARACTER*300 FILRUN,FILPRD,FILEPD,FILTIM,FILPRI,FILRIV
-      CHARACTER*300 FILDIS,FILVSE,FILMAS,FILCVI,FILHDF,FILDIS2,FILLOG
+      CHARACTER*200 FILFRD,FILOCD,FILETD,FILVSD,FILVIS,FILSMD
+      CHARACTER*200 FILFRD2,FILOCD2,FILETD2,FILVSD2,FILVIS2,FILSMD2
+      CHARACTER*200 FILRUN,FILPRD,FILEPD,FILTIM,FILPRI,FILRIV
+      CHARACTER*200 FILDIS,FILVSE,FILMAS,FILCVI,FILHDF,FILDIS2,FILLOG
       INTEGER OUTFRD,OUTOCD,OUTETD,OUTVSD
       INTEGER OUTRUN,OUTVIS,OUTRIV,OUTSMD,logfile
       PARAMETER ( OUTFRD = 20 )
@@ -60,13 +60,13 @@ c width = streamwidthfac1* maf^streamwidthfac2
 
 
 
-	CHARACTER*300 FILEIN,FILEIN1,FILEINMIN,FILEIN2,FILEO1,FILEO2,catchname
-      CHARACTER*300 workspace,filerdf,filecstcap
-	CHARACTER*300 vegname,soilname,lakename,precipname,pename
-	CHARACTER*300 tmaxfile,tminfile
-      CHARACTER*300 precfile,pefile,delme
-      CHARACTER*300 precfile2,pefile2
-	character*300 basedir, xmlfilename,buildloc,xmlfilefull
+	CHARACTER*200 FILEIN,FILEIN1,FILEINMIN,FILEIN2,FILEO1,FILEO2,catchname
+      CHARACTER*200 workspace,filerdf,filecstcap
+	CHARACTER*200 vegname,soilname,lakename,precipname,pename
+	CHARACTER*200 tmaxfile,tminfile
+      CHARACTER*200 precfile,pefile,delme
+      CHARACTER*200 precfile2,pefile2
+	character*200 basedir, xmlfilename,buildloc,xmlfilefull
       character*5 acols,arows
 	character*8 acellsize
       character*10 axllcorner,ayllcorner
@@ -130,8 +130,8 @@ c width = streamwidthfac1* maf^streamwidthfac2
       real cstcapratio(50,50),cstcaptime(50,50)
       integer cstcapnopoints(50),cstcapnoveg,cstcapnoyear
 	real cond,thsat,thres,satstor,vgalpha,vgn
-      real regulartmstep,snowddf
       real standardtimestep,increasingtimestep
+      real regulartmstep,snowddf
 	logical linkew(nrowsmax+1,ncolsmax),linkns(nrowsmax,ncolsmax+1)
 	logical savelinkew(nrowsmax+1,ncolsmax)
       logical savelinkns(nrowsmax,ncolsmax+1)
@@ -142,7 +142,7 @@ c width = streamwidthfac1* maf^streamwidthfac2
       logical outletlink
       logical isunique,islakename
 
-	character*300 invegtypes(100),insoiltypes(50000)
+	character*200 invegtypes(100),insoiltypes(50000)
       real incstcap(100),inlai(100),inrootingdepth(100)
 	integer insoilcats(50000),insoillayers(50000)
       integer insoilnumbers(50000),insoilnumbers2(50000)
@@ -162,7 +162,6 @@ c width = streamwidthfac1* maf^streamwidthfac2
 	integer streamsize(ncolsmax*nrowsmax)
 	real streamwidth1,streamwidth2,maffactor
       real demminoutletproblem
-
       real maxsoildepth
 
 	integer cattype,ncatold,ncat,catnumber(0:1000),pc
@@ -178,7 +177,7 @@ c width = streamwidthfac1* maf^streamwidthfac2
       integer*4 lengthpath
       CHARACTER(40) MyName      
 
-
+      
  9301 FORMAT(':FR1 - TEST CATCHMENT- FR COMPONENT DATA SET')
  9302 FORMAT(':FR2 - GRID SQUARES IN THE X Y DIRECTIONS')
  9304 FORMAT(':FR4 - START TIME OF WATER FLOW COMPONENT SIMULATION')
@@ -281,8 +280,8 @@ c width = streamwidthfac1* maf^streamwidthfac2
  9742 FORMAT('42: vsi data for initial conditions')
  9743 FORMAT('43: mass balance data')
  9744 FORMAT('44: discharge at the outlet')
- 9745 FORMAT('45: not used  ')
- 9746 FORMAT('46: not used  ')
+ 9745 FORMAT('45: maximum air temperature  ')
+ 9746 FORMAT('46: minimum air temperature  ')
  9747 FORMAT('47: not used')
  9748 FORMAT('48: visualisation plan ------VISUALISATION OUTPUT')
  9749 FORMAT('49: check visulisation plan')
@@ -346,26 +345,31 @@ c width = streamwidthfac1* maf^streamwidthfac2
 
 
       print*
-      print*, 'Shetran Prepare 2.2.9'
-      print*, '*********************'
+      print*, 'Shetran Prepare 2.2.10 Snow'
+      print*, '**************************'
       print* 
       
       print*, 'This executable reads an XML file and the corresponding',
      $   'ASC grids and produces the Shetran input files' 
       print* 
-c	read (*,*) basedir
+!	read (*,*) basedir
 c      print*, 'Input project name (XML file name)'
-c	read (*,*) xmlfilename
+!	read (*,*) xmlfilename
 c      print*, 'Input build location'
 c	read (*,*) buildloc
 
 c      n1=1
 c      CALL GETARG(n1, basedir)
 c       WRITE(*,*) basedir
-        basedir = '.'
+
+
+      basedir = '.'
 c      n1=2
       n1=1
-      CALL GETARG(n1,xmlfilename)
+      
+       CALL GETARG(n1,xmlfilename)
+      
+      
 c       WRITE (*,*) xmlfilename
 c      n1=3
 c      CALL GETARG(n1,buildloc)
@@ -376,6 +380,7 @@ c       pause
         
 !	xmlfilefull = trim(basedir)//'\'//trim(xmlfilename)
 	xmlfilefull = trim(xmlfilename)
+!	xmlfilefull = 'Kilham_libraryFile.xml'
 c	pause
       open(10,FILE=xmlfilefull,err=9999,status='old')
 
@@ -389,6 +394,8 @@ c	pause
 
 
  9998 close (10)
+      
+      
       call read_xml_file(xmlfilefull,catchname,filein1,fileinmin,
      $ filein2,vegname,soilname,lakename,precipname,pename,
      $ precfile,pefile,invegtypes,incstcap,inlai,inrootingdepth,inaepe,
@@ -396,7 +403,7 @@ c	pause
      $ insoilnumbers2,insoiltypes,insoildepth,
      $ inthsat,inthres,inksat,invgn,invga,
      $ ininitialpsl,inprectmstep,inpetmstep,inday,inmonth,inyear,
-     $ inendday,inendmonth,inendyear,innmveg,innmsoil,innmsoilcat,
+     $inendday,inendmonth,inendyear,innmveg,innmsoil,innmsoilcat,
      $ accumfac1,chanfac1,
      $ chanfac2,tmaxfile,tminfile,standardtimestep,increasingtimestep,
      $ regulartmstep,snowddf)
@@ -452,7 +459,6 @@ c      OPEN (OUTFRD,FILE=FILFRD)
       soilname=trim(basedir)//trim(soilname)
       pename=trim(basedir)//trim(pename)
       precipname=trim(basedir)//trim(precipname)
-
 
       open(logfile,FILE=FILLOG)
       WRITE (logfile,*) 'XML filname = ', trim(xmlfilefull)
@@ -542,7 +548,7 @@ c	   FILPRD =trim(basedir)//'\input\'//'test.prd'
 	else 
 * remove directory from precfile name
 	  finaldivider=0
-         do i=1,300
+         do i=1,200
 	     if (precfile(i:i).eq.'\') then
 	       finaldivider=i
 	     endif
@@ -551,7 +557,7 @@ c	   FILPRD =trim(basedir)//'\input\'//'test.prd'
 
 c         print*,finaldivider
 
-	   do i=finaldivider+1,300
+	   do i=finaldivider+1,200
 	       precfile2(j:j)=precfile(i:i)
 	       j=j+1
 	   enddo
@@ -566,13 +572,13 @@ c       print*,precfile,precfile2,filprd
          FILEPD = 'input_'//'test_epd.txt'
 	else 
 * remove directory from precfile name
-         do i=1,300
+         do i=1,200
 	     if (pefile(i:i).eq.'\') then
 	       finaldivider=i
 	     endif
 	   enddo
 	   j=1
-	   do i=finaldivider+1,300
+	   do i=finaldivider+1,200
 	       pefile2(j:j)=pefile(i:i)
 	       j=j+1
 	   enddo
@@ -589,6 +595,7 @@ c       print*,precfile,precfile2,filprd
      $  ,1.8,2,2.2,2.4,2.6,2.8,3,4,5,6,7,8,9,10 /)
       
       call rootdensity(rdf)
+      
 c      print*,filecstcap
       OPEN(16,FILE=filecstcap,STATUS='OLD',err=768)
 	read(16,*,err=768)
@@ -860,7 +867,7 @@ c sb 021009 change from 1.0 and 0.15 to make it more stable
 *
       WRITE (MSG,9324)
       WRITE (OUTFRD,9200) MSG
-      WRITE (OUTFRD,9105) 'F','F','F','F'
+      WRITE (OUTFRD,9105) 'T','F','F','F'
 *
 *
 ****************** Hotstart parameters *********************************
@@ -1974,7 +1981,7 @@ c end extra code
                           savecornerdone(crnrowpos,crncolpos)=.true.
 	              endif
                    endif
-c      write(434,*)cornerval(crnrowpos,crncolpos),
+c     write(434,*)cornerval(crnrowpos,crncolpos),
 c     $ crnrowpos,crncolpos,number
                   enddo
 
@@ -2229,9 +2236,10 @@ c     in case of changes
          if (linkew(i,j)) then
 	      k=k+1
 	      linkelv(k)= ellinkew(i,j)
-c            print*,i,j,lakedist(i,j),lakedist(i-1,j)
+!                write(519,*) i,j,lakedist(i,j),lakedist(i,j-1)
 c uses lake mask to caculate if river or lake
             if ((lakedist(i,j).eq.1).or.(lakedist(i-1,j).eq.1)) then
+!                print*, i,j,k,stricklerlake
                 linkstr(k)=stricklerlake
             else
                 linkstr(k)=stricklerriv
@@ -2249,9 +2257,10 @@ c uses lake mask to caculate if river or lake
             if (linkns(i,j)) then
 	          k=k+1
 	         linkelv(k)= ellinkns(i,j)
-c                print*,i,j,lakedist(i,j),lakedist(i,j-1)
+!                write(519,*) i,j,lakedist(i,j),lakedist(i,j-1)
 c uses lake mask to caculate if river or lake
                if ((lakedist(i,j).eq.1).or.(lakedist(i,j-1).eq.1)) then
+!                print*, i,j,k,stricklerlake
                    linkstr(k)=stricklerlake
                else
                    linkstr(k)=stricklerriv
@@ -2268,9 +2277,10 @@ c uses lake mask to caculate if river or lake
             if (linkew(i,j)) then
 	          k=k+1
 	         linkelv(k)= ellinkew(i,j)
-c            print*,i,j,lakedist(i,j),lakedist(i-1,j)
+!                write(519,*) i,j,lakedist(i,j),lakedist(i,j-1)
 c uses lake mask to caculate if river or lake
             if ((lakedist(i,j).eq.1).or.(lakedist(i-1,j).eq.1)) then
+!                print*, i,j,k,stricklerlake
                 linkstr(k)=stricklerlake
             else
                 linkstr(k)=stricklerriv
@@ -3019,7 +3029,7 @@ c	str=20.0
 	do i=1,innmsoil
 
 	SATSTOR=0.001
-
+!      print*,insoiltypes(i)
       WRITE (OUTVSD,9207) i,'1','0',' ',insoiltypes(i)
       AFORM(1) = FORM(inksat(i))
       AFORM(2) = FORM(inthsat(i))
@@ -3213,6 +3223,28 @@ c	enddo
 
 
 
+****************smd Data ***********************************************      
+************************ Title *****************************************      
+
+
+
+      WRITE (MSG,9901)
+      WRITE (OUTSMD,9200) MSG
+      WRITE (OUTSMD,9105) 'T'
+
+      WRITE (MSG,9903)
+      WRITE (OUTSMD,9200) MSG
+      AFORM(1) = FORM(snowddf)
+
+      WRITE (OUTSMD,9103) aform(1),'0.6500','-1.00','0','1'
+
+      WRITE (MSG,9907)
+      WRITE (OUTSMD,9200) MSG
+      WRITE (OUTSMD,9105) '0.0'
+
+
+
+
 ****************rundata ***********************************************      
 ************************ Title *****************************************      
       WRITE (MSG2,9701)
@@ -3262,7 +3294,7 @@ c      WRITE (outrun,9200) MSG2
       WRITE (MSG2,9715)
       WRITE (outrun,9200) MSG2
 
-      WRITE (MSG2,9200) 
+      WRITE (MSG2,9200) FILSMD2
       WRITE (outrun,9200) MSG2
 
       WRITE (MSG2,9716)
@@ -3383,16 +3415,15 @@ c      print*,filprd
       WRITE (outrun,9200) FILDIS2
       WRITE (MSG2,9745)
       WRITE (outrun,9200) MSG2
-      WRITE (outrun,*) 
 
+      WRITE (outrun,9200)tmaxfile
       WRITE (MSG2,9746)
       WRITE (outrun,9200) MSG2
-      WRITE (outrun,*) 
 
+      WRITE (outrun,9200)tminfile
       WRITE (MSG2,9747)
       WRITE (outrun,9200) MSG2
-      WRITE (outrun,*) 
-
+      WRITE (outrun,*)
 
 
 
@@ -3512,6 +3543,12 @@ c      print*,filprd
       WRITE (outvis,9260) MSG
       WRITE (MSG,9813)
       WRITE (outvis,9260) MSG
+      WRITE (MSG,9803)
+      WRITE (outvis,9260) MSG
+      WRITE (MSG,9832)
+      WRITE (outvis,9260) MSG
+      WRITE (MSG,9833)
+      WRITE (outvis,9260) MSG
 
 ************list
       WRITE (outvis,*)
@@ -3601,8 +3638,10 @@ c     $   '!number and row and column limits'
 c      pause 
 
 
-	END
+      END
 
+      
+      
       subroutine rootdensity(rdf)
       
       real rdf(50,50)

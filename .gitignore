@@ -7,10 +7,12 @@
 #sb added- test
 *.dll
 *.sln
-program
-prepare
-start/start/helpmessages
-examples-test
+shetran-prepare/program
+shetran-prepare-sediment/program
+shetran-prepare-snow/program
+shetran-prepare/examples-test
+shetran-prepare-sediment/examples-test
+shetran-prepare-snow/examples-test
 *.exe
 *.u2d
 *.vfproj
