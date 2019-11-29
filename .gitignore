@@ -7,11 +7,11 @@
 #sb added- test
 *.dll
 *.sln
-shetran-prepare/program
+shetran-prepare/program-test
 shetran-prepare/shetran-prepare
-shetran-prepare-sediment/program
+shetran-prepare-sediment/program-test
 shetran-prepare-sediment/shetran-prepare-sediment
-shetran-prepare-snow/program
+shetran-prepare-snow/program-test
 shetran-prepare-snow/shetran-prepare-snow
 shetran-prepare/examples-test
 shetran-prepare-sediment/examples-test
