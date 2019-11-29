@@ -8,12 +8,16 @@
 *.dll
 *.sln
 shetran-prepare/program
+shetran-prepare/shetran-prepare
 shetran-prepare-sediment/program
+shetran-prepare-sediment/shetran-prepare-sediment
 shetran-prepare-snow/program
+shetran-prepare-snow/shetran-prepare-snow
 shetran-prepare/examples-test
 shetran-prepare-sediment/examples-test
 shetran-prepare-snow/examples-test
 *.exe
+*.zip
 *.u2d
 *.vfproj
 
