@@ -348,8 +348,8 @@ c width = streamwidthfac1* maf^streamwidthfac2
 
 
       print*
-      print*, 'Shetran Prepare 2.2.10 sediment'
-      print*, '*******************************'
+      print*, 'Shetran Prepare Sediment'
+      print*, '************************'
       print* 
       
       print*, 'This executable reads an XML file and the corresponding',
@@ -3511,12 +3511,12 @@ c      print*,filprd
 
       WRITE (MSG2,8931)
       WRITE (outsyd,9200) MSG2
-      WRITE (MSG2,*) numlinks,'*1'
+      WRITE (MSG2,'(I6,A2)') numlinks,'*1'
       WRITE (outsyd,9200) MSG2
      
       WRITE (MSG2,8932)
       WRITE (outsyd,9200) MSG2
-      WRITE (MSG2,*) numlinks,'*0.650'
+      WRITE (MSG2,'(I6,A5)') numlinks,'*0.650'
       WRITE (outsyd,9200) MSG2
 
       WRITE (MSG2,8941)
@@ -3554,7 +3554,7 @@ c      print*,filprd
      $'     0.01   0.02   0.04  0.07  0.16  0.25  0.45'
       WRITE (MSG2,8955)
       WRITE (outsyd,9200) MSG2
-      WRITE (MSG2,*) numlinks,'*2'
+      WRITE (MSG2,'(I6,A2)') numlinks,'*2'
       WRITE (outsyd,9200) MSG2
       WRITE (MSG2,8956)
       WRITE (outsyd,9200) MSG2

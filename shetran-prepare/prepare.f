@@ -346,8 +346,8 @@ c width = streamwidthfac1* maf^streamwidthfac2
 
 
       print*
-      print*, 'Shetran Prepare 2.2.10'
-      print*, '**********************'
+      print*, 'Shetran Prepare'
+      print*, '***************'
       print* 
       
       print*, 'This executable reads an XML file and the corresponding',
