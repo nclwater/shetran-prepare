@@ -4,8 +4,8 @@
 <DEMMeanFileName>dem_100.txt</DEMMeanFileName>   This is used to caculate the elevations of the grid squares
 <DEMminFileName>dem_100.txt</DEMMinFileName>  This is used to caculate the location and elevations of the river channels. If it is not avilable the mean dem can be used here.
 <MaskFileName>ws_100.txt</MaskFileName>
-<VegMap>soil_100.txt</VegMap> Vegetation / land-use map. The number of categories must correspond to those in Vegetation details
-<SoilMap>lu_100.txt</SoilMap> Soil category map. the number of categories must correspond to those in Soil details
+<VegMap>lu_100.txt</VegMap> Vegetation / land-use map. The number of categories must correspond to those in Vegetation details
+<SoilMap>soil_100.txt</SoilMap> Soil category map. the number of categories must correspond to those in Soil details
 <LakeMap></LakeMap>  No lakes
 <PrecipMap>rain_thies100.txt</PrecipMap> Spatial distibution of precipitation stations
 <PeMap>evap_thies100.txt</PeMap> Spatial distibution of PE stations
@@ -40,10 +40,10 @@
 <EndDay>01</EndDay>
 <EndMonth>01</EndMonth>
 <EndYear>2014</EndYear>
-<RiverGridSquaresAccumulated>20</RiverGridSquaresAccumulated>  Number of upstream grid squares needed to produce a river channel. A larger number will have fewer river channels
+<RiverGridSquaresAccumulated>200</RiverGridSquaresAccumulated>  Number of upstream grid squares needed to produce a river channel. A larger number will have fewer river channels
 <DropFromGridToChannelDepth>4</DropFromGridToChannelDepth> The standard and minimum value is 2 if there are numerical problems with error 1060 this can be increased
 <MinimumDropBetweenChannels>0.1</MinimumDropBetweenChannels> This depends on the grid size and how steep the catchment is. A value of 1 is a sensible starting point but more gently sloping catchments it can be reduced.
-<RegularTimestep>1.0</RegularTimestep> This is the standard Shetran timestep it is autmatically reduced in rain. The standard value is 1 hour. The maximum allowed value is 2 hours
-<IncreasingTimestep>0.01</IncreasingTimestep> speed of increase in timestep after rainfall back to the standard timestep. The standard value is 0.05. If if there are numerical problems with error 1060 it can be reduced to 0.01 but the simulation will take longer.
+<RegularTimestep>0.5</RegularTimestep> This is the standard Shetran timestep it is autmatically reduced in rain. The standard value is 1 hour. The maximum allowed value is 2 hours
+<IncreasingTimestep>0.002</IncreasingTimestep> speed of increase in timestep after rainfall back to the standard timestep. The standard value is 0.05. If if there are numerical problems with error 1060 it can be reduced to 0.01 but the simulation will take longer.
 <SimulatedDischargeTimestep>1.0</SimulatedDischargeTimestep> This timestep for simulastion discharge at the outlet. Make it the same as the measured discharge
 </ShetranInput>

@@ -16,6 +16,6 @@ Executables to convert parameter and map data to Shetran input files format
 
 - Can be run on the command line or using the corresponding start executable (which also runs Shetran)
 - the command line format is the executable name followed by the xml file name
-- e.g if both execuutable and xml library file are in the same folder  type "shetran-prepare-2.2.10.exe Foston_Beck_at_Foston_MillLibraryFile.xml"
+- e.g if both execuutable and xml library file are in the same folder  type "shetran-prepare.exe Foston_Beck_at_Foston_MillLibraryFile.xml"
 
 
