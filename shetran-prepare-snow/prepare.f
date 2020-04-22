@@ -506,7 +506,7 @@ c      OPEN (OUTFRD,FILE=FILFRD)
       FILVSE = 
      $ 'output_'//trim(catchname)//'_vsi.txt'
       FILMAS = 
-     $ 'output_'//trim(catchname)//'_mb.txt'
+     $ 'output_'//trim(catchname)//'_mb.csv'
       FILCVI = 
      $ 'output_'//trim(catchname)//'_check_vis_plan.txt'
       FILHDF = 

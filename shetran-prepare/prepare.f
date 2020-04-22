@@ -477,7 +477,7 @@ c      OPEN (OUTFRD,FILE=FILFRD)
       OPEN (OUTETD,FILE=FILETD)
       FILETD2 = 'input_'//trim(CATCHNAME)//'_etd.txt'
       FILSMD = trim(basedir)//'input_'//trim(CATCHNAME)//'_smd.txt'
-      OPEN (OUTSMD,FILE=FILSMD)
+!      OPEN (OUTSMD,FILE=FILSMD)
       FILSMD2 = 'input_'//trim(CATCHNAME)//'_smd.txt'
       FILVSD = trim(basedir)//'input_'//trim(CATCHNAME)//'_vsd.txt'
       OPEN (OUTVSD,FILE=FILVSD)
@@ -500,7 +500,7 @@ c      OPEN (OUTFRD,FILE=FILFRD)
       FILVSE = 
      $ 'output_'//trim(catchname)//'_vsi.txt'
       FILMAS = 
-     $ 'output_'//trim(catchname)//'_mb.txt'
+     $ 'output_'//trim(catchname)//'_mb.csv'
       FILCVI = 
      $ 'output_'//trim(catchname)//'_check_vis_plan.txt'
       FILHDF = 
