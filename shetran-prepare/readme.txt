@@ -1,3 +1,8 @@
+220420
+******
+
+mb.txt to mb.csv. Do not produce smd file
+
 
 260516
 ******
