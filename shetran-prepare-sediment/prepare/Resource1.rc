@@ -87,7 +87,7 @@ BEGIN
         BLOCK "080904b0"
         BEGIN
             VALUE "CompanyName", "Newcastle Unviersity"
-            VALUE "FileDescription", "Uses library file and map files to produce Shetran inputs including sediment"
+            VALUE "FileDescription", "Produce Shetran inputs including sediment"
             VALUE "FileVersion", "2.2.11.0"
             VALUE "InternalName", "Resource1.rc"
             VALUE "LegalCopyright", "Copyright (C) 2020"
