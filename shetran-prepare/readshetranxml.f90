@@ -10,48 +10,48 @@ subroutine read_xml_file(xmlfilefull,catchmentname,demmeanname,demminname,maskna
    logical           :: mustread
    type(XML_PARSE)   :: info
 
-   character(len=300)                      :: tag
+   character(len=200)                      :: tag
    logical                                :: endtag
-   character(len=300), dimension(1:1,1:1)  :: attribs
+   character(len=200), dimension(1:1,1:1)  :: attribs
    integer                                :: no_attribs
-   character(len=300), dimension(1:1)     :: dummy
+   character(len=200), dimension(1:1)     :: dummy
    character(len=*), intent(in)           :: xmlfilefull
-   character(len=300), dimension(1:1)     :: projectfile
-   character(len=300), dimension(1:1),intent(out)     :: catchmentname
-   character(len=300), dimension(1:1),intent(out)     :: demmeanname
-   character(len=300), dimension(1:1),intent(out)     :: demminname
-   character(len=300), dimension(1:1),intent(out)     :: maskname
-   character(len=300), dimension(1:1),intent(out)     :: vegname
-   character(len=300), dimension(1:1),intent(out)     :: soilname
-   character(len=300), dimension(1:1),intent(out)     :: lakename
-   character(len=300), dimension(1:1),intent(out)     :: precipname
-   character(len=300), dimension(1:1),intent(out)     :: pename
-   character(len=300), dimension(1:1)     :: vegdetail
-   character(len=300), dimension(1:1)     :: soildetail
-   character(len=300), dimension(1:1)     :: soilproperty
-   character(len=300), dimension(1:1)     :: overflowrough
-   character(len=300), dimension(1:1)     :: initialconditions
-   character(len=300), dimension(1:1),intent(out)     :: precfile
-   character(len=300), dimension(1:1)     :: prectimestep
-   character(len=300), dimension(1:1),intent(out)     :: pefile
-   character(len=300), dimension(1:1),intent(out)     :: tmaxfile
-   character(len=300), dimension(1:1),intent(out)     :: tminfile
-   character(len=300), dimension(1:1)     :: petimestep
-   character(len=300), dimension(1:1)     :: xday,xmonth,xyear
-   character(len=300), dimension(1:1)     :: xendday,xendmonth,xendyear
-  ! character(len=300), dimension(1:1)     :: starttime
-  ! character(len=300)                     :: starttm
-  ! character(len=300), dimension(1:1)     :: endtime
-  ! character(len=300)                     :: endtm
-   character(len=300), dimension(1:1)     :: rivergridaccum
-   character(len=300), dimension(1:1)     :: channeldrop
-   character(len=300), dimension(1:1)     :: channelminimumdrop
-   character(len=300), dimension(1:1)     :: snowddfa,regulartmstepa
-   character(len=300), dimension(1:1)     :: standardtimestepa, increasingtimestepa
+   character(len=200), dimension(1:1)     :: projectfile
+   character(len=200), dimension(1:1),intent(out)     :: catchmentname
+   character(len=200), dimension(1:1),intent(out)     :: demmeanname
+   character(len=200), dimension(1:1),intent(out)     :: demminname
+   character(len=200), dimension(1:1),intent(out)     :: maskname
+   character(len=200), dimension(1:1),intent(out)     :: vegname
+   character(len=200), dimension(1:1),intent(out)     :: soilname
+   character(len=200), dimension(1:1),intent(out)     :: lakename
+   character(len=200), dimension(1:1),intent(out)     :: precipname
+   character(len=200), dimension(1:1),intent(out)     :: pename
+   character(len=200), dimension(1:1)     :: vegdetail
+   character(len=200), dimension(1:1)     :: soildetail
+   character(len=200), dimension(1:1)     :: soilproperty
+   character(len=200), dimension(1:1)     :: overflowrough
+   character(len=200), dimension(1:1)     :: initialconditions
+   character(len=200), dimension(1:1),intent(out)     :: precfile
+   character(len=200), dimension(1:1)     :: prectimestep
+   character(len=200), dimension(1:1),intent(out)     :: pefile
+   character(len=200), dimension(1:1),intent(out)     :: tmaxfile
+   character(len=200), dimension(1:1),intent(out)     :: tminfile
+   character(len=200), dimension(1:1)     :: petimestep
+   character(len=200), dimension(1:1)     :: xday,xmonth,xyear
+   character(len=200), dimension(1:1)     :: xendday,xendmonth,xendyear
+  ! character(len=200), dimension(1:1)     :: starttime
+  ! character(len=200)                     :: starttm
+  ! character(len=200), dimension(1:1)     :: endtime
+  ! character(len=200)                     :: endtm
+   character(len=200), dimension(1:1)     :: rivergridaccum
+   character(len=200), dimension(1:1)     :: channeldrop
+   character(len=200), dimension(1:1)     :: channelminimumdrop
+   character(len=200), dimension(1:1)     :: snowddfa,regulartmstepa
+   character(len=200), dimension(1:1)     :: standardtimestepa, increasingtimestepa
    integer                                :: no_data
    integer                                :: i,icount,icounter
-   character(len=300)                      :: vegtype,soiltype,adum
-   character(len=300)                      :: vegtypes(100),soiltypes(40000)
+   character(len=200)                      :: vegtype,soiltype,adum  
+   character(len=200)                      :: vegtypes(100),soiltypes(40000) 
    real                                   :: cst,la,root,ev,strv
    real,intent(out)                                   :: cstcap(100)
    real,intent(out)                                   :: lai(100)

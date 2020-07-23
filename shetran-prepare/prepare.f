@@ -321,7 +321,7 @@ c width = streamwidthfac1* maf^streamwidthfac2
  9204 FORMAT(3A7,A10,a30)
  9205 FORMAT(I7,3A7,I7)
  9206 FORMAT(7X,I7,4A7)
- 9207 FORMAT(I7,2A7,A10,a30)
+ 9207 FORMAT(I7,2A7,A10,a60)
  9208 FORMAT(I7,1X,500I6)
  9209 FORMAT(500I6)
  9210 FORMAT(4(A7))
@@ -414,7 +414,7 @@ c      print*,pefile
 c      print*,'t4'
 
 
-
+!       print*,invegtypes(1),invegtypes(2)
 
 c      print*,snowddf
 
@@ -2905,6 +2905,7 @@ c	str=20.0
 	  NRD=nmcellroot
 
         WRITE (MSG,'(A23,A20)') ':ET7 - VEGETATION TYPE ',invegtypes(i)
+        !print*,invegtypes(i)
         WRITE (OUTETD,9200) MSG
 
 
