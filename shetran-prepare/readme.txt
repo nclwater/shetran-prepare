@@ -1,3 +1,14 @@
+to compile:
+gfortran prepare.f xmlparse.f90 readshetranxml.f90 -o shetran-prepare
+
+110920
+******
+moves to gfrotran compiler
+a) remove pause
+b) long lines
+c) split file
+
+
 220420
 ******
 
