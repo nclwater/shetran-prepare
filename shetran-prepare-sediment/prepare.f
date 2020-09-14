@@ -1,16 +1,16 @@
 C       10        20        30        40        50        60        70    76
 C Prepare SHETRAN files
 
-	PROGRAM prepare 
+      PROGRAM prepare 
       
-      USE DFLIB, ONLY : SPLITPATHQQ      
+c      USE DFLIB, ONLY : SPLITPATHQQ      
       implicit none
 
-	integer accumfac
-	real accumfac1
-	integer ncolsmax,nrowsmax
-	real chanfac1,chanfac2,chanfac3
-	real removesink
+      integer accumfac
+      real accumfac1
+      integer ncolsmax,nrowsmax
+      real chanfac1,chanfac2,chanfac3
+      real removesink
       real netrainfall,streamwidthfac1,streamwidthfac2
       real stricklerriv,stricklerlake
 
@@ -18,18 +18,18 @@ c     number of grid squares accumulated rainfall before river is produced
 c	parameter (accumfac=5)
 
 c     maximum number of columns and rows
-	parameter (ncolsmax=500,nrowsmax=500)
+      parameter (ncolsmax=500,nrowsmax=500)
 
 c     chanfac1 is drop from grid elevation to channel depth elevation
 c     chanfac2 is drop along a channel that is being followed
 c     chanfac3 is increase in elevation when reoving channel link sinks
-c	parameter (chanfac1=2.0,chanfac2=1.0,chanfac3=1.0)
+c      parameter (chanfac1=2.0,chanfac2=1.0,chanfac3=1.0)
 
 c remove for Liz and put in xml file
-c	parameter (chanfac2=0.5,chanfac3=chanfac2)
+c      parameter (chanfac2=0.5,chanfac3=chanfac2)
 
 c     Additional elevation to remove sink
-	parameter (removesink=0.1)
+      parameter (removesink=0.1)
 
 c     annual elevation-evap(mm) to calculate mean annual flow and stream width
       parameter (netrainfall=1000.0)
@@ -62,114 +62,115 @@ c width = streamwidthfac1* maf^streamwidthfac2
 
 
 
-	CHARACTER*200 FILEIN,FILEIN1,FILEINMIN,FILEIN2,FILEO1,FILEO2,catchname
+      CHARACTER*200 FILEIN,FILEIN1,FILEINMIN,FILEIN2,FILEO1,FILEO2
+      CHARACTER*200 catchname
       CHARACTER*200 workspace,filerdf,filecstcap
-	CHARACTER*200 vegname,soilname,lakename,precipname,pename
-	CHARACTER*200 tmaxfile,tminfile
+      CHARACTER*200 vegname,soilname,lakename,precipname,pename
+      CHARACTER*200 tmaxfile,tminfile
       CHARACTER*200 precfile,pefile,delme
       CHARACTER*200 precfile2,pefile2
-	character*200 basedir, xmlfilename,buildloc,xmlfilefull
+      character*200 basedir, xmlfilename,buildloc,xmlfilefull
       character*5 acols,arows
-	character*8 acellsize
+      character*8 acellsize
       character*10 axllcorner,ayllcorner
-	character msg*520,msg1*520
-	character*1 xmap((nrowsmax+1)*2,(ncolsmax+1)*2)
-	character*1 alinkew(nrowsmax+1,ncolsmax)
+      character msg*520,msg1*520
+      character*1 xmap((nrowsmax+1)*2,(ncolsmax+1)*2)
+      character*1 alinkew(nrowsmax+1,ncolsmax)
       character*1 alinkns(nrowsmax,ncolsmax+1)
       character*1 vismask(nrowsmax,ncolsmax)
-	character anovalue
-	integer ncols,nrows,i,j,k,l,ncols2,nrows2,count,ncols3,nrows3
-	integer colposmin,rowposmin,change
-	integer cornerval(nrowsmax+1,ncolsmax+1)
-	integer crncolpos,crnrowpos,crnmax
-	integer direction,maxacc
-	integer itemp,number
-	integer poscol(ncolsmax*nrowsmax),posrow(ncolsmax*nrowsmax)
-	integer catch(nrowsmax,ncolsmax),catchrow(ncolsmax)
+      character anovalue
+      integer ncols,nrows,i,j,k,l,ncols2,nrows2,count,ncols3,nrows3
+      integer colposmin,rowposmin,change
+      integer cornerval(nrowsmax+1,ncolsmax+1)
+      integer crncolpos,crnrowpos,crnmax
+      integer direction,maxacc
+      integer itemp,number
+      integer poscol(ncolsmax*nrowsmax),posrow(ncolsmax*nrowsmax)
+      integer catch(nrowsmax,ncolsmax),catchrow(ncolsmax)
       integer catchgeometry(-1:nrowsmax*10,-1:ncolsmax*10)
-	integer vegdist(nrowsmax,ncolsmax),soildist(nrowsmax,ncolsmax)
-	integer lakedist(nrowsmax,ncolsmax)
+      integer vegdist(nrowsmax,ncolsmax),soildist(nrowsmax,ncolsmax)
+      integer lakedist(nrowsmax,ncolsmax)
       integer arrayvalue,numbermet(nrowsmax*ncolsmax)
       integer peall(nrowsmax*ncolsmax),peunique(nrowsmax*ncolsmax)
       integer numberunique, pedist2(nrowsmax,ncolsmax)
-	integer pedist(nrowsmax,ncolsmax),raindist(nrowsmax,ncolsmax)
+      integer pedist(nrowsmax,ncolsmax),raindist(nrowsmax,ncolsmax)
       integer rainall(nrowsmax*ncolsmax),rainunique(nrowsmax*ncolsmax)
       integer numberuniquer, raindist2(nrowsmax,ncolsmax)
-	integer cv,rv,cvadd,rvadd
-	integer accum(0:nrowsmax+1,0:ncolsmax+1)
-	integer msgs,msge
-	integer linkoutdir,linkoutr,linkoutc
-	integer numlinks,linkoutnum
-	integer ndefct,nxsect,iface
-	integer ncspairs
-	integer badnum,badrow,badcol
-	integer length,length2
-	integer nrowsm1,ncolsm1
-	integer year,month,day,hours,minute
-	integer nf,nrd
-	integer nrowhalf
-	integer nmcellroot,numberedge
-	integer novalue
+      integer cv,rv,cvadd,rvadd
+      integer accum(0:nrowsmax+1,0:ncolsmax+1)
+      integer msgs,msge
+      integer linkoutdir,linkoutr,linkoutc
+      integer numlinks,linkoutnum
+      integer ndefct,nxsect,iface
+      integer ncspairs
+      integer badnum,badrow,badcol
+      integer length,length2
+      integer nrowsm1,ncolsm1
+      integer year,month,day,hours,minute
+      integer nf,nrd
+      integer nrowhalf
+      integer nmcellroot,numberedge
+      integer novalue
       integer maxcatnumber
       real dem(0:nrowsmax+1,0:ncolsmax+1),demrow(ncolsmax)
       real demmean(0:nrowsmax+1,0:ncolsmax+1),demrowmean(ncolsmax)
-	real demne,demse,demsw,demnw,demmincorner,demminedge
-	real demn,dems,demw,deme
-	real demmin,mindem
-	real posval(ncolsmax*nrowsmax)
-	real temp
-	real ellinkew(nrowsmax+1,ncolsmax),ellinkns(nrowsmax,ncolsmax+1)
-	real strlinkew(nrowsmax+1,ncolsmax),strlinkns(nrowsmax,ncolsmax+1)
-	real dum1,dum2,dum3,dum4,dum5,dum6,dummin,cheldum,pchdp
-	real linkelv(ncolsmax*nrowsmax)
-	real linkstr(ncolsmax*nrowsmax)
-	real linkelvmin
-	real wdepth,str,coeff,subrio
-	real badelev
-	real cellsize,xllcorner,yllcorner
-	real plai,clai,cstcap,ck,cb
-	real ps1(7),fet(7),depth(50),rdf(50,50)
+      real demne,demse,demsw,demnw,demmincorner,demminedge
+      real demn,dems,demw,deme
+      real demmin,mindem
+      real posval(ncolsmax*nrowsmax)
+      real temp
+      real ellinkew(nrowsmax+1,ncolsmax),ellinkns(nrowsmax,ncolsmax+1)
+      real strlinkew(nrowsmax+1,ncolsmax),strlinkns(nrowsmax,ncolsmax+1)
+      real dum1,dum2,dum3,dum4,dum5,dum6,dummin,cheldum,pchdp
+      real linkelv(ncolsmax*nrowsmax)
+      real linkstr(ncolsmax*nrowsmax)
+      real linkelvmin
+      real wdepth,str,coeff,subrio
+      real badelev
+      real cellsize,xllcorner,yllcorner
+      real plai,clai,cstcap,ck,cb
+      real ps1(7),fet(7),depth(50),rdf(50,50)
       real cstcapratio(50,50),cstcaptime(50,50)
       integer cstcapnopoints(50),cstcapnoveg,cstcapnoyear
-	real cond,thsat,thres,satstor,vgalpha,vgn
+      real cond,thsat,thres,satstor,vgalpha,vgn
       real regulartmstep,snowddf
       real standardtimestep,increasingtimestep
-	logical linkew(nrowsmax+1,ncolsmax),linkns(nrowsmax,ncolsmax+1)
-	logical savelinkew(nrowsmax+1,ncolsmax)
+      logical linkew(nrowsmax+1,ncolsmax),linkns(nrowsmax,ncolsmax+1)
+      logical savelinkew(nrowsmax+1,ncolsmax)
       logical savelinkns(nrowsmax,ncolsmax+1)
-	logical notlowpoint,isok,isaccum(nrowsmax,ncolsmax)
+      logical notlowpoint,isok,isaccum(nrowsmax,ncolsmax)
       logical cornerdone(nrowsmax+1,ncolsmax+1)
       logical savecornerdone(nrowsmax+1,ncolsmax+1)
       logical cornerdonep(nrowsmax+1,ncolsmax+1)
       logical outletlink
       logical isunique,islakename
 
-	character*200 invegtypes(100),insoiltypes(50000)
+      character*200 invegtypes(100),insoiltypes(50000)
       real incstcap(100),inlai(100),inrootingdepth(100)
-	integer insoilcats(50000),insoillayers(50000)
+      integer insoilcats(50000),insoillayers(50000)
       integer insoilnumbers(50000),insoilnumbers2(50000)
-	real inaepe(100),insoildepth(50000),inthsat(50000),inthres(50000)
+      real inaepe(100),insoildepth(50000),inthsat(50000),inthres(50000)
       real instricklerveg(50000)
-	real inksat(50000),invgn(50000),invga(50000),inoverflowroughness
-	real ininitialpsl,inprectmstep,inpetmstep
+      real inksat(50000),invgn(50000),invga(50000),inoverflowroughness
+      real ininitialpsl,inprectmstep,inpetmstep
       integer inday,inmonth,inyear
       integer inendday,inendmonth,inendyear
       integer innmveg,innmsoil,innmsoilcat
-	real insoildepthmin
-	integer vislayer,finaldivider
+      real insoildepthmin
+      integer vislayer,finaldivider
       integer(2) n1
-	integer countiteration
-	integer countnumber
+      integer countiteration
+      integer countnumber
       integer outletcrnrowpos,outletcrncolpos,outletcornerval
-	integer streamsize(ncolsmax*nrowsmax)
-	real streamwidth1,streamwidth2,maffactor
+      integer streamsize(ncolsmax*nrowsmax)
+      real streamwidth1,streamwidth2,maffactor
       real demminoutletproblem
 
       real maxsoildepth
 
-	integer cattype,ncatold,ncat,catnumber(0:1000),pc
+      integer cattype,ncatold,ncat,catnumber(0:1000),pc
 
-	logical meetexit
+      logical meetexit
 
       CHARACTER   MSG2*80,msg3*80
       CHARACTER*7 AFORM(ncolsmax*nrowsmax)
@@ -179,6 +180,9 @@ c width = streamwidthfac1* maf^streamwidthfac2
       CHARACTER(256) path, ext
       integer*4 lengthpath
       CHARACTER(40) MyName      
+
+      CHARACTER Delimeter,Delimeter2
+      integer finaldel,finaldel2
 
 
  9301 FORMAT(':FR1 - TEST CATCHMENT- FR COMPONENT DATA SET')
@@ -355,11 +359,11 @@ c width = streamwidthfac1* maf^streamwidthfac2
       print*, 'This executable reads an XML file and the corresponding',
      $   'ASC grids and produces the Shetran input files' 
       print* 
-c	read (*,*) basedir
+c      read (*,*) basedir
 c      print*, 'Input project name (XML file name)'
-c	read (*,*) xmlfilename
+c      read (*,*) xmlfilename
 c      print*, 'Input build location'
-c	read (*,*) buildloc
+c      read (*,*) buildloc
 
 c      n1=1
 c      CALL GETARG(n1, basedir)
@@ -376,17 +380,17 @@ c       WRITE (*,*) buildloc
 c
 c       pause
         
-!	xmlfilefull = trim(basedir)//'\'//trim(xmlfilename)
-	xmlfilefull = trim(xmlfilename)
-!	xmlfilefull = 'Aire_at_Kildwick_BridgeLibraryFile.xml'
-c	pause
+!      xmlfilefull = trim(basedir)//'\'//trim(xmlfilename)
+      xmlfilefull = trim(xmlfilename)
+c      pause
       open(10,FILE=xmlfilefull,err=9999,status='old')
 
-	goto 9998
+      goto 9998
 
  9999 write (*,*) 'Error openinig file ',xmlfilefull
       close(10)
-       pause
+      write(*,'(''paused, type [enter] to continue'')')
+      read (*,*)
       stop 1
 
 
@@ -417,7 +421,7 @@ c      print*,pefile
 c      print*,'t4'
 
 
-
+!       print*,invegtypes(1),invegtypes(2)
 
 c      print*,snowddf
 
@@ -425,7 +429,7 @@ c 200  PRINT*,
 c     $   'Enter data file'
 c      READ (*,*) filein
 c      IF (filein1(1:1).EQ.' ') GOTO 200
-c	OPEN(10,FILE=FILEIN,STATUS='OLD')
+c      OPEN(10,FILE=FILEIN,STATUS='OLD')
 c      READ(10,*)
 c      READ(10,*) CATCHNAME
 c      READ(10,*)
@@ -436,16 +440,25 @@ c      READ(10,*)
 c      READ(10,*) accumfac1
 c      READ(10,*)
 c      READ(10,*) chanfac1
-c	accumfac=int(accumfac1)
+c      accumfac=int(accumfac1)
 
 c      LENGTH = INDEX(CATCHNAME,' ')-1
 c      LENGTH2 = INDEX(basedir,' ')-1
 c      FILFRD = 'input/'//CATCHNAME(1:LENGTH)//'.frd'
 c      OPEN (OUTFRD,FILE=FILFRD)
 
-      lengthpath = SPLITPATHQQ(xmlfilefull, drive, path, MyName, ext)
-      basedir=trim(drive)//trim(path)
+****
+      Delimeter='/'
+      Delimeter2='\'
+      finaldel= index(xmlfilefull, Delimeter, .TRUE.)
+      finaldel2= index(xmlfilefull, Delimeter2, .TRUE.)
+c      print*,finaldel
+c      print*,finaldel2
 
+c      lengthpath = SPLITPATHQQ(xmlfilefull, drive, path, MyName, ext)
+c     basedir=trim(drive)//trim(path)
+      basedir=xmlfilefull(1:max(finaldel,finaldel2))
+      print*,basedir
 
       FILLOG = trim(basedir)//'input_'//trim(CATCHNAME)//'_log.txt'
       filein1=trim(basedir)//trim(filein1)
@@ -511,7 +524,7 @@ c      OPEN (OUTFRD,FILE=FILFRD)
      $ 'output_'//trim(catchname)//'_check_vis_plan.txt'
       FILHDF = 
      $ 'output_'//trim(catchname)//'_shegraph.h5'
-      FILSPR = 
+      FILSPR =
      $ 'output_'//trim(catchname)//'_spr.txt'
 
 
@@ -521,15 +534,15 @@ c      OPEN (OUTFRD,FILE=FILFRD)
 
 
 !      FILEO1=trim(basedir)//'\output_'//'developer-output.txt'
-!	OPEN(30,FILE=FILEO1,STATUS='UNKNOWN')
-	
-	OPEN(11,FILE=FILEIN1,STATUS='OLD')
-	OPEN(18,FILE=FILEINMIN,STATUS='OLD')
+!      OPEN(30,FILE=FILEO1,STATUS='UNKNOWN')
+      
+      OPEN(11,FILE=FILEIN1,STATUS='OLD')
+      OPEN(18,FILE=FILEINMIN,STATUS='OLD')
       if ((trim(lakename).eq.('')).or.(trim(lakename).eq.('none'))) then
           islakename=.false.
           write(logfile,*)'No lake map specified'
-	else
-          write(logfile,*),'Lakemap = ',lakename
+      else
+          write(logfile,*)'Lakemap = ',lakename
          islakename=.true.
          lakename=trim(basedir)//trim(lakename)
           OPEN(19,FILE=lakename,STATUS='OLD')
@@ -545,26 +558,26 @@ c      OPEN (OUTFRD,FILE=FILFRD)
       
       OPEN(12,FILE=FILEIN2,STATUS='OLD')
       if (trim(precfile).eq.'none') then
-c	   FILPRD =trim(basedir)//'\input\'//'test.prd'
-	   FILPRD ='input_'//'test_prd.txt'
-	else 
+c         FILPRD =trim(basedir)//'\input\'//'test.prd'
+         FILPRD ='input_'//'test_prd.txt'
+      else 
 * remove directory from precfile name
-	  finaldivider=0
+        finaldivider=0
          do i=1,200
-	     if (precfile(i:i).eq.'\') then
-	       finaldivider=i
-	     endif
-	   enddo
-	   j=1
+           if (precfile(i:i).eq.'\') then
+             finaldivider=i
+           endif
+         enddo
+         j=1
 
 c         print*,finaldivider
 
-	   do i=finaldivider+1,200
-	       precfile2(j:j)=precfile(i:i)
-	       j=j+1
-	   enddo
-c	   filprd=trim(basedir)//'\input\'//trim(precfile2)
-	   filprd=trim(precfile2)
+         do i=finaldivider+1,200
+             precfile2(j:j)=precfile(i:i)
+             j=j+1
+         enddo
+c         filprd=trim(basedir)//'\input\'//trim(precfile2)
+         filprd=trim(precfile2)
       
 c       print*,precfile,precfile2,filprd
 
@@ -572,26 +585,26 @@ c       print*,precfile,precfile2,filprd
       endif
       if (trim(pefile).eq.'none') then
          FILEPD = 'input_'//'test_epd.txt'
-	else 
+      else 
 * remove directory from precfile name
          do i=1,200
-	     if (pefile(i:i).eq.'\') then
-	       finaldivider=i
-	     endif
-	   enddo
-	   j=1
-	   do i=finaldivider+1,200
-	       pefile2(j:j)=pefile(i:i)
-	       j=j+1
-	   enddo
-	   filepd=trim(pefile2)
+           if (pefile(i:i).eq.'\') then
+             finaldivider=i
+           endif
+         enddo
+         j=1
+         do i=finaldivider+1,200
+             pefile2(j:j)=pefile(i:i)
+             j=j+1
+         enddo
+         filepd=trim(pefile2)
       endif
 
 !      print*, filein1,fileinmin,filein2,precfile
 
 
-!	filerdf=trim(buildloc)//'\rdf.csv'
-	filecstcap=trim(basedir)//'canopystorage.txt'
+!      filerdf=trim(buildloc)//'\rdf.csv'
+      filecstcap=trim(basedir)//'canopystorage.txt'
 !      OPEN(15,FILE=filerdf,STATUS='OLD')
       depth(1:27) = (/ 0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.2,
      $  1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.0,4.0,5.0,6.0,7.0,8.0,
@@ -600,14 +613,14 @@ c       print*,precfile,precfile2,filprd
       call rootdensity(rdf)
 c      print*,filecstcap
       OPEN(16,FILE=filecstcap,STATUS='OLD',err=768)
-	read(16,*,err=768)
-	read(16,*,err=768)
+      read(16,*,err=768)
+      read(16,*,err=768)
 
-	read(16,*,err=768) cstcapnoveg
+      read(16,*,err=768) cstcapnoveg
       do i=1,cstcapnoveg
-      	    read(16,*,err=768) 
-      	    read(16,*,err=768) 
-      	    read(16,*,err=768) 
+                read(16,*,err=768) 
+                read(16,*,err=768) 
+                read(16,*,err=768) 
           read(16,*,err=768) cstcapnopoints(i)
 c          print*,cstcapnopoints(i)
           if (cstcapnopoints(i).gt.0) then
@@ -638,112 +651,118 @@ c        print*,cstcapnopoints(i)
       enddo
 
       READ(11,*) acols,ncols
-	READ(11,*) arows,nrows
-	READ(11,*) axllcorner,xllcorner
-	READ(11,*) ayllcorner,yllcorner
-	READ(11,*) acellsize,cellsize 
-	READ(11,*) anovalue,novalue
-	if (ncols.gt.ncolsmax-2) then
+      READ(11,*) arows,nrows
+      READ(11,*) axllcorner,xllcorner
+      READ(11,*) ayllcorner,yllcorner
+      READ(11,*) acellsize,cellsize 
+      READ(11,*) anovalue,novalue
+      if (ncols.gt.ncolsmax-2) then
           print*,'Number of columns is greater than specified maximum',
      $                 ncolsmax-2
-	    pause
+      write(*,'(''paused, type [enter] to continue'')')
+      read (*,*)
           stop
       endif
-	if (nrows.gt.nrowsmax-2) then
+      if (nrows.gt.nrowsmax-2) then
           print*,'Number of rows is greater than specified maximum',
      $                 nrowsmax-2
-	    pause
+      write(*,'(''paused, type [enter] to continue'')')
+      read (*,*)
           stop
       endif
 
-      	READ(18,*) acols,ncols3
-	if (ncols.ne.ncols3) then
+            READ(18,*) acols,ncols3
+      if (ncols.ne.ncols3) then
           print*,
      $'Number of columns not equal in the elevation grids' 
-	    pause
+      write(*,'(''paused, type [enter] to continue'')')
+      read (*,*)
           stop
       endif
-	READ(18,*) arows,nrows3
-	if (nrows.ne.nrows3) then
+      READ(18,*) arows,nrows3
+      if (nrows.ne.nrows3) then
           print*,
      $ 'Number of rows not equal in the elevation grids' 
-	    pause
-          stop
-	endif
-	READ(18,*) axllcorner,xllcorner
-	READ(18,*) ayllcorner,yllcorner
-	READ(18,*) acellsize,cellsize 
-	READ(18,*) anovalue,novalue
-
-
-
-	READ(12,*) acols,ncols2
-	if (ncols.ne.ncols2) then
-          print*,
-     $'Number of columns not equal in the elevation and catchment grids' 
-	    pause
+      write(*,'(''paused, type [enter] to continue'')')
+      read (*,*)
           stop
       endif
-	READ(12,*) arows,nrows2
-	if (nrows.ne.nrows2) then
+      READ(18,*) axllcorner,xllcorner
+      READ(18,*) ayllcorner,yllcorner
+      READ(18,*) acellsize,cellsize 
+      READ(18,*) anovalue,novalue
+
+
+
+      READ(12,*) acols,ncols2
+      if (ncols.ne.ncols2) then
+          print*,
+     $'Number of columns not equal in the elevation and catchment grids' 
+      write(*,'(''paused, type [enter] to continue'')')
+      read (*,*)
+          stop
+      endif
+      READ(12,*) arows,nrows2
+      if (nrows.ne.nrows2) then
           print*,
      $ 'Number of rows not equal in the elevation and catchment grids' 
-	    pause
+       write(*,'(''paused, type [enter] to continue'')')
+       read (*,*)
           stop
-	endif
-	READ(12,*) axllcorner,xllcorner
-	READ(12,*) ayllcorner,yllcorner
-	READ(12,*) acellsize,cellsize 
-	READ(12,*) anovalue,novalue
+      endif
+      READ(12,*) axllcorner,xllcorner
+      READ(12,*) ayllcorner,yllcorner
+      READ(12,*) acellsize,cellsize 
+      READ(12,*) anovalue,novalue
 
 
-	do i=2,nrows+1
-	    read(11,*) (demrowmean(j),j=2,ncols+1)
-    	    do j=2,ncols+1
-	       demmean(i,j) = demrowmean(j)
-	    enddo
-	enddo
+      do i=2,nrows+1
+          read(11,*) (demrowmean(j),j=2,ncols+1)
+              do j=2,ncols+1
+             demmean(i,j) = demrowmean(j)
+          enddo
+      enddo
 
-	do i=2,nrows+1
-	    read(18,*) (demrow(j),j=2,ncols+1)
-    	    do j=2,ncols+1
-	       dem(i,j) = demrow(j)
-	    enddo
-	enddo
+      do i=2,nrows+1
+          read(18,*) (demrow(j),j=2,ncols+1)
+              do j=2,ncols+1
+             dem(i,j) = demrow(j)
+          enddo
+      enddo
 
 
-	do i=1,nrows+2
-    	    do j=1,ncols+2
-	       catch(i,j) = novalue
-	    enddo
-	enddo
-	do i=2,nrows+1
-	    read(12,*) (catchrow(j),j=2,ncols+1)
-    	    do j=2,ncols+1
-	       catch(i,j) = catchrow(j)
-	    enddo
+      do i=1,nrows+2
+              do j=1,ncols+2
+             catch(i,j) = novalue
+          enddo
+      enddo
+      do i=2,nrows+1
+          read(12,*) (catchrow(j),j=2,ncols+1)
+              do j=2,ncols+1
+             catch(i,j) = catchrow(j)
+          enddo
       enddo
 
       if(islakename) then
-	  READ(19,*) 
-	  READ(19,*) 
-	  READ(19,*) 
-	  READ(19,*) 
-	  READ(19,*) 
-	  READ(19,*) 
-  	  do i=2,nrows+1
-	    read(19,*) (lakedist(i,j),j=2,ncols+1)
-	    do j=2,ncols+1
-	       if (lakedist(i,j).lt.0) then 
+        READ(19,*) 
+        READ(19,*) 
+        READ(19,*) 
+        READ(19,*) 
+        READ(19,*) 
+        READ(19,*) 
+          do i=2,nrows+1
+          read(19,*) (lakedist(i,j),j=2,ncols+1)
+          do j=2,ncols+1
+             if (lakedist(i,j).lt.0) then 
                 lakedist(i,j)=0
-	       endif
-	    enddo
+             endif
+          enddo
         enddo
        else 
-  	  do i=2,nrows+1
-	    do j=2,ncols+1
+          do i=2,nrows+1
+          do j=2,ncols+1
                 lakedist(i,j)=0
-	    enddo
+          enddo
         enddo
        endif
 
@@ -754,25 +773,25 @@ c        print*,cstcapnopoints(i)
 C     add an extra grid square around entire catchment
 c     to stop a bug in SHETRAN
       nrows=nrows+2
-	ncols=ncols+2
+      ncols=ncols+2
 
-	do i=1,nrows
-    	    do j=1,ncols
-	       if (catch(i,j).eq.novalue) then
-	            demmean(i,j) = 1.0e10
-	       endif
-	    enddo
-	enddo
+      do i=1,nrows
+              do j=1,ncols
+             if (catch(i,j).eq.novalue) then
+                  demmean(i,j) = 1.0e10
+             endif
+          enddo
+      enddo
 
       close(12)
 
-	do i=1,nrows
-    	    do j=1,ncols
-	       if (catch(i,j).eq.novalue) then
-	            dem(i,j) = 1.0e10
-	       endif
-	    enddo
-	enddo
+      do i=1,nrows
+              do j=1,ncols
+             if (catch(i,j).eq.novalue) then
+                  dem(i,j) = 1.0e10
+             endif
+          enddo
+      enddo
 
       close(18)
 
@@ -796,8 +815,8 @@ c      print*,'t1'
 *
 ********* Start/End of simulations **************************************      
 *
-	hours=0
-	minute=0
+      hours=0
+      minute=0
       WRITE (MSG,9304)
       WRITE (OUTFRD,9200) MSG
       WRITE (OUTFRD,9101) inYEAR,inMONTH,inDAY,HOURS,MINUTE
@@ -888,17 +907,17 @@ c sb 021009 change from 1.0 and 0.15 to make it more stable
 c      print*,'t2'
 c      print*,pename
 c      print*,'t3'
-	OPEN(16,FILE=pename,STATUS='OLD')
-      	READ(16,*) 
-	READ(16,*) 
-	READ(16,*) 
-	READ(16,*) 
-	READ(16,*) 
-	READ(16,*) 
-      	do i=2,nrows-1
-	  read(16,*) (pedist(i,j),j=2,ncols-1)
+      OPEN(16,FILE=pename,STATUS='OLD')
+            READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+            do i=2,nrows-1
+        read(16,*) (pedist(i,j),j=2,ncols-1)
       enddo
-      	do i=2,nrows-1
+            do i=2,nrows-1
         do j=2,ncols-1
           arrayvalue=(i-2)*(ncols-2)+j-1
           peall(arrayvalue) = pedist(i,j)
@@ -909,7 +928,7 @@ c         write(617,*) arrayvalue,peall(arrayvalue)
 c number of unique items in PE distribution
       peunique(1)=peall(1)
       numberunique=1
-      	do i=2,arrayvalue
+            do i=2,arrayvalue
         isunique = .true.
         do j=1,numberunique
         if (peunique(j).eq.peall(i)) then
@@ -925,17 +944,17 @@ c          print*, numberunique, peunique(numberunique)
       enddo
 
 
-  143	change=0
+  143      change=0
 c     uses a very basic bubble sort
       do i=2,numberunique
           if (peunique(i).lt.peunique(i-1)) then
-	        temp=peunique(i-1)
-	        peunique(i-1)=peunique(i)
-	        peunique(i)=temp
-	        change=change+1
+              itemp=peunique(i-1)
+              peunique(i-1)=peunique(i)
+              peunique(i)=itemp
+              change=change+1
           endif
-	enddo
-	if (change.ne.0) goto 143
+      enddo
+      if (change.ne.0) goto 143
 
       if (peunique(1).eq.-9999) then
          numberunique = numberunique -1
@@ -948,17 +967,17 @@ c     uses a very basic bubble sort
 *
 ****************************** rain Types ************************
 
-	OPEN(17,FILE=precipname,STATUS='OLD')
-      	READ(17,*) 
-	READ(17,*) 
-	READ(17,*) 
-	READ(17,*) 
-	READ(17,*) 
-	READ(17,*) 
-      	do i=2,nrows-1
-	  read(17,*) (raindist(i,j),j=2,ncols-1)
+      OPEN(17,FILE=precipname,STATUS='OLD')
+            READ(17,*) 
+      READ(17,*) 
+      READ(17,*) 
+      READ(17,*) 
+      READ(17,*) 
+      READ(17,*) 
+            do i=2,nrows-1
+        read(17,*) (raindist(i,j),j=2,ncols-1)
       enddo
-      	do i=2,nrows-1
+            do i=2,nrows-1
         do j=2,ncols-1
           arrayvalue=(i-2)*(ncols-2)+j-1
           rainall(arrayvalue) = raindist(i,j)
@@ -969,7 +988,7 @@ c         write(617,*) arrayvalue,peall(arrayvalue)
 c number of unique items in PE distribution
       rainunique(1)=rainall(1)
       numberuniquer=1
-      	do i=2,arrayvalue
+            do i=2,arrayvalue
         isunique = .true.
         do j=1,numberuniquer
         if (rainunique(j).eq.rainall(i)) then
@@ -985,17 +1004,17 @@ c          print*, numberunique, peunique(numberunique)
       enddo
 
 
-  543	change=0
+  543      change=0
 c     uses a very basic bubble sort
       do i=2,numberuniquer
           if (rainunique(i).lt.rainunique(i-1)) then
-	        temp=rainunique(i-1)
-	        rainunique(i-1)=rainunique(i)
-	        rainunique(i)=temp
-	        change=change+1
+              itemp=rainunique(i-1)
+              rainunique(i-1)=rainunique(i)
+              rainunique(i)=itemp
+              change=change+1
           endif
-	enddo
-	if (change.ne.0) goto 543
+      enddo
+      if (change.ne.0) goto 543
 
       if (rainunique(1).eq.-9999) then
          numberuniquer = numberuniquer -1
@@ -1046,64 +1065,66 @@ c     uses a very basic bubble sort
 
 
 c     fill surrounding elements
-	do i=0,0
-    	    do j=0,ncols+1
-	        demmean(i,j) = 1.0e10
-	    enddo
+      do i=0,0
+              do j=0,ncols+1
+              demmean(i,j) = 1.0e10
+          enddo
       enddo
-	do i=nrows+1,nrows+1
-    	    do j=0,ncols+1
-	        demmean(i,j) = 1.0e10
-	    enddo
+      do i=nrows+1,nrows+1
+              do j=0,ncols+1
+              demmean(i,j) = 1.0e10
+          enddo
       enddo
-	j=0
-	do i=1,nrows
-	    demmean(i,j) = 1.0e10
-	enddo
-	j=ncols+1
-	do i=1,nrows
-	    demmean(i,j) = 1.0e10
-	enddo
+      j=0
+      do i=1,nrows
+          demmean(i,j) = 1.0e10
+      enddo
+      j=ncols+1
+      do i=1,nrows
+          demmean(i,j) = 1.0e10
+      enddo
 
-	do i=0,0
-    	    do j=0,ncols+1
-	        dem(i,j) = 1.0e10
-	    enddo
+      do i=0,0
+              do j=0,ncols+1
+              dem(i,j) = 1.0e10
+          enddo
       enddo
-	do i=nrows+1,nrows+1
-    	    do j=0,ncols+1
-	        dem(i,j) = 1.0e10
-	    enddo
+      do i=nrows+1,nrows+1
+              do j=0,ncols+1
+              dem(i,j) = 1.0e10
+          enddo
       enddo
-	j=0
-	do i=1,nrows
-	    dem(i,j) = 1.0e10
-	enddo
-	j=ncols+1
-	do i=1,nrows
-	    dem(i,j) = 1.0e10
-	enddo
+      j=0
+      do i=1,nrows
+          dem(i,j) = 1.0e10
+      enddo
+      j=ncols+1
+      do i=1,nrows
+          dem(i,j) = 1.0e10
+      enddo
 
-	   
+         
 
 c     check that all the elevations are greater than zero
 c correct bad elevation 30032012
       badnum=0
-	do i=1,nrows
-    	    do j=1,ncols
-	       if (demmean(i,j).le.0.0) then
+      do i=1,nrows
+              do j=1,ncols
+             if (demmean(i,j).le.0.0) then
 c             badnum=badnum+1
-	       write(*,'(A50,A44)') 
+             write(*,'(A50,A44)') 
      $          'There was a grid square within the catchment mask ',
      $          'with an elevation equal to or less than zero'
-	       write(*,'(A14,i4, A12,I4)')
+             write(*,'(A14,i4, A12,I4)')
      $           'Located at row', i-1, '  and column', j-1
 
              write(*,*)
 
-	       write(*,'(A46)') 'Shetran will attempt to automatically correct'
+             write(*,'(A46)')
+     $         'Shetran will attempt to automatically correct'
              write(*,*)
-             pause
+             write(*,'(''paused, type [enter] to continue'')')
+             read (*,*)
                if (catch(i,j+1).ne.novalue) then
                  demmean(i,j)=max(demmean(i,j),demmean(i,j+1))
                endif
@@ -1130,29 +1151,32 @@ c             badnum=badnum+1
                endif
                if  (demmean(i,j).le.0.0) then
                  write(*,*)
-	           write(*,'(A42)') 'Shetran is unable to correct this problem'
-	           write(*,'(A33)') 'The simulation will probably fail'
+                 write(*,'(A42)')
+     $            'Shetran is unable to correct this problem'
+                 write(*,'(A33)') 'The simulation will probably fail'
                  write(*,*)
-                 pause
+                 write(*,'(''paused, type [enter] to continue'')')
+                 read (*,*)
                endif
              endif
-	    enddo
-	enddo
+          enddo
+      enddo
 
       badnum=0
-	do i=1,nrows
-    	    do j=1,ncols
-	       if (dem(i,j).le.0.0) then
+      do i=1,nrows
+              do j=1,ncols
+             if (dem(i,j).le.0.0) then
 c             badnum=badnum+1
-	       write(*,'(A50,A44)') 
+             write(*,'(A50,A44)') 
      $          'There was a grid square within the catchment mask ',
      $          'with an elevation equal to or less than zero'
-	       write(*,'(A14,i4, A12,I4)')
+             write(*,'(A14,i4, A12,I4)')
      $           'Located at row', i-1, '  and column', j-1
 
              write(*,*)
 
-	       write(*,'(A46)') 'Shetran will attempt to automatically correct'
+             write(*,'(A46)')
+     $       'Shetran will attempt to automatically correct'
              write(*,*)
 c             pause
                if (catch(i,j+1).ne.novalue) then
@@ -1181,59 +1205,61 @@ c             pause
                endif
                if  (dem(i,j).le.0.0) then
                  write(*,*)
-	           write(*,'(A42)') 'Shetran is unable to correct this problem'
-	           write(*,'(A33)') 'The simulation will probably fail'
+                 write(*,'(A42)')
+     $            'Shetran is unable to correct this problem'
+                 write(*,'(A33)') 'The simulation will probably fail'
                  write(*,*)
-                 pause
+                 write(*,'(''paused, type [enter] to continue'')')
+                 read (*,*)
                endif
              endif
-	    enddo
-	enddo
+          enddo
+      enddo
 
 
 
-!!! NEW CODE 161112 	real demne,demse,demsw,demnw,demmincorner,demminedge
+!!! NEW CODE 161112       real demne,demse,demsw,demnw,demmincorner,demminedge
 !!! If there is a drop diagonally but not one sideways the sideway value is dropped
       
 C     Find min elevation within the catchment
 C     This must be at the catchment outlet 
- 	demmin=2.0e10
+       demmin=2.0e10
       do i=1,nrows
-    	    do j=1,ncols
-	       if (dem(i,j).lt.demmin) then
-	            demmin=dem(i,j)
+              do j=1,ncols
+             if (dem(i,j).lt.demmin) then
+                  demmin=dem(i,j)
                   colposmin=j
-	            rowposmin=i
-	       endif
-	    enddo
-	enddo
+                  rowposmin=i
+             endif
+          enddo
+      enddo
 
     
     
     
       do i=1,nrows
-    	  do j=1,ncols	
-	      demn=dem(i-1,j)
-	      dems=dem(i+1,j)
-	      deme=dem(i,j+1)
-	      demw=dem(i,j-1)
+            do j=1,ncols      
+            demn=dem(i-1,j)
+            dems=dem(i+1,j)
+            deme=dem(i,j+1)
+            demw=dem(i,j-1)
 
 
-	      demne=dem(i-1,j+1)
-	      demse=dem(i+1,j+1)
-	      demsw=dem(i+1,j-1)
-	      demnw=dem(i-1,j-1)
+            demne=dem(i-1,j+1)
+            demse=dem(i+1,j+1)
+            demsw=dem(i+1,j-1)
+            demnw=dem(i-1,j-1)
 
 
 
-	      demminedge=min(demn,dems,deme,demw)
-	      demmincorner=min(demne,demse,demnw,demsw)
-	      if ((j.eq.colposmin).and.(i.eq.rowposmin)) then
-	                notlowpoint=.false.
-	      else
-	                notlowpoint=.true.
-	      endif
-	      if ((dem(i,j).le.demminedge).and.(notlowpoint).and.
+            demminedge=min(demn,dems,deme,demw)
+            demmincorner=min(demne,demse,demnw,demsw)
+            if ((j.eq.colposmin).and.(i.eq.rowposmin)) then
+                      notlowpoint=.false.
+            else
+                      notlowpoint=.true.
+            endif
+            if ((dem(i,j).le.demminedge).and.(notlowpoint).and.
      $                             (catch(i,j).ne.novalue)) then
 c                       write(823,*) i,j,demminedge
                  if (dem(i,j).ge.demmincorner) then
@@ -1270,9 +1296,9 @@ c                        write(823,*) 'se',i,j
                          endif
                      endif
                  endif
-	        endif
-	     enddo
-	enddo
+              endif
+           enddo
+      enddo
 
 !!!END OF NEW CODE 161112
 
@@ -1281,39 +1307,39 @@ c                        write(823,*) 'se',i,j
       
 C     Find min elevation within the catchment
 C     This must be at the catchment outlet 
- 102	demmin=2.0e10
+ 102      demmin=2.0e10
       do i=1,nrows
-    	    do j=1,ncols
-	       if (dem(i,j).lt.demmin) then
-	            demmin=dem(i,j)
+              do j=1,ncols
+             if (dem(i,j).lt.demmin) then
+                  demmin=dem(i,j)
                   colposmin=j
-	            rowposmin=i
-	       endif
-	    enddo
-	enddo
+                  rowposmin=i
+             endif
+          enddo
+      enddo
 
 C     test to see if min at catchment boundary ?
-	demn=dem(rowposmin,colposmin-1)
-	dems=dem(rowposmin,colposmin+1)
-	deme=dem(rowposmin+1,colposmin)
-	demw=dem(rowposmin-1,colposmin)
-	if ((demn.gt.0.99e10).or.(dems.gt.0.99e10).or.
+      demn=dem(rowposmin,colposmin-1)
+      dems=dem(rowposmin,colposmin+1)
+      deme=dem(rowposmin+1,colposmin)
+      demw=dem(rowposmin-1,colposmin)
+      if ((demn.gt.0.99e10).or.(dems.gt.0.99e10).or.
      $    (deme.gt.0.99e10).or.(demw.gt.0.99e10)) then
-	    isok=.true.
-	endif
+          isok=.true.
+      endif
 
 C     if not at boundary add 1.0m to min. elevation and try again
-	if (.not.isok) then
-	    dem(rowposmin,colposmin)=demmin+1.0
-	    goto 102
+      if (.not.isok) then
+          dem(rowposmin,colposmin)=demmin+1.0
+          goto 102
 c         ********
-	endif
+      endif
 
 
 
       write(*,*)
-	write(*,'(A31,F8.2)') 'Minimum catchment elevation is ',demmin 
-	write(*,'(A7,I4,A12,I4)') 'At row ',
+      write(*,'(A31,F8.2)') 'Minimum catchment elevation is ',demmin 
+      write(*,'(A7,I4,A12,I4)') 'At row ',
      $     rowposmin,' and column ',colposmin
       write(*,*)
 
@@ -1322,29 +1348,29 @@ c         ********
 C     Remove sinks by removesink. Count is number of sinks
  101  count=0
           do i=1,nrows
-    	        do j=1,ncols	
-	            demn=dem(i-1,j)
-	            dems=dem(i+1,j)
-	            deme=dem(i,j+1)
-	            demw=dem(i,j-1)
+                  do j=1,ncols      
+                  demn=dem(i-1,j)
+                  dems=dem(i+1,j)
+                  deme=dem(i,j+1)
+                  demw=dem(i,j-1)
 
 
-	            demminedge=min(demn,dems,deme,demw)
-	            if ((j.eq.colposmin).and.(i.eq.rowposmin)) then
-	                notlowpoint=.false.
-	            else
-	                notlowpoint=.true.
-	            endif
-	            if ((dem(i,j).le.demminedge).and.(notlowpoint).and.
+                  demminedge=min(demn,dems,deme,demw)
+                  if ((j.eq.colposmin).and.(i.eq.rowposmin)) then
+                      notlowpoint=.false.
+                  else
+                      notlowpoint=.true.
+                  endif
+                  if ((dem(i,j).le.demminedge).and.(notlowpoint).and.
      $                             (catch(i,j).ne.novalue)) then
 
-	                    dem(i,j)=demminedge+removesink
-	                    count=count+1
-	            endif
-	        enddo
-	    enddo
-c	    print*,count
-	if (count.gt.0) goto 101
+                          dem(i,j)=demminedge+removesink
+                          count=count+1
+                  endif
+              enddo
+          enddo
+c          print*,count
+      if (count.gt.0) goto 101
 c                     ********
 
 !!!! END of code change
@@ -1360,74 +1386,74 @@ C     poscol(1) is its column position
 C     posrow(1) is its row  position
       number=0
       do i=1,nrows
-    	    do j=1,ncols
-	       if (dem(i,j).lt.0.99e10) then
-	            number=number+1
-	            posval(number)=dem(i,j)
-	            poscol(number)=j
-	            posrow(number)=i
-	       endif
-	    enddo
-	enddo
- 103	change=0
+              do j=1,ncols
+             if (dem(i,j).lt.0.99e10) then
+                  number=number+1
+                  posval(number)=dem(i,j)
+                  poscol(number)=j
+                  posrow(number)=i
+             endif
+          enddo
+      enddo
+ 103      change=0
 c     uses a very basic bubble sort
       do i=2,number
           if (posval(i).lt.posval(i-1)) then
-	        temp=posval(i-1)
-	        posval(i-1)=posval(i)
-	        posval(i)=temp
-	        itemp=poscol(i-1)
-	        poscol(i-1)=poscol(i)
-	        poscol(i)=itemp
-	        itemp=posrow(i-1)
-	        posrow(i-1)=posrow(i)
-	        posrow(i)=itemp
-	        change=change+1
+              temp=posval(i-1)
+              posval(i-1)=posval(i)
+              posval(i)=temp
+              itemp=poscol(i-1)
+              poscol(i-1)=poscol(i)
+              poscol(i)=itemp
+              itemp=posrow(i-1)
+              posrow(i-1)=posrow(i)
+              posrow(i)=itemp
+              change=change+1
           endif
-	enddo
-	if (change.ne.0) goto 103
+      enddo
+      if (change.ne.0) goto 103
 c                      ********
 
 c     accumulate water flow
 C     Basic assumption is that water accumulates along steepest gradient
-	cv=poscol(1)
-	rv=posrow(1)
+      cv=poscol(1)
+      rv=posrow(1)
       accum(rv,cv)=0
       do i=number,2,-1
-	    cv=poscol(i)
-	    rv=posrow(i)
-	    mindem = min(dem(rv,cv+1),dem(rv,cv-1),
+          cv=poscol(i)
+          rv=posrow(i)
+          mindem = min(dem(rv,cv+1),dem(rv,cv-1),
      $         dem(rv+1,cv),dem(rv-1,cv))
 C     easterly direction
-	    if (dem(rv,cv+1).eq.mindem) then
-	        rvadd=rv
-	        cvadd=cv+1
+          if (dem(rv,cv+1).eq.mindem) then
+              rvadd=rv
+              cvadd=cv+1
 c     used for outlet element. to find out which direction
 c     water is leaving the catchment
-	        if (i.eq.2) then
-	           direction=2
-	        endif
+              if (i.eq.2) then
+                 direction=2
+              endif
 C     westerly direction
-	    elseif (dem(rv,cv-1).eq.mindem) then
-	        rvadd=rv
-	        cvadd=cv-1
-	        if (i.eq.2) then
-	           direction=4
-	        endif
+          elseif (dem(rv,cv-1).eq.mindem) then
+              rvadd=rv
+              cvadd=cv-1
+              if (i.eq.2) then
+                 direction=4
+              endif
 C     southerly direction
-	    elseif (dem(rv+1,cv).eq.mindem) then
-	        rvadd=rv+1
-	        cvadd=cv
-	        if (i.eq.2) then
-	           direction=3
-	        endif
+          elseif (dem(rv+1,cv).eq.mindem) then
+              rvadd=rv+1
+              cvadd=cv
+              if (i.eq.2) then
+                 direction=3
+              endif
 C     northerly direction
-	    elseif (dem(rv-1,cv).eq.mindem) then
-	        rvadd=rv-1
-	        cvadd=cv
-	        if (i.eq.2) then
-	           direction=1
-	        endif
+          elseif (dem(rv-1,cv).eq.mindem) then
+              rvadd=rv-1
+              cvadd=cv
+              if (i.eq.2) then
+                 direction=1
+              endif
           endif
           accum(rvadd,cvadd)=accum(rv,cv)+accum(rvadd,cvadd)+1
       enddo
@@ -1435,30 +1461,30 @@ C     northerly direction
 
 C new code 180907 if minmium elevevation is surrounded by 3 other
 C elements within the catchment then the output direction is known
-	cv=poscol(1)
-	rv=posrow(1)
-	numberedge=0
+      cv=poscol(1)
+      rv=posrow(1)
+      numberedge=0
       if (dem(rv,cv+1).gt.0.99e10) numberedge=numberedge+1
       if (dem(rv,cv-1).gt.0.99e10) numberedge=numberedge+1
       if (dem(rv+1,cv).gt.0.99e10) numberedge=numberedge+1
       if (dem(rv-1,cv).gt.0.99e10) numberedge=numberedge+1
-	if (numberedge.eq.1) then
-	  if (dem(rv-1,cv).gt.0.99e10) direction=1
-	  if (dem(rv,cv+1).gt.0.99e10) direction=2
-	  if (dem(rv+1,cv).gt.0.99e10) direction=3
-	  if (dem(rv,cv-1).gt.0.99e10) direction=4
-	endif
+      if (numberedge.eq.1) then
+        if (dem(rv-1,cv).gt.0.99e10) direction=1
+        if (dem(rv,cv+1).gt.0.99e10) direction=2
+        if (dem(rv+1,cv).gt.0.99e10) direction=3
+        if (dem(rv,cv-1).gt.0.99e10) direction=4
+      endif
 
 
 *     new code 110209 reduce accumfac if it is too large so that at least two
 *     river links produced 
 
-	if (accumfac.ge.int(real(number)/2.0)) then 
+      if (accumfac.ge.int(real(number)/2.0)) then 
          accumfac=int(real(number)/2.0)-1
       print*
       print*, "flow accumulation parameter reduced to ", accumfac
-	print*
-	endif
+      print*
+      endif
 
 ***   end of new code 110209
 
@@ -1467,29 +1493,29 @@ C elements within the catchment then the output direction is known
 c     put an extra accumulation point in outside the catchment
 c     direction 1=n,2=e,3=s,4=w
 c     this also gives the outlet direction of the weir
-	if (direction.eq.1) then
-	    accum(rvadd-1,cvadd)= accum(rvadd,cvadd)+1
+      if (direction.eq.1) then
+          accum(rvadd-1,cvadd)= accum(rvadd,cvadd)+1
       elseif (direction.eq.2) then
-	    accum(rvadd,cvadd+1)= accum(rvadd,cvadd)+1
+          accum(rvadd,cvadd+1)= accum(rvadd,cvadd)+1
       elseif (direction.eq.3) then
-	    accum(rvadd+1,cvadd)= accum(rvadd,cvadd)+1
+          accum(rvadd+1,cvadd)= accum(rvadd,cvadd)+1
       else  
-	    accum(rvadd,cvadd-1)= accum(rvadd,cvadd)+1
+          accum(rvadd,cvadd-1)= accum(rvadd,cvadd)+1
       endif
 
 c     cornerval is the maximum value of the 4 accumulated water
 c     flows around each corner point
 c     this is used to find the river channels (links) and their elevations
-	do i=1,nrows+1
-	    do j=1,ncols+1
-	        cornerval(i,j)=max(accum(i-1,j-1),accum(i-1,j),
+      do i=1,nrows+1
+          do j=1,ncols+1
+              cornerval(i,j)=max(accum(i-1,j-1),accum(i-1,j),
      $        accum(i,j-1),accum(i,j))
-	    enddo
-	enddo
+          enddo
+      enddo
 
-!	do i=1,nrows+1
-!    	    write(30,'(41(i4,1X))') (cornerval(i,j),j=1,ncols+1)
-!	enddo
+!      do i=1,nrows+1
+!              write(30,'(41(i4,1X))') (cornerval(i,j),j=1,ncols+1)
+!      enddo
 
 
 
@@ -1517,22 +1543,22 @@ c     linkew - river channel heading in a east west direction. True if a channel
 
 
       do i=1,nrows+1
-	   do j=1,ncols+1
+         do j=1,ncols+1
              cornerdone(i,j)=.false.
-	       cornerdonep(i,j)=.false.
+             cornerdonep(i,j)=.false.
          enddo
-	enddo
+      enddo
       do i=1,nrows+1
-	   do j=1,ncols
+         do j=1,ncols
              linkew=.false.
          enddo
-	enddo
+      enddo
 
       do i=1,nrows
-	   do j=1,ncols+1
+         do j=1,ncols+1
              linkns=.false.
          enddo
-	enddo
+      enddo
 
 
 
@@ -1543,29 +1569,29 @@ c     ******
 C     uses a method by considering the corners of grid squares
 C     starts with the highest elements
       countnumber=0
-	meetexit=.false.
+      meetexit=.false.
       do i=number,2,-1
-	    cv=poscol(i)
-	    rv=posrow(i)
+          cv=poscol(i)
+          rv=posrow(i)
           if (accum(rv,cv).ge.accumfac) then
 
 c          print*,i,cv,rv
 c     look at corners around to check link has not already been established
-	       if ((.not.cornerdone(rv,cv)).and.(.not.cornerdone(rv+1,cv))
+             if ((.not.cornerdone(rv,cv)).and.(.not.cornerdone(rv+1,cv))
      $        .and.(.not.cornerdone(rv,cv+1)).and.
      $         (.not.cornerdone(rv+1,cv+1))) then
 
 c     works out where the inital link in this river should go
-	          maxacc=max(accum(rv,cv+1),accum(rv,cv-1),
+                maxacc=max(accum(rv,cv+1),accum(rv,cv-1),
      $           accum(rv+1,cv),accum(rv-1,cv))
-      	        if (accum(rv,cv+1).eq.maxacc) then
+                    if (accum(rv,cv+1).eq.maxacc) then
 c     east west link ->  heading east
                      demn=dem(rv-1,cv)
-	               dems=dem(rv+1,cv)
+                     dems=dem(rv+1,cv)
 C     north side
-	                if (demn.lt.dems) then
-                         	linkew(rv,cv)=.true.    
-                         	savelinkew(rv,cv)=.true.
+                      if (demn.lt.dems) then
+                               linkew(rv,cv)=.true.    
+                               savelinkew(rv,cv)=.true.
 
 c                         channel elevation
                           dems=dem(rv,cv)
@@ -1574,16 +1600,16 @@ c                         channel elevation
                           pchdp=min(demn,dems)-chanfac1
 C                         end channel elevation
 
-                        	crncolpos=cv+1
-                       	crnrowpos=rv
+                              crncolpos=cv+1
+                             crnrowpos=rv
                           cornerdone(rv,cv)=.true.
                           cornerdone(rv,cv+1)=.true.
                           savecornerdone(rv,cv)=.true.
                           savecornerdone(rv,cv+1)=.true.
 C     south side
-	                else
-	                    linkew(rv+1,cv)=.true.
-	                    savelinkew(rv+1,cv)=.true.
+                      else
+                          linkew(rv+1,cv)=.true.
+                          savelinkew(rv+1,cv)=.true.
 
 c                         channel elevation
                           demn=dem(rv,cv)
@@ -1592,20 +1618,20 @@ c                         channel elevation
                           pchdp=min(demn,dems)-chanfac1
 C                         end channel elevation
 
-                        	crncolpos=cv+1
-                       	crnrowpos=rv+1
+                              crncolpos=cv+1
+                             crnrowpos=rv+1
                           cornerdone(rv+1,cv)=.true.
                           cornerdone(rv+1,cv+1)=.true.
                           savecornerdone(rv+1,cv)=.true.
                           savecornerdone(rv+1,cv+1)=.true.
-	                endif
-	            elseif (accum(rv,cv-1).eq.maxacc) then
+                      endif
+                  elseif (accum(rv,cv-1).eq.maxacc) then
 c     east west link -> heading west
                       demn=dem(rv-1,cv)
-	                dems=dem(rv+1,cv)
-	                if (demn.lt.dems) then
-                      	linkew(rv,cv)=.true.
-                      	savelinkew(rv,cv)=.true.
+                      dems=dem(rv+1,cv)
+                      if (demn.lt.dems) then
+                            linkew(rv,cv)=.true.
+                            savelinkew(rv,cv)=.true.
 
 c                         channel elevation
                           dems=dem(rv,cv)
@@ -1614,15 +1640,15 @@ c                         channel elevation
                           pchdp=min(demn,dems)-chanfac1
 C                         end channel elevation
 
-                        	crncolpos=cv
-                       	crnrowpos=rv
+                              crncolpos=cv
+                             crnrowpos=rv
                           cornerdone(rv,cv)=.true.
                           cornerdone(rv,cv+1)=.true.
                           savecornerdone(rv,cv)=.true.
                           savecornerdone(rv,cv+1)=.true.
-	                else
-	                    linkew(rv+1,cv)=.true.
-	                    savelinkew(rv+1,cv)=.true.
+                      else
+                          linkew(rv+1,cv)=.true.
+                          savelinkew(rv+1,cv)=.true.
 
 c                         channel elevation
                           demn=dem(rv,cv)
@@ -1631,20 +1657,20 @@ c                         channel elevation
                           pchdp=min(demn,dems)-chanfac1
 C                         end channel elevation
 
-                        	crncolpos=cv
-                       	crnrowpos=rv+1
+                              crncolpos=cv
+                             crnrowpos=rv+1
                           cornerdone(rv+1,cv)=.true.
                           cornerdone(rv+1,cv+1)=.true.
                           savecornerdone(rv+1,cv)=.true.
                           savecornerdone(rv+1,cv+1)=.true.
-	                endif
-	            elseif (accum(rv+1,cv).eq.maxacc) then
+                      endif
+                  elseif (accum(rv+1,cv).eq.maxacc) then
 c     north south link -> heading south
                       deme=dem(rv,cv+1)
- 	                demw=dem(rv,cv-1)
-	                if (deme.lt.demw) then
-                      	linkns(rv,cv+1)=.true.
-                      	savelinkns(rv,cv+1)=.true.
+                       demw=dem(rv,cv-1)
+                      if (deme.lt.demw) then
+                            linkns(rv,cv+1)=.true.
+                            savelinkns(rv,cv+1)=.true.
 
 c                         channel elevation
                           demw=dem(rv,cv)
@@ -1653,15 +1679,15 @@ c                         channel elevation
                           pchdp=min(deme,demw)-chanfac1
 C                         end channel elevation
 
-                        	crncolpos=cv+1
-                       	crnrowpos=rv+1
+                              crncolpos=cv+1
+                             crnrowpos=rv+1
                           cornerdone(rv,cv+1)=.true.
                           cornerdone(rv+1,cv+1)=.true.
                           savecornerdone(rv,cv+1)=.true.
                           savecornerdone(rv+1,cv+1)=.true.
-	                else
-	                    linkns(rv,cv)=.true.
-	                    savelinkns(rv,cv)=.true.
+                      else
+                          linkns(rv,cv)=.true.
+                          savelinkns(rv,cv)=.true.
 
 c                         channel elevation
                           deme=dem(rv,cv)
@@ -1670,21 +1696,21 @@ c                         channel elevation
                           pchdp=min(deme,demw)-chanfac1
 C                         end channel elevation
 
-                        	crncolpos=cv
-                       	crnrowpos=rv+1
+                              crncolpos=cv
+                             crnrowpos=rv+1
                           cornerdone(rv,cv)=.true.
                           cornerdone(rv+1,cv)=.true.
                           savecornerdone(rv,cv)=.true.
                           savecornerdone(rv+1,cv)=.true.
-	                endif
-	            else
+                      endif
+                  else
 c     north south link -> heading north
                       deme=dem(rv,cv+1)
-	                demw=dem(rv,cv-1)
-	                if (deme.lt.demw) then
-                      	linkns(rv,cv+1)=.true.
-                      	savelinkns(rv,cv+1)=.true.
-                        	crncolpos=cv+1
+                      demw=dem(rv,cv-1)
+                      if (deme.lt.demw) then
+                            linkns(rv,cv+1)=.true.
+                            savelinkns(rv,cv+1)=.true.
+                              crncolpos=cv+1
 
 c                         channel elevation
                           demw=dem(rv,cv)
@@ -1693,14 +1719,14 @@ c                         channel elevation
                           pchdp=min(deme,demw)-chanfac1
 C                         end channel elevation
 
-                       	crnrowpos=rv
+                             crnrowpos=rv
                           cornerdone(rv,cv+1)=.true.
                           cornerdone(rv+1,cv+1)=.true.
                           savecornerdone(rv,cv+1)=.true.
                           savecornerdone(rv+1,cv+1)=.true.
-	                else
-	                    linkns(rv,cv)=.true.
-	                    savelinkns(rv,cv)=.true.
+                      else
+                          linkns(rv,cv)=.true.
+                          savelinkns(rv,cv)=.true.
 
 c                         channel elevation
                           deme=dem(rv,cv)
@@ -1709,14 +1735,14 @@ c                         channel elevation
                           pchdp=min(deme,demw)-chanfac1
 C                         end channel elevation
 
-                        	crncolpos=cv
-                       	crnrowpos=rv
+                              crncolpos=cv
+                             crnrowpos=rv
                           cornerdone(rv,cv)=.true.
                           cornerdone(rv+1,cv)=.true.
                           savecornerdone(rv,cv)=.true.
                           savecornerdone(rv+1,cv)=.true.
-	                endif
-	            endif
+                      endif
+                  endif
 
 c     Part 2
 c     ******
@@ -1737,31 +1763,31 @@ c     previous one is east
 
 c                     channel elevation
                       if (linkew(crnrowpos,crncolpos+1)) then
-	                    dum1=ellinkew(crnrowpos,crncolpos+1)
-	                else 
+                          dum1=ellinkew(crnrowpos,crncolpos+1)
+                      else 
                           dum1=1.0e10
-	                endif
+                      endif
 
                       if (linkns(crnrowpos-1,crncolpos+1)) then
-	                    dum2=ellinkns(crnrowpos-1,crncolpos+1)
-	                else 
+                          dum2=ellinkns(crnrowpos-1,crncolpos+1)
+                      else 
                           dum2=1.0e10
-	                endif
+                      endif
 
 
                       if (linkns(crnrowpos,crncolpos+1)) then
-	                    dum3=ellinkns(crnrowpos,crncolpos+1)
-	                else 
+                          dum3=ellinkns(crnrowpos,crncolpos+1)
+                      else 
                           dum3=1.0e10
-	                endif
+                      endif
                       cheldum=min(dum1,dum2,dum3)
-	                ellinkew(crnrowpos,crncolpos)=0.5*(cheldum+pchdp)
- 	                strlinkew(crnrowpos,crncolpos)=stricklerriv
+                      ellinkew(crnrowpos,crncolpos)=0.5*(cheldum+pchdp)
+                       strlinkew(crnrowpos,crncolpos)=stricklerriv
                      pchdp=0.5*(cheldum+pchdp)
 c                     end of channel elevation
 
                       meetexit=.true.
-   	                exit
+                         exit
 c     previous one is west
                    elseif((cornerdonep(crnrowpos,crncolpos-1)).and.
      $                (cornerval(crnrowpos,crncolpos-1).ge.
@@ -1770,31 +1796,31 @@ c     previous one is west
 
 c                     channel elevation
                       if (linkew(crnrowpos,crncolpos-2)) then
-	                    dum1=ellinkew(crnrowpos,crncolpos-2)
-	                else 
+                          dum1=ellinkew(crnrowpos,crncolpos-2)
+                      else 
                           dum1=1.0e10
-	                endif
+                      endif
 
                       if (linkns(crnrowpos-1,crncolpos-1)) then
-	                    dum2=ellinkns(crnrowpos-1,crncolpos-1)
-	                else 
+                          dum2=ellinkns(crnrowpos-1,crncolpos-1)
+                      else 
                           dum2=1.0e10
-	                endif
+                      endif
 
 
                       if (linkns(crnrowpos,crncolpos-1)) then
-	                    dum3=ellinkns(crnrowpos,crncolpos-1)
-	                else 
+                          dum3=ellinkns(crnrowpos,crncolpos-1)
+                      else 
                           dum3=1.0e10
-	                endif
+                      endif
                       cheldum=min(dum1,dum2,dum3)
-	                ellinkew(crnrowpos,crncolpos-1)=0.5*(cheldum+pchdp)
- 	                strlinkew(crnrowpos,crncolpos-1)=stricklerriv
+                     ellinkew(crnrowpos,crncolpos-1)=0.5*(cheldum+pchdp)
+                       strlinkew(crnrowpos,crncolpos-1)=stricklerriv
                       pchdp=0.5*(cheldum+pchdp)
 c                     end of channel elevation
 
                       meetexit=.true.
-   	                exit
+                         exit
 c     previous one is south
                    elseif((cornerdonep(crnrowpos+1,crncolpos)).and.
      $                (cornerval(crnrowpos+1,crncolpos).ge.
@@ -1803,31 +1829,31 @@ c     previous one is south
 
 c                     channel elevation
                       if (linkns(crnrowpos+1,crncolpos)) then
-	                    dum1=ellinkns(crnrowpos+1,crncolpos)
-	                else 
+                          dum1=ellinkns(crnrowpos+1,crncolpos)
+                      else 
                           dum1=1.0e10
-	                endif
+                      endif
 
                       if (linkew(crnrowpos+1,crncolpos-1)) then
-	                    dum2=ellinkew(crnrowpos+1,crncolpos-1)
-	                else 
+                          dum2=ellinkew(crnrowpos+1,crncolpos-1)
+                      else 
                           dum2=1.0e10
-	                endif
+                      endif
 
 
                       if (linkew(crnrowpos+1,crncolpos)) then
-	                    dum3=ellinkew(crnrowpos+1,crncolpos)
-	                else 
+                          dum3=ellinkew(crnrowpos+1,crncolpos)
+                      else 
                           dum3=1.0e10
-	                endif
+                      endif
                       cheldum=min(dum1,dum2,dum3)
-	                ellinkns(crnrowpos,crncolpos)=0.5*(cheldum+pchdp)
+                      ellinkns(crnrowpos,crncolpos)=0.5*(cheldum+pchdp)
                       strlinkns(crnrowpos,crncolpos)=stricklerriv
                       pchdp=0.5*(cheldum+pchdp)
 c                     end of channel elevation
 
                       meetexit=.true.
-   	                exit
+                         exit
 c     previous one is north
                    elseif((cornerdonep(crnrowpos-1,crncolpos)).and.
      $                (cornerval(crnrowpos-1,crncolpos).ge.
@@ -1836,35 +1862,35 @@ c     previous one is north
 
 c                     channel elevation
                       if (linkns(crnrowpos-2,crncolpos)) then
-	                    dum1=ellinkns(crnrowpos-2,crncolpos)
-	                else 
+                          dum1=ellinkns(crnrowpos-2,crncolpos)
+                      else 
                           dum1=1.0e10
-	                endif
+                      endif
 
                       if (linkew(crnrowpos-1,crncolpos-1)) then
-	                    dum2=ellinkew(crnrowpos-1,crncolpos-1)
-	                else 
+                          dum2=ellinkew(crnrowpos-1,crncolpos-1)
+                      else 
                           dum2=1.0e10
-	                endif
+                      endif
 
 
                       if (linkew(crnrowpos-1,crncolpos)) then
-	                    dum3=ellinkew(crnrowpos-1,crncolpos)
-	                else 
+                          dum3=ellinkew(crnrowpos-1,crncolpos)
+                      else 
                           dum3=1.0e10
-	                endif
+                      endif
                       cheldum=min(dum1,dum2,dum3)
-	                ellinkns(crnrowpos-1,crncolpos)=0.5*(cheldum+pchdp)
+                     ellinkns(crnrowpos-1,crncolpos)=0.5*(cheldum+pchdp)
                       strlinkns(crnrowpos-1,crncolpos)=stricklerriv
                       pchdp=0.5*(cheldum+pchdp)
 c                     end of channel elevation
 
                       meetexit=.true.
-   	                exit
+                         exit
 c     Part 2b
 c     *******
 C     no previous channel carry on existing river channel
-	             else
+                   else
 
                     crnmax=max(cornerval(crnrowpos,crncolpos+1),
      $                        cornerval(crnrowpos,crncolpos-1),
@@ -1872,12 +1898,12 @@ C     no previous channel carry on existing river channel
      $                        cornerval(crnrowpos-1,crncolpos))
 c     east west link ->  heading east
                     if (crnmax.eq.cornerval(crnrowpos,crncolpos+1)) then
-                         	linkew(crnrowpos,crncolpos)=.true.
-                         	savelinkew(crnrowpos,crncolpos)=.true.
+                               linkew(crnrowpos,crncolpos)=.true.
+                               savelinkew(crnrowpos,crncolpos)=.true.
 
                           dum1=dem(crnrowpos-1,crncolpos)
                           dum2=dem(crnrowpos,crncolpos)
-	                    cheldum=min(dum1,dum2)
+                          cheldum=min(dum1,dum2)
                         if ((cheldum-chanfac1).le.(pchdp-chanfac2)) then
                          ellinkew(crnrowpos,crncolpos)= cheldum-chanfac1
                          strlinkew(crnrowpos,crncolpos) = stricklerriv
@@ -1894,18 +1920,18 @@ c extra code 040315 reduce the outlet link by 1m dano100m example
 c                                                                 ******
       endif
 c end extra code
-                        	crncolpos=crncolpos+1
+                              crncolpos=crncolpos+1
                           cornerdone(crnrowpos,crncolpos)=.true.
                           savecornerdone(crnrowpos,crncolpos)=.true.
 c     east west link -> heading west
                     elseif 
      $                 (crnmax.eq.cornerval(crnrowpos,crncolpos-1)) then
-                         	linkew(crnrowpos,crncolpos-1)=.true.
-                         	savelinkew(crnrowpos,crncolpos-1)=.true.
+                               linkew(crnrowpos,crncolpos-1)=.true.
+                               savelinkew(crnrowpos,crncolpos-1)=.true.
 
                           dum1=dem(crnrowpos-1,crncolpos-1)
                           dum2=dem(crnrowpos,crncolpos-1)
-	                    cheldum=min(dum1,dum2)
+                          cheldum=min(dum1,dum2)
 
                        if ((cheldum-chanfac1).le.(pchdp-chanfac2)) then
                        ellinkew(crnrowpos,crncolpos-1)= cheldum-chanfac1
@@ -1928,12 +1954,12 @@ c end extra code
 c     north south link -> heading south
                     elseif 
      $                 (crnmax.eq.cornerval(crnrowpos+1,crncolpos)) then
-                         	linkns(crnrowpos,crncolpos)=.true.
-                         	savelinkns(crnrowpos,crncolpos)=.true.
+                               linkns(crnrowpos,crncolpos)=.true.
+                               savelinkns(crnrowpos,crncolpos)=.true.
 
                           dum1=dem(crnrowpos,crncolpos-1)
                           dum2=dem(crnrowpos,crncolpos)
-	                    cheldum=min(dum1,dum2)
+                          cheldum=min(dum1,dum2)
                         if ((cheldum-chanfac1).le.(pchdp-chanfac2)) then
                          ellinkns(crnrowpos,crncolpos)= cheldum-chanfac1
                          strlinkns(crnrowpos,crncolpos) = stricklerriv
@@ -1949,18 +1975,18 @@ c extra code 040315 reduce the outlet link by 1m dano100m example
       endif
 c end extra code
 
-                        	crnrowpos=crnrowpos+1
+                              crnrowpos=crnrowpos+1
                           cornerdone(crnrowpos,crncolpos)=.true.
                           savecornerdone(crnrowpos,crncolpos)=.true.
 c     north south link -> heading north
                     elseif
      $                 (crnmax.eq.cornerval(crnrowpos-1,crncolpos)) then
-                         	linkns(crnrowpos-1,crncolpos)=.true.
-                         	savelinkns(crnrowpos-1,crncolpos)=.true.
+                               linkns(crnrowpos-1,crncolpos)=.true.
+                               savelinkns(crnrowpos-1,crncolpos)=.true.
 
                           dum1=dem(crnrowpos-1,crncolpos-1)
                           dum2=dem(crnrowpos-1,crncolpos)
-	                    cheldum=min(dum1,dum2)
+                          cheldum=min(dum1,dum2)
 
                        if ((cheldum-chanfac1).le.(pchdp-chanfac2)) then
                        ellinkns(crnrowpos-1,crncolpos)= cheldum-chanfac1
@@ -1978,10 +2004,10 @@ c extra code 040315 reduce the outlet link by 1m dano100m example
      $ = ellinkns(crnrowpos-1,crncolpos)-1.0
       endif
 c end extra code
-                        	crnrowpos=crnrowpos-1
+                              crnrowpos=crnrowpos-1
                           cornerdone(crnrowpos,crncolpos)=.true.
                           savecornerdone(crnrowpos,crncolpos)=.true.
-	              endif
+                    endif
                    endif
 c      write(434,*)cornerval(crnrowpos,crncolpos),
 c     $ crnrowpos,crncolpos,number
@@ -1995,31 +2021,31 @@ c     $ crnrowpos,crncolpos,number
                   if (countnumber.eq.1) then
 
 *set outlet flow accumulation=0 so no river join here and cause crashes im shetran
-	              outletcrnrowpos=crnrowpos
-	              outletcrncolpos=crncolpos
-	              outletcornerval=cornerval(crnrowpos,crncolpos)
+                    outletcrnrowpos=crnrowpos
+                    outletcrncolpos=crncolpos
+                    outletcornerval=cornerval(crnrowpos,crncolpos)
                     cornerval(outletcrnrowpos,outletcrncolpos)=0
 *end of set outlet flow accum
 
                     do k=1,nrows+1
-	                do j=1,ncols+1
+                      do j=1,ncols+1
                          savecornerdone(k,j) = .false. 
                          savelinkew(k,j) = .false.
                          savelinkns(k,j) = .false.
                       enddo
-	              enddo
+                    enddo
                   elseif (meetexit) then
                     do k=1,nrows+1
-	                do j=1,ncols+1
+                      do j=1,ncols+1
                          savecornerdone(k,j) = .false. 
                          savelinkew(k,j) = .false.
                          savelinkns(k,j) = .false.
                       enddo
-	              enddo
+                    enddo
                   else
-c	              print*,'yes'
+c                    print*,'yes'
                     do k=1,nrows+1
-	                do j=1,ncols+1
+                      do j=1,ncols+1
                       if (savecornerdone(k,j)) then
                          cornerdone(k,j)=.false.
                          savecornerdone(k,j) = .false. 
@@ -2032,10 +2058,10 @@ c	              print*,'yes'
                          linkns(k,j)= .false.                    
                          savelinkns(k,j) = .false.
                       endif
-	                enddo
-	              enddo
-	            endif
-	            meetexit=.false.
+                      enddo
+                    enddo
+                  endif
+                  meetexit=.false.
 **** end of 280108
 
 
@@ -2044,16 +2070,16 @@ c	              print*,'yes'
 c     which corners have a specified link
 c     used to attract a new river channel to an existing one
                   do k=1,nrows+1
-	                do j=1,ncols+1
+                      do j=1,ncols+1
                           if (cornerdone(k,j)) then
-	                        cornerdonep(k,j)=.true.
-	                    endif
+                              cornerdonep(k,j)=.true.
+                          endif
                       enddo
-	            enddo
+                  enddo
 
-          	endif
+                endif
           endif
-	enddo
+      enddo
 
 
 **** new code 280108 
@@ -2070,161 +2096,162 @@ c     *************************************
 
 c     find river channel (link) element numbers and position of outlet
       k=0
-	linkelvmin=1.0e10
-	i=nrows+1
+      linkelvmin=1.0e10
+      i=nrows+1
       do j=1,ncols
          if (linkew(i,j)) then
-	      k=k+1
-	      linkelv(k)= ellinkew(i,j)
-	      linkstr(k)= strlinkew(i,j)
-	      if (linkelv(k).lt.linkelvmin) then
-	          linkelvmin=linkelv(k)
-	          linkoutnum=k
+            k=k+1
+            linkelv(k)= ellinkew(i,j)
+            linkstr(k)= strlinkew(i,j)
+            if (linkelv(k).lt.linkelvmin) then
+                linkelvmin=linkelv(k)
+                linkoutnum=k
                 linkoutdir=1
                 linkoutr=i
                 linkoutc=j
 c               new code 031212
                 demminoutletproblem=min(dem(i,j),dem(i-1,j))
-	      endif
-	   endif
-	enddo
+            endif
+         endif
+      enddo
       do i=nrows,1,-1
          do j=1,ncols+1
             if (linkns(i,j)) then
-	         k=k+1
-	         linkelv(k)= ellinkns(i,j)
-	         linkstr(k)= strlinkns(i,j)
-	         if (linkelv(k).lt.linkelvmin) then
-	             linkelvmin=linkelv(k)
-    	             linkoutnum=k
+               k=k+1
+               linkelv(k)= ellinkns(i,j)
+               linkstr(k)= strlinkns(i,j)
+               if (linkelv(k).lt.linkelvmin) then
+                   linkelvmin=linkelv(k)
+                       linkoutnum=k
                    linkoutdir=2
                    linkoutr=i
                    linkoutc=j
 c               new code 031212
                 demminoutletproblem=min(dem(i,j),dem(i,j-1))
-	         endif
-	      endif
-	   enddo
+               endif
+            endif
+         enddo
          do j=1,ncols
             if (linkew(i,j)) then
-	         k=k+1
-	         linkelv(k)= ellinkew(i,j)
-	         linkstr(k)= strlinkew(i,j)
-	         if (linkelv(k).lt.linkelvmin) then
-	             linkelvmin=linkelv(k)
-    	             linkoutnum=k
+               k=k+1
+               linkelv(k)= ellinkew(i,j)
+               linkstr(k)= strlinkew(i,j)
+               if (linkelv(k).lt.linkelvmin) then
+                   linkelvmin=linkelv(k)
+                       linkoutnum=k
                    linkoutdir=1
                    linkoutr=i
                    linkoutc=j
 c               new code 031212
                    demminoutletproblem=min(dem(i,j),dem(i-1,j))
-	         endif
-	      endif
-	   enddo
-	enddo
+               endif
+            endif
+         enddo
+      enddo
       numlinks=k
 c      do i=1,k
-c	print*,linkelv(i)
-c	enddo
-c	print*,linkelvmin,linkoutdir,linkoutr,linkoutc
+c      print*,linkelv(i)
+c      enddo
+c      print*,linkelvmin,linkoutdir,linkoutr,linkoutc
 
 c               new code 031212. problem with location of river link
 c      if direction of outlet is wrong then outlet link can be in the wrong place. 
 c this bumps up DEM values so it still works.
       do i=1,nrows
-	    do j=1,ncols
-	        if (dem(i,j).lt.demminoutletproblem) then 
-	            dem(i,j)= demminoutletproblem+0.1
-          	endif
-	    enddo
-	enddo
+          do j=1,ncols
+              if (dem(i,j).lt.demminoutletproblem) then 
+                  dem(i,j)= demminoutletproblem+0.1
+                endif
+          enddo
+      enddo
 c              endof new code new code 031212
 
 ******go through links to check there is always a downward pathway
       do i=1,nrows+1
-	    do j=1,ncols
-	        if (.not.linkew(i,j)) then 
-	            ellinkew(i,j)=1.0e10
-          	endif
-	    enddo
-	enddo
+          do j=1,ncols
+              if (.not.linkew(i,j)) then 
+                  ellinkew(i,j)=1.0e10
+                endif
+          enddo
+      enddo
       do i=1,nrows
-	    do j=1,ncols+1
-	        if (.not.linkns(i,j)) then 
-      	        ellinkns(i,j)=1.0e10
-          	endif
-	    enddo
-	enddo
+          do j=1,ncols+1
+              if (.not.linkns(i,j)) then 
+                    ellinkns(i,j)=1.0e10
+                endif
+          enddo
+      enddo
 
 c     ew links
       countiteration=0
  105  count=0
       countiteration=countiteration+1
-	do i=2,nrows
-	    do j=2,ncols-1
-	        if (linkew(i,j)) then
-	            if ((i.eq.linkoutr).and.(j.eq.linkoutc).and.
+      do i=2,nrows
+          do j=2,ncols-1
+              if (linkew(i,j)) then
+                  if ((i.eq.linkoutr).and.(j.eq.linkoutc).and.
      $                                 (linkoutdir.eq.1)) then
                       outletlink=.true.
-	            else
-	                outletlink=.false.
-	            endif
-	            dum1=ellinkew(i,j-1)
-	            dum2=ellinkns(i-1,j)
-	            dum3=ellinkns(i,j)
-	            dum4=ellinkns(i-1,j+1)
-	            dum5=ellinkns(i,j+1)
-	            dum6=ellinkew(i,j+1)
-	            dummin=min(dum1,dum2,dum3,dum4,dum5,dum6)
+                  else
+                      outletlink=.false.
+                  endif
+                  dum1=ellinkew(i,j-1)
+                  dum2=ellinkns(i-1,j)
+                  dum3=ellinkns(i,j)
+                  dum4=ellinkns(i-1,j+1)
+                  dum5=ellinkns(i,j+1)
+                  dum6=ellinkew(i,j+1)
+                  dummin=min(dum1,dum2,dum3,dum4,dum5,dum6)
 * sb 240909 add 0.01
 *** sb 041010 added chanfac2-0.0001
-	            if ((ellinkew(i,j).le.dummin+chanfac2-0.0001).and.
+                  if ((ellinkew(i,j).le.dummin+chanfac2-0.0001).and.
      $                              (.not.outletlink)) then
-	            ellinkew(i,j)=ellinkew(i,j)+chanfac2
+                  ellinkew(i,j)=ellinkew(i,j)+chanfac2
                   count=count+1
-	            endif
-	        endif
-	    enddo
-	enddo
+                  endif
+              endif
+          enddo
+      enddo
 c     ns links
-	do i=2,nrows-1
-	    do j=2,ncols
-	        if (linkns(i,j)) then
-	            if ((i.eq.linkoutr).and.(j.eq.linkoutc).and.
+      do i=2,nrows-1
+          do j=2,ncols
+              if (linkns(i,j)) then
+                  if ((i.eq.linkoutr).and.(j.eq.linkoutc).and.
      $                                 (linkoutdir.eq.2)) then
                       outletlink=.true.
-	            else
-	                outletlink=.false.
-	            endif
-	            dum1=ellinkns(i-1,j)
-	            dum2=ellinkew(i,j-1)
-	            dum3=ellinkew(i,j)
-	            dum4=ellinkew(i+1,j-1)
-	            dum5=ellinkew(i+1,j)
-	            dum6=ellinkns(i+1,j)
-	            dummin=min(dum1,dum2,dum3,dum4,dum5,dum6)
+                  else
+                      outletlink=.false.
+                  endif
+                  dum1=ellinkns(i-1,j)
+                  dum2=ellinkew(i,j-1)
+                  dum3=ellinkew(i,j)
+                  dum4=ellinkew(i+1,j-1)
+                  dum5=ellinkew(i+1,j)
+                  dum6=ellinkns(i+1,j)
+                  dummin=min(dum1,dum2,dum3,dum4,dum5,dum6)
 * sb 240909 add 0.01
 *** sb 041010 added chanfac2-0.0001
-	            if ((ellinkns(i,j).le.dummin+chanfac2-0.0001).and.
+                  if ((ellinkns(i,j).le.dummin+chanfac2-0.0001).and.
      $                              (.not.outletlink)) then
-	            ellinkns(i,j)=ellinkns(i,j)+chanfac2
+                  ellinkns(i,j)=ellinkns(i,j)+chanfac2
                   count=count+1
-	            endif
-	        endif
-	    enddo
-	enddo
+                  endif
+              endif
+          enddo
+      enddo
       write(logfile,*) 'Number of river chanel sinks = ',count
       if (countiteration.eq.1000) then
-	   print*
-	   print*,'There is a problem finding a downward flow path'
-	   print*,'Please check poistion of river channels in Shegraph'
-	   print*
-	   pause
+         print*
+         print*,'There is a problem finding a downward flow path'
+         print*,'Please check poistion of river channels in Shegraph'
+         print*
+         write(*,'(''paused, type [enter] to continue'')')
+         read (*,*)
       goto 106
 c     ********
-	endif
+      endif
 
-	if (count.gt.0) goto 105
+      if (count.gt.0) goto 105
 c                     ********
 ******end of go through links for downward pathway
 
@@ -2232,12 +2259,12 @@ c                     ********
 c     find river channel (link) element numbers again
 c     in case of changes
  106     k=0
-	linkelvmin=1.0e10
-	i=nrows+1
+      linkelvmin=1.0e10
+      i=nrows+1
       do j=1,ncols
          if (linkew(i,j)) then
-	      k=k+1
-	      linkelv(k)= ellinkew(i,j)
+            k=k+1
+            linkelv(k)= ellinkew(i,j)
 c            print*,i,j,lakedist(i,j),lakedist(i-1,j)
 c uses lake mask to caculate if river or lake
             if ((lakedist(i,j).eq.1).or.(lakedist(i-1,j).eq.1)) then
@@ -2245,19 +2272,19 @@ c uses lake mask to caculate if river or lake
             else
                 linkstr(k)=stricklerriv
             endif
-!	      linkstr(k)= strlinkew(i,j)
+!            linkstr(k)= strlinkew(i,j)
             streamsize(k)=min(cornerval(i,j),cornerval(i,j+1))
-	      if (linkelv(k).lt.linkelvmin) then
-	          linkelvmin=linkelv(k)
-	          linkoutnum=k
-	      endif
-	   endif
-	enddo
+            if (linkelv(k).lt.linkelvmin) then
+                linkelvmin=linkelv(k)
+                linkoutnum=k
+            endif
+         endif
+      enddo
       do i=nrows,1,-1
          do j=1,ncols+1
             if (linkns(i,j)) then
-	          k=k+1
-	         linkelv(k)= ellinkns(i,j)
+                k=k+1
+               linkelv(k)= ellinkns(i,j)
 c                print*,i,j,lakedist(i,j),lakedist(i,j-1)
 c uses lake mask to caculate if river or lake
                if ((lakedist(i,j).eq.1).or.(lakedist(i,j-1).eq.1)) then
@@ -2265,18 +2292,18 @@ c uses lake mask to caculate if river or lake
                else
                    linkstr(k)=stricklerriv
                endif
- ! 	         linkstr(k)= strlinkns(i,j)
+ !                linkstr(k)= strlinkns(i,j)
              streamsize(k)=min(cornerval(i,j),cornerval(i+1,j))
-	        if (linkelv(k).lt.linkelvmin) then
-	            linkelvmin=linkelv(k)
-	            linkoutnum=k
-	        endif
-	      endif
-	   enddo
+              if (linkelv(k).lt.linkelvmin) then
+                  linkelvmin=linkelv(k)
+                  linkoutnum=k
+              endif
+            endif
+         enddo
          do j=1,ncols
             if (linkew(i,j)) then
-	          k=k+1
-	         linkelv(k)= ellinkew(i,j)
+                k=k+1
+               linkelv(k)= ellinkew(i,j)
 c            print*,i,j,lakedist(i,j),lakedist(i-1,j)
 c uses lake mask to caculate if river or lake
             if ((lakedist(i,j).eq.1).or.(lakedist(i-1,j).eq.1)) then
@@ -2284,125 +2311,125 @@ c uses lake mask to caculate if river or lake
             else
                 linkstr(k)=stricklerriv
             endif
-!	      linkstr(k)= strlinkew(i,j)
+!            linkstr(k)= strlinkew(i,j)
               streamsize(k)=min(cornerval(i,j),cornerval(i,j+1))
-	        if (linkelv(k).lt.linkelvmin) then
-	          linkelvmin=linkelv(k)
-	          linkoutnum=k
-	        endif
-	      endif
-	   enddo
-	enddo
+              if (linkelv(k).lt.linkelvmin) then
+                linkelvmin=linkelv(k)
+                linkoutnum=k
+              endif
+            endif
+         enddo
+      enddo
 
 *************new code 1/2/11 sb ************************
 * direction (which is the outlet face) is sometimes wrong
 * recaculate here
 
       if (linkoutdir.eq.1) then
-	   if (cornerval(linkoutr,linkoutc).
+         if (cornerval(linkoutr,linkoutc).
      $        gt.cornerval(linkoutr,linkoutc+1)) then
-	      direction=4
+            direction=4
           else
-	      direction=2
+            direction=2
           endif
       else
           if (cornerval(linkoutr,linkoutc).
      $        gt.cornerval(linkoutr+1,linkoutc)) then
-	      direction=1
+            direction=1
           else
-	      direction=3
+            direction=3
           endif
       endif
-*********end of new code**********************************          	 
+*********end of new code**********************************                 
 
 ****************temporary output**************************
 c      do i=1,nrows+1
-c	   write(20,'(42L1)')(linkew(i,j),j=1,ncols)
-c	enddo
+c         write(20,'(42L1)')(linkew(i,j),j=1,ncols)
+c      enddo
 c      write(20,*)
 c      do i=1,nrows
-c	   write(20,'(43L1)')(linkns(i,j),j=1,ncols+1)
-c	enddo
+c         write(20,'(43L1)')(linkns(i,j),j=1,ncols+1)
+c      enddo
 
-*	do i=1,nrows
-*    	    write(30,'(40(g10.4,1X))') (dem(i,j),j=1,ncols)
-*	enddo
+*      do i=1,nrows
+*              write(30,'(40(g10.4,1X))') (dem(i,j),j=1,ncols)
+*      enddo
 c      do i=1,number
 c          write(20,*) posval(i),posrow(i),poscol(i)  
 c      enddo    
-*	do i=1,nrows
-*    	    write(30,'(40(i6,1X))') (accum(i,j),j=1,ncols)
-*	enddo
-c	do i=1,nrows+1
-c   	    write(20,'(40(l4,1X))') (linkew(i,j),j=1,ncols)
-c	enddo
-c	do i=1,nrows
-c    	    write(20,'(41(l4,1X))') (linkns(i,j),j=1,ncols+1)
-c	enddo
+*      do i=1,nrows
+*              write(30,'(40(i6,1X))') (accum(i,j),j=1,ncols)
+*      enddo
+c      do i=1,nrows+1
+c             write(20,'(40(l4,1X))') (linkew(i,j),j=1,ncols)
+c      enddo
+c      do i=1,nrows
+c              write(20,'(41(l4,1X))') (linkns(i,j),j=1,ncols+1)
+c      enddo
 
 
 *      do i=1,2*nrows+1
-*	   do j=1,2*ncols+1
-*	       xmap(i,j)=' '
-*	   enddo
-*	enddo
+*         do j=1,2*ncols+1
+*             xmap(i,j)=' '
+*         enddo
+*      enddo
 
 
       do i=1,nrows+1
-	   do j=1,ncols+1
-	      if (linkew(i,j)) then
-	          xmap(((2*(i-1))+1),(2*j))='-'
-	      else
-	          xmap(((2*(i-1))+1),(2*j))='.'
-	      endif
-	      if (linkns(i,j)) then
-	          xmap((2*i),((2*(j-1))+1))='|'
-	      else
-	          xmap((2*i),((2*(j-1))+1))='.'
-	      endif
-	   enddo
-	enddo
+         do j=1,ncols+1
+            if (linkew(i,j)) then
+                xmap(((2*(i-1))+1),(2*j))='-'
+            else
+                xmap(((2*(i-1))+1),(2*j))='.'
+            endif
+            if (linkns(i,j)) then
+                xmap((2*i),((2*(j-1))+1))='|'
+            else
+                xmap((2*i),((2*(j-1))+1))='.'
+            endif
+         enddo
+      enddo
 
 *      do i=1,2*nrows
-*	   write(30,'(84(a1))') (xmap(i,j),j=1,2*ncols)
-*	enddo
+*         write(30,'(84(a1))') (xmap(i,j),j=1,2*ncols)
+*      enddo
 
 
       do i=1,42
-	   do j=1,42
-	      if (linkew(i,j)) then
-	          msgs=12*(j-1)+1
-	          msge=msgs+5
+         do j=1,42
+            if (linkew(i,j)) then
+                msgs=12*(j-1)+1
+                msge=msgs+5
                 write(msg(msgs:msge),'(a6)') '    '
-	          msgs=12*(j-1)+7
-	          msge=msgs+5
+                msgs=12*(j-1)+7
+                msge=msgs+5
                 write(msg(msgs:msge),'(i6)') int(ellinkew(i,j))
-	      else
-	          msgs=12*(j-1)+1
-	          msge=msgs+11
+            else
+                msgs=12*(j-1)+1
+                msge=msgs+11
                 write(msg(msgs:msge),'(a12)') '        '
-	      endif
-	   enddo
-*	   write(30,'(a520)') msg
-	   do j=1,42
-	      if (linkns(i,j)) then
-	          msgs=12*(j-1)+1
-	          msge=msgs+5
+            endif
+         enddo
+*         write(30,'(a520)') msg
+         do j=1,42
+            if (linkns(i,j)) then
+                msgs=12*(j-1)+1
+                msge=msgs+5
                 write(msg(msgs:msge),'(i6)') int(ellinkns(i,j))
-	          msgs=12*(j-1)+7
-	          msge=msgs+5
+                msgs=12*(j-1)+7
+                msge=msgs+5
                 write(msg(msgs:msge),'(i6)') int(dem(i,j))
-	      else
-	          msgs=12*(j-1)+1
-	          msge=msgs+5
+            else
+                msgs=12*(j-1)+1
+                msge=msgs+5
                 write(msg(msgs:msge),'(a6)') '    '
-	          msgs=12*(j-1)+7
-	          msge=msgs+5
+                msgs=12*(j-1)+7
+                msge=msgs+5
                 write(msg(msgs:msge),'(i6)') int(dem(i,j))
-	      endif
-	   enddo
-*	   write(30,'(a520)') msg
-	enddo
+            endif
+         enddo
+*         write(30,'(a520)') msg
+      enddo
 ****************end of temporary output**************************
 
 
@@ -2411,14 +2438,14 @@ c	enddo
 ********** Computational grid definition ******************************* 
 *
       do i=1,nrows
-	   do j=1,ncols
-	      if (catch(i,j).ne.novalue) then
-		     catch(i,j) = 1
-	      else
-	         catch(i,j) = 0
-	      endif
-	   enddo
-	enddo
+         do j=1,ncols
+            if (catch(i,j).ne.novalue) then
+                 catch(i,j) = 1
+            else
+               catch(i,j) = 0
+            endif
+         enddo
+      enddo
       WRITE (MSG2,9334)
       WRITE (outfrd,9200) MSG2
       DO I = 1,nrows
@@ -2431,24 +2458,24 @@ c	enddo
       do i=1,nrows
         do j=1,ncols+1
           if (linkns(i,j)) then
-	        alinkns(i,j)='R'
-	    else
-	        alinkns(i,j)='.'
-	    endif
-	  enddo
+              alinkns(i,j)='R'
+          else
+              alinkns(i,j)='.'
+          endif
+        enddo
       enddo  
       do I = 1,nrows+1
         do j=1,ncols
           if (linkew(i,j)) then
-	        alinkew(i,j)='R'
-	    else
-	        alinkew(i,j)='.'
-	    endif
-	  enddo
+              alinkew(i,j)='R'
+          else
+              alinkew(i,j)='.'
+          endif
+        enddo
       enddo 
       if (linkoutdir.eq.1) then
           alinkew(linkoutr,linkoutc)='W' 
-	else
+      else
           alinkns(linkoutr,linkoutc)='W'
       endif 
       WRITE (MSG2,9335)
@@ -2466,39 +2493,39 @@ c	enddo
 *                
       do i=1,nrows
        do l=1,10
-    	      do j=1,ncols
+                do j=1,ncols
                do k =1,10
                        if  (catch(i,j).eq.0) then
-		             catchgeometry((i-1)*10+l,(j-1)*10+k) = novalue
+                         catchgeometry((i-1)*10+l,(j-1)*10+k) = novalue
                        else 
-		             catchgeometry((i-1)*10+l,(j-1)*10+k) = 0
+                         catchgeometry((i-1)*10+l,(j-1)*10+k) = 0
                        endif
                enddo
-	      enddo
+            enddo
          enddo
-	enddo
+      enddo
 
       do i=1,nrows
         do l=1,10
            do j=1,ncols+1
              if (linkns(i,j)) then
-		        catchgeometry((i-1)*10+l,(j-1)*10-1) = 1
-		        catchgeometry((i-1)*10+l,(j-1)*10) = 1
-		        catchgeometry((i-1)*10+l,(j-1)*10+1) = 1
-	      endif
+                    catchgeometry((i-1)*10+l,(j-1)*10-1) = 1
+                    catchgeometry((i-1)*10+l,(j-1)*10) = 1
+                    catchgeometry((i-1)*10+l,(j-1)*10+1) = 1
+            endif
           enddo
-	  enddo
+        enddo
       enddo  
       do I = 1,nrows+1
           do j=1,ncols
               do l=1,10
                  if (linkew(i,j)) then
-		           catchgeometry((i-1)*10-1,(j-1)*10+l) = 1
-		           catchgeometry((i-1)*10,(j-1)*10+l) = 1
-		           catchgeometry((i-1)*10+1,(j-1)*10+l) = 1
-	          endif
-	     enddo
-      	  enddo
+                       catchgeometry((i-1)*10-1,(j-1)*10+l) = 1
+                       catchgeometry((i-1)*10,(j-1)*10+l) = 1
+                       catchgeometry((i-1)*10+1,(j-1)*10+l) = 1
+                endif
+           enddo
+              enddo
       enddo 
       write(26,'(A5,a4,i8)') 'ncols','    ',ncols*10
       write(26,'(A5,a4,i8)') 'nrows','    ',nrows*10
@@ -2519,52 +2546,52 @@ C     Remove sinks by removesink. Count is number of sinks
 !!!+2.0 is to account for the banks
  201  count=0
           do i=1,nrows
-    	        do j=1,ncols	
+                  do j=1,ncols      
                   if (linkew(i,j)) then
                      demn = ellinkew(i,j)+2.0
                   else
-	               demn=demmean(i-1,j)
+                     demn=demmean(i-1,j)
                   endif
 
                   if (linkew(i+1,j)) then
                      dems = ellinkew(i+1,j)+2.0
                   else
-	               dems=demmean(i+1,j)
+                     dems=demmean(i+1,j)
                   endif
 
 
                   if (linkns(i,j)) then
                      demw = ellinkns(i,j)+2.0
                   else
-	               demw=demmean(i,j-1)
+                     demw=demmean(i,j-1)
                   endif
 
                   if (linkns(i,j+1)) then
                      deme = ellinkns(i,j+1)+2.0
                   else
-	               deme=demmean(i,j+1)
+                     deme=demmean(i,j+1)
                   endif
 
-	            demminedge=min(demn,dems,deme,demw)
-	            if ((j.eq.colposmin).and.(i.eq.rowposmin)) then
-	                notlowpoint=.false.
-	            else
-	                notlowpoint=.true.
-	            endif
-	
+                  demminedge=min(demn,dems,deme,demw)
+                  if ((j.eq.colposmin).and.(i.eq.rowposmin)) then
+                      notlowpoint=.false.
+                  else
+                      notlowpoint=.true.
+                  endif
+      
 c                print*,demn,dems,deme,demw,i,j,colposmin,
 c     $           rowposmin,catch(i,j)
     
                 if ((demmean(i,j).le.demminedge).and.(notlowpoint).and.
      $                             (catch(i,j).eq.1)) then
 
-	                    demmean(i,j)=demminedge+removesink
-	                    count=count+1
-	            endif
-	        enddo
-	    enddo
-	    write(logfile,*) ' Number of land element sinks = ', count
-	if (count.gt.0) goto 201
+                          demmean(i,j)=demminedge+removesink
+                          count=count+1
+                  endif
+              enddo
+          enddo
+          write(logfile,*) ' Number of land element sinks = ', count
+      if (count.gt.0) goto 201
 c                     ********
 
 !!!! END of code change
@@ -2580,7 +2607,7 @@ c                     ********
         k=nrows-i+1
         DO J = 1,ncols
             IF (demmean(i,j).gt.9.9e9) THEN
-	         demmean(i,j)=0.0
+               demmean(i,j)=0.0
             ENDIF
         ENDDO
         WRITE (outfrd,9101) k
@@ -2596,7 +2623,7 @@ c       do i=1,numberunique
 c       print*, i, peunique(i)
 c      enddo
 
-      	do i=2,nrows-1
+            do i=2,nrows-1
         do j=2,ncols-1
           do k=1,numberunique
              if (pedist(i,j).eq.peunique(k)) then
@@ -2613,12 +2640,12 @@ c      enddo
       enddo
 
       do j=1,ncols
-	     pedist2(1,j)=0
-	     pedist2(nrows,j)=0
+           pedist2(1,j)=0
+           pedist2(nrows,j)=0
       enddo
       do i=1,nrows
-	     pedist2(i,1)=0
-	     pedist2(i,ncols)=0
+           pedist2(i,1)=0
+           pedist2(i,ncols)=0
       enddo
      
       WRITE (MSG,9343)
@@ -2643,7 +2670,7 @@ c      do i=1,numberunique
 c      print*, i, peunique(i)
 c      enddo
 
-      	do i=2,nrows-1
+            do i=2,nrows-1
         do j=2,ncols-1
           do k=1,numberuniquer
              if (raindist(i,j).eq.rainunique(k)) then
@@ -2660,12 +2687,12 @@ c      enddo
       enddo
 
       do j=1,ncols
-	     raindist2(1,j)=0
-	     raindist2(nrows,j)=0
+           raindist2(1,j)=0
+           raindist2(nrows,j)=0
       enddo
       do i=1,nrows
-	     raindist2(i,1)=0
-	     raindist2(i,ncols)=0
+           raindist2(i,1)=0
+           raindist2(i,ncols)=0
       enddo
      
       WRITE (MSG,9346)
@@ -2688,44 +2715,44 @@ c      enddo
 *
 ****************************** Vegetation Types ************************
 *
-	if (innmveg.gt.1) then
-	   OPEN(13,FILE=vegname,STATUS='OLD')
+      if (innmveg.gt.1) then
+         OPEN(13,FILE=vegname,STATUS='OLD')
       endif
       WRITE (MSG,9349)
       WRITE (OUTFRD,9200) MSG
-	if (innmveg.gt.1) then
-	  READ(13,*) 
-	  READ(13,*) 
-	  READ(13,*) 
-	  READ(13,*) 
-	  READ(13,*) 
-	  READ(13,*) 
-  	  do i=2,nrows-1
-	    read(13,*) (vegdist(i,j),j=2,ncols-1)
-	    do j=2,ncols-1
-	       if (vegdist(i,j).lt.0) then 
+      if (innmveg.gt.1) then
+        READ(13,*) 
+        READ(13,*) 
+        READ(13,*) 
+        READ(13,*) 
+        READ(13,*) 
+        READ(13,*) 
+          do i=2,nrows-1
+          read(13,*) (vegdist(i,j),j=2,ncols-1)
+          do j=2,ncols-1
+             if (vegdist(i,j).lt.0) then 
                 vegdist(i,j)=0
 ***             make sure every grid square inside is defined
                 if ((catch(i,j).eq.1).and.(vegdist(i,j).eq.0)) then
                   vegdist(i,j)=1
                 endif
-	       endif
-	    enddo
-	  enddo
+             endif
+          enddo
+        enddo
         do j=1,ncols
-	     vegdist(1,j)=0
-	     vegdist(nrows,j)=0
+           vegdist(1,j)=0
+           vegdist(nrows,j)=0
         enddo
         do i=1,nrows
-	     vegdist(i,1)=0
-	     vegdist(i,ncols)=0
+           vegdist(i,1)=0
+           vegdist(i,ncols)=0
         enddo
         DO I = 1,nrows
           k=nrows-i+1
           WRITE (outfrd,9108) k,(vegdist(i,j),j=1,ncols)
         ENDDO  
 
-	else
+      else
         DO I = 1,nrows
           k=nrows-i+1
           WRITE (outfrd,9108) k,(catch(i,j),j=1,ncols)
@@ -2813,23 +2840,23 @@ c      enddo
       
       WRITE (MSG2,9435)
       WRITE (outocd,9200) MSG2
-	wdepth=0.0
+      wdepth=0.0
 *** strickler now caculated seperately for rivers and lakes 131213
-c	str=20.0
-	nxsect=2
+c      str=20.0
+      nxsect=2
 *** sb 041010 changed from 10.0 to 50.0
-	coeff=50.0
-	subrio=0.7
-	if (direction.eq.1) then
-	    iface=2
-	elseif (direction.eq.2) then
-	    iface=1
-	elseif (direction.eq.3) then
-	    iface=4
-	else
-	    iface=3
+      coeff=50.0
+      subrio=0.7
+      if (direction.eq.1) then
+          iface=2
+      elseif (direction.eq.2) then
+          iface=1
+      elseif (direction.eq.3) then
+          iface=4
+      else
+          iface=3
       endif
-	do i=1,numlinks
+      do i=1,numlinks
           AFORM(1)=FORM(linkelv(i))
           AFORM(2)=FORM(WDEPTH)
           AFORM(3)=FORM(linkstr(i))    
@@ -2838,11 +2865,11 @@ c	str=20.0
 
           streamwidth1=streamsize(i)*maffactor
           streamwidth2=streamwidthfac1*(streamwidth1**streamwidthfac2)
-     	    aform(1)=form(streamwidth2)
-	    aform(2)=form(0.0)
-	    aform(3)=form(streamwidth2)
+               aform(1)=form(streamwidth2)
+          aform(2)=form(0.0)
+          aform(3)=form(streamwidth2)
 *** sb 041010 changed from 2.0 to 1.5
-	    aform(4)=form(1.5)
+          aform(4)=form(1.5)
           WRITE (outocd,9210) AFORM(1),AFORM(2),AFORM(3),AFORM(4)
 
 
@@ -2853,7 +2880,7 @@ c	str=20.0
                AFORM(4)=FORM(linkelv(i)-1.0)
                WRITE (outocd,9206) IFACE,AFORM(1),AFORM(2),
      $                          AFORM(3),AFORM(4)
-	       endif
+             endif
 *
       enddo
 
@@ -2889,30 +2916,31 @@ c	str=20.0
 
       do i=1,innmveg
   
- 	  
+         
 * find rooting depth 
         do j=1,27
-	    if (inrootingdepth(i).le.depth(j)) then
-	      nmcellroot=j
-	      exit
+          if (inrootingdepth(i).le.depth(j)) then
+            nmcellroot=j
+            exit
           endif
-	  enddo
+        enddo
 
 
        if (inlai(i).ge.1.0) then
-	    plai=1.0
-	    clai=inlai(i)
-	  else
-	    plai=inlai(i)
-	    clai=1.0 
-	  endif
+          plai=1.0
+          clai=inlai(i)
+        else
+          plai=inlai(i)
+          clai=1.0 
+        endif
 
         NF=7     
-	  CK=0.000014
-	  CB=5.1
-	  NRD=nmcellroot
+        CK=0.000014
+        CB=5.1
+        NRD=nmcellroot
 
         WRITE (MSG,'(A23,A20)') ':ET7 - VEGETATION TYPE ',invegtypes(i)
+        !print*,invegtypes(i)
         WRITE (OUTETD,9200) MSG
 
 
@@ -2986,23 +3014,23 @@ c	str=20.0
         WRITE (MSG,9517)
         WRITE (OUTETD,9200) MSG
 
-	
+      
         do j=1,nmcellroot
             AFORM(1)=FORM(DEPTH(J))
             AFORM(2)=FORM(RDF(j,nmcellroot))
             WRITE (OUTETD,9105) AFORM(1),AFORM(2)
         ENDDO
 
-	enddo
+      enddo
 
 
 
 ****************vsd Data ***********************************************      
 ************************ Title *****************************************      
 
-!	if (innmsoil.gt.1) then
-  	   OPEN(14,FILE=soilname,STATUS='OLD')
-!	endif
+!      if (innmsoil.gt.1) then
+           OPEN(14,FILE=soilname,STATUS='OLD')
+!      endif
 
       WRITE (MSG,9601)
       WRITE (OUTVSD,9200) MSG
@@ -3025,9 +3053,9 @@ c	str=20.0
       WRITE (OUTVSD,9200) MSG
 
 ************************ SOILS ********************************      
-	do i=1,innmsoil
+      do i=1,innmsoil
 
-	SATSTOR=0.001
+      SATSTOR=0.001
 
       WRITE (OUTVSD,9207) i,'1','0',' ',insoiltypes(i)
       AFORM(1) = FORM(inksat(i))
@@ -3117,7 +3145,8 @@ c	str=20.0
           print*,' This version of shetran prepare has a limit of 380m',
      $     'soil/rock depth. The xml file contains deeper soils/rocks '
           print*,' '
-          pause
+          write(*,'(''paused, type [enter] to continue'')')
+          read (*,*)
           stop
       endif
       
@@ -3133,10 +3162,10 @@ C      WRITE (OUTVSD,9118) cattype,'0'
       WRITE (MSG,9658)
       WRITE (OUTVSD,9200) MSG
 
-	
+      
 
       do i =1,innmsoilcat
-	aform(i)=form(insoildepth(i))
+      aform(i)=form(insoildepth(i))
       enddo
       
      
@@ -3157,43 +3186,43 @@ c       pause
  !       else
  !          cattype=cattype+1  
         endif
-	enddo
+      enddo
 c      do i=1,cattype
 c        WRITE (OUTVSD,9120) i,catnumber(i)-catnumber(i-1)
 c        WRITE (OUTVSD,9121) ' ',(j,j=catnumber(i),catnumber(i-1)+1,-1)
 c        WRITE (OUTVSD,9122) ' ',
-c     $   	   (aform(j), j=catnumber(i),catnumber(i-1)+1,-1)
-c	enddo
+c     $            (aform(j), j=catnumber(i),catnumber(i-1)+1,-1)
+c      enddo
 
       if (maxcatnumber.gt.1) then
         WRITE (MSG2,9668)
         WRITE (outvsd,9200) MSG2
 
-	  READ(14,*) 
-	  READ(14,*) 
-	  READ(14,*) 
-	  READ(14,*) 
-	  READ(14,*) 
-	  READ(14,*) 
-  	  do i=2,nrows-1
-	    read(14,*) (soildist(i,j),j=2,ncols-1)
-	    do j=2,ncols-1
-	       if (soildist(i,j).lt.0) then 
+        READ(14,*) 
+        READ(14,*) 
+        READ(14,*) 
+        READ(14,*) 
+        READ(14,*) 
+        READ(14,*) 
+          do i=2,nrows-1
+          read(14,*) (soildist(i,j),j=2,ncols-1)
+          do j=2,ncols-1
+             if (soildist(i,j).lt.0) then 
                 soildist(i,j)=0
 ***             make sure every grid square inside is defined
                 if ((catch(i,j).eq.1).and.(soildist(i,j).eq.0)) then
                   soildist(i,j)=1
                 endif
-	       endif
-	    enddo
-	  enddo
+             endif
+          enddo
+        enddo
         do j=1,ncols
-	     soildist(1,j)=0
-	     soildist(nrows,j)=0
+           soildist(1,j)=0
+           soildist(nrows,j)=0
         enddo
         do i=1,nrows
-	     soildist(i,1)=0
-	     soildist(i,ncols)=0
+           soildist(i,1)=0
+           soildist(i,ncols)=0
         enddo
         if (maxcatnumber.lt.10) then
         DO I = 1,nrows
@@ -3207,7 +3236,7 @@ c	enddo
         ENDDO  
         endif
 
-	endif
+      endif
 
 
 
@@ -3218,7 +3247,7 @@ c	enddo
       WRITE (outvsd,9200) MSG2
       WRITE (OUTVSD,9104) '0','0','0','0','0','0','0','0'
 
-	close(14)
+      close(14)
 
 
 
@@ -3230,32 +3259,37 @@ c	enddo
       WRITE (outrun,9200) MSG2
 
       WRITE (outrun,9200) FILFRD2
-c	j=1
-c	do i=1,80
-c	if (msg2(i:i).eq.' ') then
-c	else
-c	    msg3(j:j)=msg2(i:i)
-c	    j=j+1
-c	endif
-c	enddo
-c	do i=j,80
-c	   msg3(i:i)=' '
-c	enddo 
+c      j=1
+c      do i=1,80
+c      if (msg2(i:i).eq.' ') then
+c      else
+c          msg3(j:j)=msg2(i:i)
+c          j=j+1
+c      endif
+c      enddo
+c      do i=j,80
+c         msg3(i:i)=' '
+c      enddo 
 c      WRITE (outrun,9200) MSG3
 c      WRITE (outrun,9200) MSG2
 
       WRITE (MSG2,9711)
       WRITE (outrun,9200) MSG2
+
       WRITE (MSG2,9200) FILVSD2
       WRITE (outrun,9200) MSG2
 
       WRITE (MSG2,9712)
       WRITE (outrun,9200) MSG2
+
+
+
       WRITE (MSG2,9200) FILOCD2
       WRITE (outrun,9200) MSG2
 
       WRITE (MSG2,9713)
       WRITE (outrun,9200) MSG2
+
       WRITE (MSG2,9200) FILETD2
       WRITE (outrun,9200) MSG2
 
@@ -3265,13 +3299,13 @@ c      WRITE (outrun,9200) MSG2
 
       WRITE (MSG2,9715)
       WRITE (outrun,9200) MSG2
+
       WRITE (MSG2,9200) 
       WRITE (outrun,9200) MSG2
 
       WRITE (MSG2,9716)
       WRITE (outrun,9200) MSG2
       WRITE (outrun,*) 
-
       WRITE (MSG2,9717)
       WRITE (outrun,9200) MSG2
       WRITE (MSG2,9200) FILSYD2
@@ -3280,11 +3314,9 @@ c      WRITE (outrun,9200) MSG2
       WRITE (MSG2,9718)
       WRITE (outrun,9200) MSG2
       WRITE (outrun,*) 
-
       WRITE (MSG2,9719)
       WRITE (outrun,9200) MSG2
       WRITE (outrun,*) 
-
       WRITE (MSG2,9720) 
       WRITE (outrun,9200) MSG2
 
@@ -3313,10 +3345,11 @@ c      print*,filprd
       WRITE (MSG2,9200) FILPRI
       WRITE (outrun,9200) MSG2
 
-      WRITE (MSG2,9724) 
+      WRITE (MSG2,9724)
       WRITE (outrun,9200) MSG2
       WRITE (MSG2,9200) FILSPR
       WRITE (outrun,9200) MSG2
+
       WRITE (MSG2,9725)
       WRITE (outrun,9200) MSG2
       WRITE (outrun,*) 
@@ -3425,9 +3458,10 @@ c      print*,filprd
 
       WRITE (MSG2,9200) FILHDF
       WRITE (outrun,9200) MSG2
-      
-*****************sediment file******************************************      
-************************************************************************      
+
+
+*****************sediment file******************************************
+************************************************************************
  8901  FORMAT(':SY01 - SY job title')
  8902  FORMAT(':SY02 - SY Version number')
  8911 FORMAT
@@ -3487,7 +3521,7 @@ c      print*,filprd
       WRITE (outsyd,*)
      $'      .1D-3   .37D-3  .89D-3  1.59D-3  2.25D-3  3.25D-3  8.0D-3'
 
-      
+
       WRITE (MSG2,8922)
       WRITE (outsyd,9200) MSG2
       do i=1,innmsoil
@@ -3513,7 +3547,7 @@ c      print*,filprd
       WRITE (outsyd,9200) MSG2
       WRITE (MSG2,'(I6,A2)') numlinks,'*1'
       WRITE (outsyd,9200) MSG2
-     
+
       WRITE (MSG2,8932)
       WRITE (outsyd,9200) MSG2
       WRITE (MSG2,'(I6,A5)') numlinks,'*0.650'
@@ -3521,31 +3555,31 @@ c      print*,filprd
 
       WRITE (MSG2,8941)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      1' 
+      WRITE (outsyd,*) '      1'
       WRITE (MSG2,8942)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      0.3' 
+      WRITE (outsyd,*) '      0.3'
       WRITE (MSG2,8943)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      1' 
+      WRITE (outsyd,*) '      1'
       WRITE (MSG2,8944)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      0.0' 
+      WRITE (outsyd,*) '      0.0'
       WRITE (MSG2,8945)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      1' 
+      WRITE (outsyd,*) '      1'
       WRITE (MSG2,8946)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      0.3' 
+      WRITE (outsyd,*) '      0.3'
       WRITE (MSG2,8951)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      1' 
+      WRITE (outsyd,*) '      1'
       WRITE (MSG2,8952)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      0.03' 
+      WRITE (outsyd,*) '      0.03'
       WRITE (MSG2,8953)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      2' 
+      WRITE (outsyd,*) '      2'
       WRITE (MSG2,8954)
       WRITE (outsyd,9200) MSG2
       WRITE (outsyd,*)
@@ -3561,18 +3595,19 @@ c      print*,filprd
       DO I = 1,nrows
         k=nrows-i+1
         WRITE (outsyd,9108) k,(catch(i,j),j=1,ncols)
-      ENDDO  
+      ENDDO
       WRITE (MSG2,8957)
       WRITE (outsyd,9200) MSG2
-      WRITE (outsyd,*) '      1' 
+      WRITE (outsyd,*) '      1'
       WRITE (MSG2,8958)
       WRITE (outsyd,9200) MSG2
       WRITE (outsyd,*) '      7*0.0'
       WRITE (MSG2,8961)
       WRITE (outsyd,9200) MSG2
       WRITE (outsyd,*) '     0      4*0'
-      
-      
+
+
+
 
 
 ****************visulisation-plan**************************************      
@@ -3580,10 +3615,10 @@ c      print*,filprd
       if (insoildepthmin.le.1.0) then
           vislayer=int(10*insoildepthmin)+1
       elseif  (insoildepthmin.le.2.0) then
-	    vislayer=int(5*(insoildepthmin-1.0))+11
+          vislayer=int(5*(insoildepthmin-1.0))+11
       else 
-	    vislayer=int(insoildepthmin-2.0)+16
-	endif
+          vislayer=int(insoildepthmin-2.0)+16
+      endif
  9801 FORMAT ("'visualisation plan'")
  9802 FORMAT ("diag")
  9803 FORMAT ("item")
@@ -3662,15 +3697,15 @@ c      print*,filprd
       WRITE (outvis,9260) MSG
       WRITE (MSG,9806)
       WRITE (outvis,9260) MSG
-	!if (vislayer.le.9) then 
+      !if (vislayer.le.9) then 
       !  WRITE (MSG,'(A38,1x,i1,A10)') 
      $!  'GRID_OR_LIST_NO^7 : TIMES^8 : LAYERS^1',vislayer,
      $!    ' : ENDITEM'
-	!else
+      !else
       !  WRITE (MSG,'(A38,1x,i2,A10)') 
      $!  'GRID_OR_LIST_NO^7 : TIMES^8 : LAYERS^1',vislayer,
      $!    ' : ENDITEM'
-	!endif
+      !endif
       WRITE (MSG,9807)
 
       WRITE (outvis,9260) MSG
@@ -3678,15 +3713,15 @@ c      print*,filprd
       WRITE (outvis,9260) MSG
       WRITE (MSG,9808)
       WRITE (outvis,9260) MSG
-	if (vislayer.le.9) then 
+      if (vislayer.le.9) then 
         WRITE (MSG,'(A38,1x,i1,A10)') 
      $  'GRID_OR_LIST_NO^7 : TIMES^8 : LAYERS^1',vislayer,
      $    ' : ENDITEM'
-	else
+      else
         WRITE (MSG,'(A38,1x,i2,A10)') 
      $  'GRID_OR_LIST_NO^7 : TIMES^8 : LAYERS^1',vislayer,
      $    ' : ENDITEM'
-	endif
+      endif
       WRITE (outvis,9260) MSG
       WRITE (MSG,9803)
       WRITE (outvis,9260) MSG
@@ -3773,28 +3808,28 @@ c      print*,filprd
       WRITE (outvis,*)
       WRITE (MSG,9816)
       WRITE (outvis,9260) MSG
-	if ((nrows.ge.100).and.(ncols.ge.100)) then
+      if ((nrows.ge.100).and.(ncols.ge.100)) then
          WRITE (outvis,9271) '7','1',nrows,'1',ncols,
      $      '!number and row and column limits'
-	elseif ((nrows.ge.100).and.(ncols.lt.100)) then
+      elseif ((nrows.ge.100).and.(ncols.lt.100)) then
          WRITE (outvis,9272) '7','1',nrows,'1',ncols,
      $      '!number and row and column limits'
-	elseif ((nrows.lt.100).and.(ncols.ge.100)) then
+      elseif ((nrows.lt.100).and.(ncols.ge.100)) then
          WRITE (outvis,9273) '7','1',nrows,'1',ncols,
      $      '!number and row and column limits'
-	elseif ((nrows.lt.10).and.(ncols.lt.10)) then
+      elseif ((nrows.lt.10).and.(ncols.lt.10)) then
          WRITE (outvis,9275) '7','1',nrows,'1',ncols,
      $      '!number and row and column limits'
-	elseif ((nrows.ge.10).and.(ncols.lt.10)) then
+      elseif ((nrows.ge.10).and.(ncols.lt.10)) then
          WRITE (outvis,9277) '7','1',nrows,'1',ncols,
      $      '!number and row and column limits'
-	elseif ((nrows.lt.10).and.(ncols.ge.10)) then
+      elseif ((nrows.lt.10).and.(ncols.ge.10)) then
          WRITE (outvis,9276) '7','1',nrows,'1',ncols,
      $      '!number and row and column limits'
        else  
          WRITE (outvis,9274) '7','1',nrows,'1',ncols,
      $      '!number and row and column limits'
-	endif 
+      endif 
 
 
 
@@ -3804,14 +3839,14 @@ c     $   '!number and row and column limits'
       WRITE (outvis,9262)'!row low, row high, column low, column high'
 
       do i=1,nrows
-	   do j=1,ncols
-	      if (catch(i,j).eq.0) then
-	         vismask(i,j)='.'
-	      else
-	         vismask(i,j)='1'
-	      endif
-	   enddo
-	enddo
+         do j=1,ncols
+            if (catch(i,j).eq.0) then
+               vismask(i,j)='.'
+            else
+               vismask(i,j)='1'
+            endif
+         enddo
+      enddo
 
       DO I = 1,nrows
         WRITE (outvis,9265)(vismask(i,j),j=1,ncols)
@@ -3849,7 +3884,7 @@ c     $   '!number and row and column limits'
 c      pause 
 
 
-	END
+      END
 
       subroutine rootdensity(rdf)
       
@@ -3952,6 +3987,7 @@ c      pause
      $  0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.001/)
 
 
+      
       
       
       

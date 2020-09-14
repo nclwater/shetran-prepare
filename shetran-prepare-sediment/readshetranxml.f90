@@ -1,6 +1,9 @@
-subroutine read_xml_file(xmlfilefull,catchmentname,demmeanname,demminname,maskname,vegname,soilname,lakename,precipname,pename,precfile,pefile,  &
-             vegtypes,cstcap,lai,rootingdepth,aepe,stricklerveg,soilcats,soillayers,soilnumbers,soilnumbers2,soiltypes,soildepth,thsat,thres,ksat,vgn,vga, &
-             initialpsl,prectmstep,petmstep,day,month,year,endday,endmonth,endyear,icountveg,icountsoil,icountsoilcat, &
+subroutine read_xml_file(xmlfilefull,catchmentname,demmeanname,demminname,maskname,vegname,soilname,lakename,&
+             precipname,pename,precfile,pefile,  &
+             vegtypes,cstcap,lai,rootingdepth,aepe,stricklerveg,soilcats,soillayers,soilnumbers,soilnumbers2,&
+             soiltypes,soildepth,thsat,thres,ksat,vgn,vga, &
+             initialpsl,prectmstep,petmstep,day,month,year,endday,endmonth,endyear,icountveg,icountsoil,&
+             icountsoilcat, &
              rivergridacc,channeldp,channelmindrop,tmaxfile,tminfile,standardtimestep,increasingtimestep, &
              regulartmstep,snowddf)
    use xmlparse
@@ -50,19 +53,20 @@ subroutine read_xml_file(xmlfilefull,catchmentname,demmeanname,demminname,maskna
    character(len=200), dimension(1:1)     :: standardtimestepa, increasingtimestepa
    integer                                :: no_data
    integer                                :: i,icount,icounter
-   character(len=200)                      :: vegtype,soiltype
-   character(len=200)                      :: vegtypes(100),soiltypes(40000)
+   character(len=200)                      :: vegtype,soiltype,adum  
+   character(len=200)                      :: vegtypes(100),soiltypes(40000) 
    real                                   :: cst,la,root,ev,strv
    real,intent(out)                                   :: cstcap(100)
    real,intent(out)                                   :: lai(100)
    real,intent(out)                                   :: rootingdepth(100)
    real,intent(out)                                   :: aepe(100)
    real,intent(out)                                   :: stricklerveg(100)
-   real                                   :: soilcat,soillayer,sd,ths,thr,ks,va,vn,soilnumber,soilnumber2
-   integer,intent(out)                                   :: soilcats(40000)
-   integer,intent(out)                                   :: soillayers(40000)
-   integer,intent(out)                                   :: soilnumbers(40000)
-   integer,intent(out)                                   :: soilnumbers2(40000)
+   real                                               :: sd,ths,thr,ks,va,vn
+   integer                                            :: soilcat,soillayer,soilnumber,soilnumber2
+   integer,intent(out)                                :: soilcats(40000)
+   integer,intent(out)                                :: soillayers(40000)
+   integer,intent(out)                                :: soilnumbers(40000)
+   integer,intent(out)                                :: soilnumbers2(40000)
    real,intent(out)                                   :: soildepth(40000)
    real,intent(out)                                   :: thsat(40000)
    real,intent(out)                                   :: thres(40000)
@@ -309,7 +313,7 @@ subroutine read_xml_file(xmlfilefull,catchmentname,demmeanname,demminname,maskna
         exit
      else
         read(soilproperty(1),*,err=867,end=867) soilnumber,soiltype,ths,thr,ks,va,vn
-		soilnumbers(icount)=soilnumber
+        soilnumbers(icount)=soilnumber
         soiltypes(icount)=soiltype
         thsat(icount)=ths
         thres(icount)=thr
@@ -327,7 +331,7 @@ subroutine read_xml_file(xmlfilefull,catchmentname,demmeanname,demminname,maskna
         if ( xml_error(info) ) then
           stop
         endif
-		icount=icount+1
+        icount=icount+1
 
      endif
 
@@ -369,9 +373,12 @@ subroutine read_xml_file(xmlfilefull,catchmentname,demmeanname,demminname,maskna
      if (trim(tag).eq.'SoilDetails') then
         exit
      else
+!        print*,soildetail(1)
         read(soildetail(1),*,err=967,end=967) soilcat,soillayer,soilnumber2,sd
-		soilcats(icount)=soilcat
-		soillayers(icount)=soillayer
+!        print*,soilcat,soillayer
+        
+        soilcats(icount)=soilcat
+        soillayers(icount)=soillayer
         soilnumbers2(icount)=soilnumber2
         soildepth(icount)=sd
         call xml_get( info, tag, endtag, attribs, no_attribs, dummy, no_data )
@@ -384,7 +391,7 @@ subroutine read_xml_file(xmlfilefull,catchmentname,demmeanname,demminname,maskna
         if ( xml_error(info) ) then
           stop
         endif
-		icount=icount+1
+        icount=icount+1
 
      endif
 
@@ -682,37 +689,44 @@ subroutine read_xml_file(xmlfilefull,catchmentname,demmeanname,demminname,maskna
 767     print*
         print*,'Error reading xml library file. Around vegetation details are incorrect'
         print*
-        pause
+        write(*,'(''paused, type [enter] to continue'')')
+        read (*,*)
         stop
 867     print*
         print*,'Error reading xml library file. Around soil properties are incorrect'
         print*
-        pause
+        write(*,'(''paused, type [enter] to continue'')')
+        read (*,*)
         stop
 967     print*
         print*,'Error reading xml library file. Around soil details are incorrect'
         print*
-        pause
+        write(*,'(''paused, type [enter] to continue'')')
+        read (*,*)
         stop
 968     print*
         print*,'Error reading xml library file. Around initial conditions is incorrect'
         print*
-        pause
+        write(*,'(''paused, type [enter] to continue'')')
+        read (*,*)
         stop
 969     print*
         print*,'Error reading xml library file. Around precipitation timestep is incorrect'
         print*
-        pause
+        write(*,'(''paused, type [enter] to continue'')')
+        read (*,*)
         stop
 970     print*
         print*,'Error reading xml library file. Around PE timestep is incorrect'
         print*
-        pause
+        write(*,'(''paused, type [enter] to continue'')')
+        read (*,*)
         stop
 971     print*
         print*,'Error reading xml library file. Something between start day and simulated discharge timestep is incorrect'
         print*
-        pause
+        write(*,'(''paused, type [enter] to continue'')')
+        read (*,*)
         stop   
 
 end subroutine read_xml_file
