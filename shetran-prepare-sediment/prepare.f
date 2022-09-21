@@ -37,8 +37,8 @@ c width = streamwidthfac1* maf^streamwidthfac2
       parameter (streamwidthfac1=15.0)
       parameter (streamwidthfac2=0.5)
 
-      parameter (stricklerriv=20.0)
-      parameter (stricklerlake=3.0)
+      parameter (stricklerriv=50.0)
+      parameter (stricklerlake=10.0)
 
 
       CHARACTER*200 FILFRD,FILOCD,FILETD,FILVSD,FILVIS,FILSMD
@@ -66,6 +66,7 @@ c width = streamwidthfac1* maf^streamwidthfac2
       CHARACTER*200 catchname
       CHARACTER*200 workspace,filerdf,filecstcap
       CHARACTER*200 vegname,soilname,lakename,precipname,pename
+      CHARACTER*200 NFMStorageName,NFMForestName
       CHARACTER*200 tmaxfile,tminfile
       CHARACTER*200 precfile,pefile,delme
       CHARACTER*200 precfile2,pefile2
@@ -94,6 +95,10 @@ c width = streamwidthfac1* maf^streamwidthfac2
       integer peall(nrowsmax*ncolsmax),peunique(nrowsmax*ncolsmax)
       integer numberunique, pedist2(nrowsmax,ncolsmax)
       integer pedist(nrowsmax,ncolsmax),raindist(nrowsmax,ncolsmax)
+      integer NFMStorageDist(nrowsmax,ncolsmax)
+      integer NFMStorageDist2(nrowsmax,ncolsmax)
+      integer NFMForestDist(nrowsmax,ncolsmax)
+      integer NFMForestDist2(nrowsmax,ncolsmax)
       integer rainall(nrowsmax*ncolsmax),rainunique(nrowsmax*ncolsmax)
       integer numberuniquer, raindist2(nrowsmax,ncolsmax)
       integer cv,rv,cvadd,rvadd
@@ -144,6 +149,8 @@ c width = streamwidthfac1* maf^streamwidthfac2
       logical cornerdonep(nrowsmax+1,ncolsmax+1)
       logical outletlink
       logical isunique,islakename
+      logical IsStorageFile,IsForestFile
+      integer io
 
       character*200 invegtypes(100),insoiltypes(50000)
       real incstcap(100),inlai(100),inrootingdepth(100)
@@ -352,7 +359,7 @@ c width = streamwidthfac1* maf^streamwidthfac2
 
 
       print*
-      print*, 'Shetran Prepare Sediment'
+      print*, 'Shetran Prepare sediment'
       print*, '************************'
       print* 
       
@@ -370,8 +377,11 @@ c      CALL GETARG(n1, basedir)
 c       WRITE(*,*) basedir
         basedir = '.'
 c      n1=2
+
       n1=1
       CALL GETARG(n1,xmlfilename)
+
+c      xmlfilename  = '../84013/LibraryFile111.xml'      
 c       WRITE (*,*) xmlfilename
 c      n1=3
 c      CALL GETARG(n1,buildloc)
@@ -468,6 +478,8 @@ c     basedir=trim(drive)//trim(path)
       soilname=trim(basedir)//trim(soilname)
       pename=trim(basedir)//trim(pename)
       precipname=trim(basedir)//trim(precipname)
+      NFMStorageName=trim(basedir)//trim(CATCHNAME)//'_NFM_storage.asc'
+      NFMForestName=trim(basedir)//trim(CATCHNAME)//'_NFM_forest.asc'
 
 
       open(logfile,FILE=FILLOG)
@@ -480,6 +492,10 @@ c     basedir=trim(drive)//trim(path)
      $ 'Land use distribution filname = ', trim(vegname)
       WRITE (logfile,*) 
      $ 'Soil category distribution filname = ',trim(soilname)
+      WRITE (logfile,*) 
+     $ 'NFM_storage distribution filname = ',trim(NFMStorageName)
+      WRITE (logfile,*) 
+     $ 'NFM_storage distribution filname = ',trim(NFMForestName)
 
       
 
@@ -743,6 +759,39 @@ c        print*,cstcapnopoints(i)
           enddo
       enddo
 
+      do i=2,nrows+1
+           do j=2,ncols+1
+              if (catch(i,j).ne.novalue) then
+                if ((catch(i-1,j).eq.novalue).and.
+     $          (catch(i+1,j).eq.novalue).and.
+     $          (catch(i,j+1).eq.novalue).and.
+     $          (catch(i,j-1).eq.novalue)) then
+                    print*
+                    print*,'*********************************'
+                    print*,
+     $                 'There is grid square in the mask not ', 
+     $                 'adjacent horizontally or vertically to ',
+     $                 'another grid square. This grid square has ',
+     $                 'been removed'
+                    print*,'The issue is in row ',i-1,'column ',j-1
+                    print*
+                    WRITE (logfile,*)
+                    WRITE (logfile,*)
+     $                 'There is grid square in the mask not ', 
+     $                 'adjacent horizontally or vertically to ',
+     $                 'another grid square. This grid square has ',
+     $                 'been removed'
+              WRITE (logfile,*) 'The issue is in row ',i-1,'column ',j-1
+                    WRITE (logfile,*)
+
+                catch(i,j)=novalue
+              endif
+             endif
+                
+           enddo
+          
+      enddo
+      
       if(islakename) then
         READ(19,*) 
         READ(19,*) 
@@ -871,7 +920,7 @@ c      print*,'t1'
 c sb 021009 change from 1.0 and 0.15 to make it more stable
       AFORM(1) = FORM(0.5)
       AFORM(2) = FORM(increasingtimestep)
-      AFORM(3) = FORM(9999.)
+      AFORM(3) = FORM(99999.)
       AFORM(4) = FORM(standardtimestep)
       WRITE (OUTFRD,9103) AFORM(1),AFORM(2),AFORM(3),
      $                    AFORM(4),'T'
@@ -900,7 +949,48 @@ c sb 021009 change from 1.0 and 0.15 to make it more stable
       AFORM(2)=FORM(0.0)
       WRITE (OUTFRD,9106) 'F','F',AFORM(1),AFORM(2)
 *
+*
+****************************** NFM Storage and forest************************
 
+c      print*,'t2'
+c      print*,pename
+c      print*,'t3'
+      IsStorageFile=.true.
+      OPEN(16,FILE=NFMStorageName,STATUS='OLD',IOSTAT=io)
+      If (io.gt.0) then
+          IsStorageFile=.false.
+      else
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+        do i=2,nrows-1
+           read(16,*) (NFMStorageDist(i,j),j=2,ncols-1)
+        enddo
+      endif
+      close(16)
+        
+      IsForestFile=.true.
+        OPEN(16,FILE=NFMForestName,STATUS='OLD',IOSTAT=io)
+      If (io.gt.0) then
+          IsForestFile=.false.
+      else
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+      READ(16,*) 
+        do i=2,nrows-1
+           read(16,*) (NFMForestDist(i,j),j=2,ncols-1)
+        enddo
+      endif
+      close(16)
+
+      
+      
 *
 ****************************** PE Types ************************
 
@@ -1032,7 +1122,11 @@ c     uses a very basic bubble sort
 
       WRITE (MSG,9328)
       WRITE (OUTFRD,9200) MSG
-      WRITE (OUTFRD,9117) numberunique,numberuniquer,innmveg,'1','1'
+      if (IsForestFile) then
+       WRITE (OUTFRD,9117) numberunique,numberuniquer,innmveg+10,'1','1'
+      else
+        WRITE (OUTFRD,9117) numberunique,numberuniquer,innmveg,'1','1'
+      endif
 
 
 ***************** River lining parameters ******************************
@@ -2747,10 +2841,74 @@ c      enddo
            vegdist(i,1)=0
            vegdist(i,ncols)=0
         enddo
+        
+****************************
+!extra forest layer
+      if (IsForestFile) then
+        
         DO I = 1,nrows
+        DO j = 1,ncols
+
+        if (vegdist(i,j).eq.0) then
+          NFMForestDist2(i,j)=0
+        endif
+
+        if (vegdist(i,j).eq.1) then
+        if (NFMForestDist(i,j).lt.5) then
+          NFMForestDist2(i,j)=1
+        elseif (NFMForestDist(i,j).lt.15) then
+           NFMForestDist2(i,j)=3
+        elseif (NFMForestDist(i,j).lt.25) then
+          NFMForestDist2(i,j)=4
+        elseif (NFMForestDist(i,j).lt.35) then
+          NFMForestDist2(i,j)=5
+        elseif (NFMForestDist(i,j).lt.45) then
+          NFMForestDist2(i,j)=6
+        elseif (NFMForestDist(i,j).lt.55) then
+          NFMForestDist2(i,j)=7
+        elseif (NFMForestDist(i,j).lt.65) then
+          NFMForestDist2(i,j)=8
+        elseif (NFMForestDist(i,j).lt.75) then
+          NFMForestDist2(i,j)=9
+        elseif (NFMForestDist(i,j).lt.85) then
+          NFMForestDist2(i,j)=10
+        elseif (NFMForestDist(i,j).lt.95) then
+          NFMForestDist2(i,j)=11
+        else
+          NFMForestDist2(i,j)=12
+        endif
+        endif
+
+        if (vegdist(i,j).eq.2) then
+          NFMForestDist2(i,j)=2
+        endif
+        enddo
+        enddo
+
+        DO I = 1,nrows
+          k=nrows-i+1
+          WRITE (outfrd,9100) k
+          WRITE (outfrd,9209) (NFMForestDist2(i,j),j=1,ncols)
+        ENDDO
+        
+      else
+         DO I = 1,nrows
           k=nrows-i+1
           WRITE (outfrd,9108) k,(vegdist(i,j),j=1,ncols)
         ENDDO  
+        
+        
+        
+      endif
+****************************
+!end of extra forest layer
+        
+        
+        
+*        DO I = 1,nrows
+*          k=nrows-i+1
+*          WRITE (outfrd,9108) k,(vegdist(i,j),j=1,ncols)
+*        ENDDO  
 
       else
         DO I = 1,nrows
@@ -2775,8 +2933,13 @@ c      enddo
 *
 ********************** Get basic control parameters ********************
 *
-      WRITE (OUTOCD,9405) '1',innmveg,'1','F'
 
+!10 extra negative values for storage      
+      if (IsStorageFile) then      
+      WRITE (OUTOCD,9405) '1',innmveg+10,'1','F'
+      else
+      WRITE (OUTOCD,9405) '1',innmveg,'1','F'
+      endif
 *
 *************************** Timestep Control ***************************
 *
@@ -2803,8 +2966,76 @@ c      enddo
       do i=1,innmveg
          aform(i)=form(instricklerveg(i))
       enddo
-      write (outocd,'(100(a7))') (aform(i),i=1,innmveg)
 
+******************
+!extra storage file
+      if (IsStorageFile) then      
+      !10 extra negative values for storage      
+         do i=1,10
+            aform(innmveg+i)=form(real(-i*10))
+!         aform(i)=form(-i*10)
+         enddo
+         write (outocd,'(100(a7))') (aform(i),i=1,innmveg+10)
+
+         DO I = 1,nrows
+         DO j = 1,ncols
+
+         if (vegdist(i,j).eq.0) then
+             NFMStorageDist2(i,j)=0
+         endif
+
+        if (vegdist(i,j).eq.1) then
+        if (NFMStorageDist(i,j).lt.5) then
+          NFMStorageDist2(i,j)=1
+        elseif (NFMStorageDist(i,j).lt.15) then
+           NFMStorageDist2(i,j)=3
+        elseif (NFMStorageDist(i,j).lt.25) then
+          NFMStorageDist2(i,j)=4
+        elseif (NFMStorageDist(i,j).lt.35) then
+          NFMStorageDist2(i,j)=5
+        elseif (NFMStorageDist(i,j).lt.45) then
+          NFMStorageDist2(i,j)=6
+        elseif (NFMStorageDist(i,j).lt.55) then
+          NFMStorageDist2(i,j)=7
+        elseif (NFMStorageDist(i,j).lt.65) then
+          NFMStorageDist2(i,j)=8
+        elseif (NFMStorageDist(i,j).lt.75) then
+          NFMStorageDist2(i,j)=9
+        elseif (NFMStorageDist(i,j).lt.85) then
+          NFMStorageDist2(i,j)=10
+        elseif (NFMStorageDist(i,j).lt.95) then
+          NFMStorageDist2(i,j)=11
+        else
+          NFMStorageDist2(i,j)=12
+        endif
+        endif
+
+        if (vegdist(i,j).eq.2) then
+            NFMStorageDist2(i,j)=2
+        endif
+        enddo
+         enddo
+      WRITE (MSG,9414)
+      WRITE (OUTOCD,9200) MSG
+        DO I = 1,nrows
+          k=nrows-i+1
+          WRITE (outocd,9100) k
+          WRITE (outocd,9209) (NFMStorageDist2(i,j),j=1,ncols)
+      ENDDO  
+
+      
+      WRITE (MSG,9417)
+      WRITE (OUTOCD,9200) MSG
+        DO I = 1,nrows
+          k=nrows-i+1
+          WRITE (outocd,9100) k
+          WRITE (outocd,9209) (NFMStorageDist2(i,j),j=1,ncols)
+        ENDDO  
+      else
+
+          
+!standard output with no storage file
+          write (outocd,'(100(a7))') (aform(i),i=1,innmveg)
       WRITE (MSG,9414)
       WRITE (OUTOCD,9200) MSG
         DO I = 1,nrows
@@ -2819,6 +3050,10 @@ c      enddo
           k=nrows-i+1
           WRITE (outocd,9108) k,(vegdist(i,j),j=1,ncols)
         ENDDO  
+      endif
+!end of extra storage file
+**************************
+
 
 
 ******** Are there head,flux or polynomial boundary conditions ? *******
@@ -3023,6 +3258,121 @@ c      str=20.0
 
       enddo
 
+******* Vegetation types extra forest layer *********************************** 
+******* Vegetation types extra forest layer *********************************** 
+      if (IsForestFile) then      
+
+*forest layers types 3-12 depending on percent cover
+      do i=3,12
+  
+         
+* find rooting depth 
+        do j=1,27
+          if (inrootingdepth(1).le.depth(j)) then
+            nmcellroot=j
+            exit
+          endif
+        enddo
+
+
+       if (inlai(1).ge.1.0) then
+          plai=1.0
+          clai=inlai(1)
+        else
+          plai=inlai(1)
+          clai=1.0 
+        endif
+
+        NF=7     
+        CK=0.000014
+        CB=5.1
+        NRD=nmcellroot
+
+        WRITE (MSG,'(A23,i4)') ':ET7 - VEGETATION TYPE ',i
+        !print*,invegtypes(i)
+        WRITE (OUTETD,9200) MSG
+
+
+        AFORM(1) = FORM(PLAI)
+*forest fraction cstcap
+        AFORM(2) = FORM(incstcap(1)+3*incstcap(1)*(i-2)/10.0)
+        AFORM(3) = FORM(CK)
+        AFORM(4) = FORM(CB)
+        AFORM(5) = FORM(clai)
+
+
+        WRITE (OUTETD,9255) 'F','0.','0.','0.','0.','0.','3',
+     $   '7',AFORM(1),AFORM(2),AFORM(3),AFORM(4),NRD,AFORM(5),'0','0'
+         
+
+******** Check time-varying arrays 
+
+
+        WRITE (MSG,9509)
+        WRITE (OUTETD,9200) MSG
+
+        if (cstcapnopoints(1).gt.0) then
+          WRITE (OUTETD,9105) '1','0','0','0'
+          WRITE (MSG,9518)
+          WRITE (OUTETD,9200) MSG
+          cstcapnoyear=(inendyear-inyear+1)*cstcapnopoints(1)
+          
+          WRITE (OUTETD,9211) cstcapnoyear
+           WRITE (MSG,9519)
+          WRITE (OUTETD,9200) MSG
+          do j=1,inendyear-inyear+1
+             do k=1,cstcapnopoints(1)
+                aform(1)=form(cstcapratio(i,k))
+                aform(2)=form(cstcaptime(i,k)+365.0*(j-1))
+                WRITE (OUTETD,9105) aform(1),aform(2)
+            enddo
+          enddo
+
+        else
+          WRITE (OUTETD,9105) '0','0','0','0'
+
+        endif         
+
+
+*************PSL/RCF/FET
+        WRITE (MSG,9515)
+        WRITE (OUTETD,9200) MSG
+        PS1(1)=-1000
+        PS1(2)=-150
+        PS1(3)=-50
+        PS1(4)=-20
+        PS1(5)=-10
+        PS1(6)=-1
+        PS1(7)=-0.1
+        FET(1)=0.0*(inaepe(1)+inaepe(1)*(i-2)/10.0)
+        FET(2)=0.05*(inaepe(1)+inaepe(1)*(i-2)/10.0)
+        FET(3)=0.20*(inaepe(1)+inaepe(1)*(i-2)/10.0)
+        FET(4)=0.50*(inaepe(1)+inaepe(1)*(i-2)/10.0)
+        FET(5)=0.80*(inaepe(1)+inaepe(1)*(i-2)/10.0)
+        FET(6)=1.00*(inaepe(1)+inaepe(1)*(i-2)/10.0)
+        FET(7)=1.00*(inaepe(1)+inaepe(1)*(i-2)/10.0)
+        DO J=1,NF
+             AFORM(1)=FORM(PS1(J))
+             AFORM(2)=FORM(FET(J))
+             WRITE (OUTETD,9105) AFORM(1),'0.',AFORM(2)
+        ENDDO
+
+
+
+* Read and write root density function data
+
+        WRITE (MSG,9517)
+        WRITE (OUTETD,9200) MSG
+
+      
+        do j=1,nmcellroot
+            AFORM(1)=FORM(DEPTH(J))
+            AFORM(2)=FORM(RDF(j,nmcellroot))
+            WRITE (OUTETD,9105) AFORM(1),AFORM(2)
+        ENDDO
+
+      enddo
+      endif
 
 
 ****************vsd Data ***********************************************      
@@ -3042,7 +3392,7 @@ c      str=20.0
 
       WRITE (MSG,9603)
       WRITE (OUTVSD,9200) MSG
-      WRITE (OUTVSD,9118) innmsoil,'35','0','1'
+      WRITE (OUTVSD,9118) innmsoil,'14','0','1'
 
       WRITE (MSG,9604)
       WRITE (OUTVSD,9200) MSG
@@ -3079,70 +3429,34 @@ c      str=20.0
       WRITE (MSG,9606)
       WRITE (OUTVSD,9200) MSG
       WRITE (OUTVSD,9104) 
-     $ '0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.1'
+     $ '0.1','0.2','0.3','0.4','0.6','0.8','0.8','1.0','2.0','2.0'
       WRITE (OUTVSD,9104) 
-     $ '0.2','0.2','0.2','0.2','0.2','0.2','0.2','0.2','0.2','0.2'
+     $ '3.0','4.0','5.0','5.0'
+
+      elseif (maxsoildepth.lt.46.0) then
+
+          WRITE (MSG,9606)
+      WRITE (OUTVSD,9200) MSG
       WRITE (OUTVSD,9104) 
-     $ '1.0','1.0','1.0','1.0','1.0','1.0','1.0','1.0','1.0','1.0'
+     $ '0.1','0.2','0.3','0.4','0.6','0.8','1.0','2.0','3.0','4.0'
       WRITE (OUTVSD,9104) 
-     $ '2.0','2.0','2.0','2.0','2.0'
+     $ '6.0','8.0','10.0','10.0'
+
+      elseif (maxsoildepth.lt.100.0) then
+
+          WRITE (MSG,9606)
+      WRITE (OUTVSD,9200) MSG
+      WRITE (OUTVSD,9104) 
+     $ '0.1','0.2','0.3','0.4','0.6','1.0','2.0','4.0','8.0','12.0'
+      WRITE (OUTVSD,9104) 
+     $ '16.0','20.0','20.0','20.0'
+
+         
       
-      elseif (maxsoildepth.lt.50.0) then
-          
-      WRITE (MSG,9606)
-      WRITE (OUTVSD,9200) MSG
-      WRITE (OUTVSD,9104) 
-     $ '0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.1'
-      WRITE (OUTVSD,9104) 
-     $ '0.2','0.2','0.2','0.2','0.2','1.0','1.0','1.0','1.0','1.0'
-      WRITE (OUTVSD,9104) 
-     $ '1.0','2.0','2.0','2.0','2.0','2.0','2.0','2.0','2.0','2.0'
-      WRITE (OUTVSD,9104) 
-     $ '5.0','5.0','5.0','5.0','5.0'
-
-       elseif (maxsoildepth.lt.100.0) then
-          
-      WRITE (MSG,9606)
-      WRITE (OUTVSD,9200) MSG
-      WRITE (OUTVSD,9104) 
-     $ '0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.1'
-      WRITE (OUTVSD,9104) 
-     $ '0.2','0.2','0.2','0.2','0.2','1.0','1.0','1.0','2.0','2.0'
-      WRITE (OUTVSD,9104) 
-     $ '2.0','2.0','5.0','5.0','5.0','5.0','5.0','5.0','5.0','5.0'
-      WRITE (OUTVSD,9104) 
-     $ '10.0','10.0','10.0','10.0','10.0'
-     
-       elseif (maxsoildepth.lt.200.0) then
-          
-      WRITE (MSG,9606)
-      WRITE (OUTVSD,9200) MSG
-      WRITE (OUTVSD,9104) 
-     $ '0.1','0.1','0.1','0.1','0.1','0.1','0.1','0.2','0.2','0.2'
-      WRITE (OUTVSD,9104) 
-     $ '0.2','1.0','1.0','1.0','1.0','2.0','2.0','2.0','5.0','5.0'
-      WRITE (OUTVSD,9104) 
-     $ '5.0','5.0','5.0','5.0','10.0','10.0','10.0','10.0','10.0','10.0'
-      WRITE (OUTVSD,9104) 
-     $ '20.0','20.0','20.0','20.0','20.0'
-
-       elseif (maxsoildepth.lt.380.0) then
-          
-      WRITE (MSG,9606)
-      WRITE (OUTVSD,9200) MSG
-      WRITE (OUTVSD,9104) 
-     $ '0.1','0.1','0.1','0.1','0.1','0.1','0.2','0.2','0.5','0.5'
-      WRITE (OUTVSD,9104) 
-     $ '1.0','1.0','2.0','5.0','5.0','5.0','10.0','10.0','20.0','20.0'
-      WRITE (OUTVSD,9104) 
-     $ '20.0','20.0','20.0','20.0','20.0','20.0','20.0','20.0','20.0',
-     $ '20.0'
-      WRITE (OUTVSD,9104) 
-     $ '20.0','20.0','20.0','20.0','20.0'
       
       else
           print*,' '
-          print*,' This version of shetran prepare has a limit of 380m',
+          print*,' This version of shetran prepare has a limit of 100m',
      $     'soil/rock depth. The xml file contains deeper soils/rocks '
           print*,' '
           write(*,'(''paused, type [enter] to continue'')')
@@ -3310,7 +3624,6 @@ c      WRITE (outrun,9200) MSG2
       WRITE (outrun,9200) MSG2
       WRITE (MSG2,9200) FILSYD2
       WRITE (outrun,9200) MSG2
-
       WRITE (MSG2,9718)
       WRITE (outrun,9200) MSG2
       WRITE (outrun,*) 
@@ -3349,7 +3662,6 @@ c      print*,filprd
       WRITE (outrun,9200) MSG2
       WRITE (MSG2,9200) FILSPR
       WRITE (outrun,9200) MSG2
-
       WRITE (MSG2,9725)
       WRITE (outrun,9200) MSG2
       WRITE (outrun,*) 
@@ -3425,15 +3737,15 @@ c      print*,filprd
       WRITE (outrun,9200) FILDIS2
       WRITE (MSG2,9745)
       WRITE (outrun,9200) MSG2
-      WRITE (outrun,*) 
 
+      WRITE (outrun,*) 
       WRITE (MSG2,9746)
       WRITE (outrun,9200) MSG2
-      WRITE (outrun,*) 
 
+      WRITE (outrun,*) 
       WRITE (MSG2,9747)
       WRITE (outrun,9200) MSG2
-      WRITE (outrun,*) 
+      WRITE (outrun,*)
 
 
 
@@ -3458,7 +3770,6 @@ c      print*,filprd
 
       WRITE (MSG2,9200) FILHDF
       WRITE (outrun,9200) MSG2
-
 
 *****************sediment file******************************************
 ************************************************************************
@@ -3606,10 +3917,6 @@ c      print*,filprd
       WRITE (outsyd,9200) MSG2
       WRITE (outsyd,*) '     0      4*0'
 
-
-
-
-
 ****************visulisation-plan**************************************      
 ************************ Title *****************************************   
       if (insoildepthmin.le.1.0) then
@@ -3667,7 +3974,7 @@ c      print*,filprd
  9872 FORMAT ("NUMBER^15 : NAME^s_t_dp : BASIS^list_as_list :",
      $" SCOPE^rivers :  EXTRA_DIMENSIONS^none")
  9873 FORMAT ("GRID_OR_LIST_NO^6 : TIMES^9 :ENDITEM")
- 9832  FORMAT ("NUMBER^13 : NAME^snow_dep : BASIS^grid_as_grid :",
+ 9832 FORMAT ("NUMBER^6 : NAME^snow_dep : BASIS^grid_as_grid :",
      $" SCOPE^squares :  EXTRA_DIMENSIONS^none")
  9833 FORMAT ("GRID_OR_LIST_NO^7 : TIMES^8 : ENDITEM")
  9814 FORMAT ("list")
@@ -3731,12 +4038,6 @@ c      print*,filprd
       WRITE (outvis,9260) MSG
       WRITE (MSG,9803)
       WRITE (outvis,9260) MSG
-      WRITE (MSG,9812)
-      WRITE (outvis,9260) MSG
-      WRITE (MSG,9813)
-      WRITE (outvis,9260) MSG
-      WRITE (MSG,9803)
-      WRITE (outvis,9260) MSG
       WRITE (MSG,9854)
       WRITE (outvis,9260) MSG
       WRITE (MSG,9855)
@@ -3795,6 +4096,7 @@ c      print*,filprd
       WRITE (outvis,9260) MSG
       WRITE (MSG,9873)
       WRITE (outvis,9260) MSG
+
 
 ************list
       WRITE (outvis,*)
