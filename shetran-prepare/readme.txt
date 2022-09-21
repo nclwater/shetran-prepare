@@ -1,3 +1,20 @@
+210922
+******
+
+
+1) NFM storage and Forest. If CATCHNAME_NFM_forest.asc or CATCHNAME_NFM_storage.asc is present then changes are made to the input files. If the files are not present the changes are not made. For CATCHNAME_NFM_forest.asc vegetations types 3-12 added to etd file (it is assumed that there are two types before a generic veg type and an urban type). for CATCHNAME_NFM_storage.asc then strickler types 3-12 added to ocd file with negtive values for extra storage. (it is assumed that there are two types before a generic veg type and an urban type).
+
+2) catch issue with diagonal cell in catchment mask. The diagonal cell is removed
+
+3) increase allow max discharge
+
+4) change soil depths to make faster. Only up to 100m depth used to be up to 380m
+
+5) Strickler lake=10, strickler river=50
+
+
+
+
 to compile:
 gfortran prepare.f xmlparse.f90 readshetranxml.f90 -o shetran-prepare
 
