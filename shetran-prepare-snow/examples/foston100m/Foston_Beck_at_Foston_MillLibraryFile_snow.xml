@@ -27,12 +27,12 @@
 <SoilDetails>
 <SoilDetail>Soil Category, Soil Layer, Soil Type, Depth at base of layer (m)</SoilDetail>
 <SoilDetail>1, 1, 1, 1.2</SoilDetail>
-<SoilDetail>1, 2, 2, 135.8</SoilDetail>
+<SoilDetail>1, 2, 2, 95.8</SoilDetail>
 <SoilDetail>2, 1, 1, 1.2</SoilDetail>
-<SoilDetail>2, 2, 2, 125.87</SoilDetail>
+<SoilDetail>2, 2, 2, 95.87</SoilDetail>
 <SoilDetail>3, 1, 1, 1.2</SoilDetail>
 <SoilDetail>3, 2, 3, 5.59</SoilDetail>
-<SoilDetail>3, 3, 2, 125.59</SoilDetail>
+<SoilDetail>3, 3, 2, 95.59</SoilDetail>
 </SoilDetails>
 <InitialConditions>0</InitialConditions> Initial water table depth below ground
 <PrecipitationTimeSeriesData>RainTimeSeriesFoston_Beck_at_Foston_Mill.csv</PrecipitationTimeSeriesData> Precipitation time series. Units are in mm in the timestep length in PrecipitationTimeStep. In this case mm/day 
@@ -50,8 +50,8 @@
 <RiverGridSquaresAccumulated>100</RiverGridSquaresAccumulated> Number of upstream grid squares needed to produce a river channel. A larger number will have fewer river channels
 <DropFromGridToChannelDepth>4</DropFromGridToChannelDepth> The standard and minimum value is 2 if there are numerical problems with error 1060 this can be increased
 <MinimumDropBetweenChannels>0.1</MinimumDropBetweenChannels> This depends on the grid size and how steep the catchment is. A value of 1 is a sensible starting point but more gently sloping catchments it can be reduced.
-<RegularTimestep>1.0</RegularTimestep> This is the standard Shetran timestep it is autmatically reduced in rain. The standard value is 1 hour. The maximum allowed value is 2 hours
-<IncreasingTimestep>0.05</IncreasingTimestep> speed of increase in timestep after rainfall back to the standard timestep. The standard value is 0.05. If if there are numerical problems with error 1060 it can be reduced to 0.01 but the simulation will take longer.
-<SimulatedDischargeTimestep>24.0</SimulatedDischargeTimestep> This should be the same as the measured discharge
+<RegularTimestep>2.0</RegularTimestep> This is the standard Shetran timestep it is autmatically reduced in rain. The standard value is 1 hour. The maximum allowed value is 2 hours
+<IncreasingTimestep>0.15</IncreasingTimestep> speed of increase in timestep after rainfall back to the standard timestep. The standard value is 0.05. If if there are numerical problems with error 1060 it can be reduced to 0.01 but the simulation will take longer.
+<SimulatedDischargeTimestep>1.0</SimulatedDischargeTimestep> This should be the same as the measured discharge
 <SnowmeltDegreeDayFactor>0.0002</SnowmeltDegreeDayFactor> Units  = mm s-1 C-1
 </ShetranInput>

@@ -1,11 +1,20 @@
+110920
+******
+moves to gfrotran compiler
+a) remove pause
+b) long lines
+c) split file
+
+
 220420
 ******
 
-mb.txt to mb.csv. 
+mb.txt to mb.csv. Do not produce smd file
 
-301015
+
+260516
 ******
-Added sediment
+correct error in reading soil details
 
 261015
 ******
