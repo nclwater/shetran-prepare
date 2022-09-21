@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 210922
 ******
 
@@ -25,6 +26,8 @@ a) remove pause
 b) long lines
 c) split file
 
+=======
+>>>>>>> Stashed changes
 
 220420
 ******
