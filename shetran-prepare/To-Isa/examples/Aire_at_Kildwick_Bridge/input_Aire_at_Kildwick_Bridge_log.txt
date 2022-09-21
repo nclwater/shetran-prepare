@@ -1,0 +1,45 @@
+ XML filname = 
+ C:\Users\steve\Documents\shetran-prepare\shetran-prepare\To-Isa\examples\Aire_a
+ t_Kildwick_Bridge\Aire_at_Kildwick_BridgeLibraryFile.xml
+ 
+ DEM filname = 
+ C:\Users\steve\Documents\shetran-prepare\shetran-prepare\To-Isa\examples\Aire_a
+ t_Kildwick_Bridge\demAsciiAire_at_Kildwick_Bridge.txt
+ Minimum DEM filname = 
+ C:\Users\steve\Documents\shetran-prepare\shetran-prepare\To-Isa\examples\Aire_a
+ t_Kildwick_Bridge\minDemAsciiAire_at_Kildwick_Bridge.txt
+ Catchment Mask filname = 
+ C:\Users\steve\Documents\shetran-prepare\shetran-prepare\To-Isa\examples\Aire_a
+ t_Kildwick_Bridge\maskAsciiAire_at_Kildwick_Bridge.txt
+ Land use distribution filname = 
+ C:\Users\steve\Documents\shetran-prepare\shetran-prepare\To-Isa\examples\Aire_a
+ t_Kildwick_Bridge\LandCoverAsciiAire_at_Kildwick_Bridge.txt
+ Soil category distribution filname = 
+ C:\Users\steve\Documents\shetran-prepare\shetran-prepare\To-Isa\examples\Aire_a
+ t_Kildwick_Bridge\soilAsciiAire_at_Kildwick_Bridge.txt
+ Lakemap = 
+ lakeAsciiAire_at_Kildwick_Bridge.txt                                           
+                                                                                
+                                           
+ Precipitation Distribution Filename = 
+ C:\Users\steve\Documents\shetran-prepare\shetran-prepare\To-Isa\examples\Aire_a
+ t_Kildwick_Bridge\RainAsciiAire_at_Kildwick_Bridge.txt
+ Potential Evaporation Distribution Filname = 
+ C:\Users\steve\Documents\shetran-prepare\shetran-prepare\To-Isa\examples\Aire_a
+ t_Kildwick_Bridge\PEAsciiAire_at_Kildwick_Bridge.txt
+ Precpitation data = RainTimeSeriesFactoredAire_at_Kildwick_Bridge.csv
+ Potential Evaporation data = PETimeSeriesAire_at_Kildwick_Bridge.csv
+ Number of river chanel sinks =            1
+ Number of river chanel sinks =            1
+ Number of river chanel sinks =            1
+ Number of river chanel sinks =            2
+ Number of river chanel sinks =            2
+ Number of river chanel sinks =            2
+ Number of river chanel sinks =            2
+ Number of river chanel sinks =            2
+ Number of river chanel sinks =            1
+ Number of river chanel sinks =            1
+ Number of river chanel sinks =            0
+ 
+  Number of land element sinks =            8
+  Number of land element sinks =            0

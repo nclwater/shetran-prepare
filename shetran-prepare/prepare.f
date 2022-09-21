@@ -368,8 +368,9 @@ c      CALL GETARG(n1, basedir)
 c       WRITE(*,*) basedir
         basedir = '.'
 c      n1=2
-      n1=1
-      CALL GETARG(n1,xmlfilename)
+       n1=1
+!      xmlfilename="ess\Esseq@PlantainIslandTightBox_LibraryFile.xml"
+       CALL GETARG(n1,xmlfilename)
 c       WRITE (*,*) xmlfilename
 c      n1=3
 c      CALL GETARG(n1,buildloc)
