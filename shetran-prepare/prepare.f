@@ -2884,11 +2884,20 @@ c      enddo
           WRITE (outfrd,9209) (NFMForestDist2(i,j),j=1,ncols)
         ENDDO
         
+!different output type if more than 9 veg types
       else
-         DO I = 1,nrows
-          k=nrows-i+1
-          WRITE (outfrd,9108) k,(vegdist(i,j),j=1,ncols)
-        ENDDO  
+          if (innmveg.le.9) then
+              DO I = 1,nrows
+                  k=nrows-i+1
+               WRITE (outfrd,9108) k,(vegdist(i,j),j=1,ncols)
+             ENDDO  
+         else
+              DO I = 1,nrows
+                  k=nrows-i+1
+                  WRITE (outfrd,9100) k
+                  WRITE (outfrd,9209) (vegdist(i,j),j=1,ncols)
+              ENDDO
+         endif                  
         
         
         
@@ -3031,20 +3040,45 @@ c      enddo
           write (outocd,'(100(a7))') (aform(i),i=1,innmveg)
       WRITE (MSG,9414)
       WRITE (OUTOCD,9200) MSG
-        DO I = 1,nrows
-          k=nrows-i+1
-          WRITE (outocd,9108) k,(vegdist(i,j),j=1,ncols)
-        ENDDO  
+
+!different output type if more than 9 veg types
+          if (innmveg.le.9) then
+              DO I = 1,nrows
+                  k=nrows-i+1
+               WRITE (outocd,9108) k,(vegdist(i,j),j=1,ncols)
+             ENDDO  
+         else
+              DO I = 1,nrows
+                  k=nrows-i+1
+                  WRITE (outocd,9100) k
+                  WRITE (outocd,9209) (vegdist(i,j),j=1,ncols)
+              ENDDO
+         endif                  
+      
+      
+      
 
 
       WRITE (MSG,9417)
       WRITE (OUTOCD,9200) MSG
-        DO I = 1,nrows
-          k=nrows-i+1
-          WRITE (outocd,9108) k,(vegdist(i,j),j=1,ncols)
-        ENDDO  
-      endif
-!end of extra storage file
+ 
+!different output type if more than 9 veg types
+          if (innmveg.le.9) then
+              DO I = 1,nrows
+                  k=nrows-i+1
+               WRITE (outocd,9108) k,(vegdist(i,j),j=1,ncols)
+             ENDDO  
+         else
+              DO I = 1,nrows
+                  k=nrows-i+1
+                  WRITE (outocd,9100) k
+                  WRITE (outocd,9209) (vegdist(i,j),j=1,ncols)
+              ENDDO
+         endif                  
+      
+      endif     
+
+      !end of extra storage file
 **************************
 
 
