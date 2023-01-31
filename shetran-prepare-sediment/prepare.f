@@ -479,7 +479,7 @@ c     basedir=trim(drive)//trim(path)
       pename=trim(basedir)//trim(pename)
       precipname=trim(basedir)//trim(precipname)
       NFMStorageName=trim(basedir)//trim(CATCHNAME)//'_NFM_storage.asc'
-      NFMForestName=trim(basedir)//trim(CATCHNAME)//'_NFM_forest.asc'
+      NFMForestName=trim(basedir)//trim(CATCHNAME)//'_NFM_woodland.asc'
 
 
       open(logfile,FILE=FILLOG)
@@ -2857,30 +2857,33 @@ c      enddo
         if (NFMForestDist(i,j).lt.5) then
           NFMForestDist2(i,j)=1
         elseif (NFMForestDist(i,j).lt.15) then
-           NFMForestDist2(i,j)=3
+           NFMForestDist2(i,j)=4
         elseif (NFMForestDist(i,j).lt.25) then
-          NFMForestDist2(i,j)=4
-        elseif (NFMForestDist(i,j).lt.35) then
           NFMForestDist2(i,j)=5
-        elseif (NFMForestDist(i,j).lt.45) then
+        elseif (NFMForestDist(i,j).lt.35) then
           NFMForestDist2(i,j)=6
-        elseif (NFMForestDist(i,j).lt.55) then
+        elseif (NFMForestDist(i,j).lt.45) then
           NFMForestDist2(i,j)=7
-        elseif (NFMForestDist(i,j).lt.65) then
+        elseif (NFMForestDist(i,j).lt.55) then
           NFMForestDist2(i,j)=8
-        elseif (NFMForestDist(i,j).lt.75) then
+        elseif (NFMForestDist(i,j).lt.65) then
           NFMForestDist2(i,j)=9
-        elseif (NFMForestDist(i,j).lt.85) then
+        elseif (NFMForestDist(i,j).lt.75) then
           NFMForestDist2(i,j)=10
-        elseif (NFMForestDist(i,j).lt.95) then
+        elseif (NFMForestDist(i,j).lt.85) then
           NFMForestDist2(i,j)=11
-        else
+        elseif (NFMForestDist(i,j).lt.95) then
           NFMForestDist2(i,j)=12
+        else
+          NFMForestDist2(i,j)=13
         endif
         endif
 
         if (vegdist(i,j).eq.2) then
           NFMForestDist2(i,j)=2
+        endif
+        if (vegdist(i,j).eq.3) then
+          NFMForestDist2(i,j)=3
         endif
         enddo
         enddo
@@ -2997,30 +3000,33 @@ c      enddo
         if (NFMStorageDist(i,j).lt.5) then
           NFMStorageDist2(i,j)=1
         elseif (NFMStorageDist(i,j).lt.15) then
-           NFMStorageDist2(i,j)=3
+           NFMStorageDist2(i,j)=4
         elseif (NFMStorageDist(i,j).lt.25) then
-          NFMStorageDist2(i,j)=4
-        elseif (NFMStorageDist(i,j).lt.35) then
           NFMStorageDist2(i,j)=5
-        elseif (NFMStorageDist(i,j).lt.45) then
+        elseif (NFMStorageDist(i,j).lt.35) then
           NFMStorageDist2(i,j)=6
-        elseif (NFMStorageDist(i,j).lt.55) then
+        elseif (NFMStorageDist(i,j).lt.45) then
           NFMStorageDist2(i,j)=7
-        elseif (NFMStorageDist(i,j).lt.65) then
+        elseif (NFMStorageDist(i,j).lt.55) then
           NFMStorageDist2(i,j)=8
-        elseif (NFMStorageDist(i,j).lt.75) then
+        elseif (NFMStorageDist(i,j).lt.65) then
           NFMStorageDist2(i,j)=9
-        elseif (NFMStorageDist(i,j).lt.85) then
+        elseif (NFMStorageDist(i,j).lt.75) then
           NFMStorageDist2(i,j)=10
-        elseif (NFMStorageDist(i,j).lt.95) then
+        elseif (NFMStorageDist(i,j).lt.85) then
           NFMStorageDist2(i,j)=11
-        else
+        elseif (NFMStorageDist(i,j).lt.95) then
           NFMStorageDist2(i,j)=12
+        else
+          NFMStorageDist2(i,j)=13
         endif
         endif
 
         if (vegdist(i,j).eq.2) then
             NFMStorageDist2(i,j)=2
+        endif
+        if (vegdist(i,j).eq.3) then
+            NFMStorageDist2(i,j)=3
         endif
         enddo
          enddo
@@ -3295,8 +3301,8 @@ c      str=20.0
 ******* Vegetation types extra forest layer *********************************** 
       if (IsForestFile) then      
 
-*forest layers types 3-12 depending on percent cover
-      do i=3,12
+*forest layers types 4-13 depending on percent cover
+      do i=4,13
   
          
 * find rooting depth 
@@ -3368,6 +3374,7 @@ c      str=20.0
 
 
 *************PSL/RCF/FET
+** add up t0 extra 350mm of pet (0.6 * 580mm) assuming 580 is pet in southern england
         WRITE (MSG,9515)
         WRITE (OUTETD,9200) MSG
         PS1(1)=-1000
@@ -3377,13 +3384,13 @@ c      str=20.0
         PS1(5)=-10
         PS1(6)=-1
         PS1(7)=-0.1
-        FET(1)=0.0*(inaepe(1)+inaepe(1)*(i-2)/10.0)
-        FET(2)=0.05*(inaepe(1)+inaepe(1)*(i-2)/10.0)
-        FET(3)=0.20*(inaepe(1)+inaepe(1)*(i-2)/10.0)
-        FET(4)=0.50*(inaepe(1)+inaepe(1)*(i-2)/10.0)
-        FET(5)=0.80*(inaepe(1)+inaepe(1)*(i-2)/10.0)
-        FET(6)=1.00*(inaepe(1)+inaepe(1)*(i-2)/10.0)
-        FET(7)=1.00*(inaepe(1)+inaepe(1)*(i-2)/10.0)
+        FET(1)=0.0*(inaepe(1)+0.6*(i-3)/10.0)
+        FET(2)=0.05*(inaepe(1)+0.6*(i-3)/10.0)
+        FET(3)=0.20*(inaepe(1)+0.6*(i-3)/10.0)
+        FET(4)=0.50*(inaepe(1)+0.6*(i-3)/10.0)
+        FET(5)=0.80*(inaepe(1)+0.6*(i-3)/10.0)
+        FET(6)=1.00*(inaepe(1)+0.6*(i-3)/10.0)
+        FET(7)=1.00*(inaepe(1)+0.6*(i-3)/10.0)
         DO J=1,NF
              AFORM(1)=FORM(PS1(J))
              AFORM(2)=FORM(FET(J))
