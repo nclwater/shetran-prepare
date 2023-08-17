@@ -171,6 +171,11 @@ c width = streamwidthfac1* maf^streamwidthfac2
       real streamwidth1,streamwidth2,maffactor
       real demminoutletproblem
 
+      real pet(ncolsmax*nrowsmax),petchange2(ncolsmax*nrowsmax)
+      integer petchange1(ncolsmax*nrowsmax),petchange3(50000)
+      real tempvalue
+      CHARACTER*200  changePETfile,tempPEtfile
+
       real maxsoildepth
 
       integer cattype,ncatold,ncat,catnumber(0:1000),pc
@@ -379,7 +384,7 @@ c      n1=2
       n1=1
       CALL GETARG(n1,xmlfilename)
 
-c      xmlfilename  = '../84013/LibraryFile111.xml'      
+c       xmlfilename='../examples-test/model_input/catch_project_file.xml'
 c       WRITE (*,*) xmlfilename
 c      n1=3
 c      CALL GETARG(n1,buildloc)
@@ -982,7 +987,6 @@ c      print*,'t3'
       endif
       close(16)
 
-      
       
 *
 ****************************** PE Types ************************
@@ -3295,6 +3299,88 @@ c      str=20.0
 ******* Vegetation types extra forest layer *********************************** 
       if (IsForestFile) then      
 
+          k=1 
+          do i=1,nrows
+              do j=1,ncols
+                  if (pedist(i,j).ge.1) then
+                      petchange3(k)=pedist(i,j)
+                      k=k+1
+                  endif
+              enddo
+          enddo
+          k=k-1
+          do i=1,k
+              do j=1,k-1
+                  if(petchange3(j).gt.petchange3(j+1))then
+                      tempvalue=petchange3(j+1) 
+                      petchange3(j+1)=petchange3(j)
+                      petchange3(j)=tempvalue
+                  endif
+              enddo
+          enddo
+          do i=1,k
+ !             print*,petchange3(i)
+          enddo
+          
+          
+          do k=1,numberuniquer
+          do i=1,nrows
+              do j=1,ncols
+!!                  if (pedist(i,j).eq.k) then
+                  if (pedist(i,j).eq.petchange3(k)) then
+                      petchange1(k)=NFMForestDist2(i,j)
+                      if (petchange1(k).ge.4) then
+                          petchange2(k)=1.0+(petchange1(k)-3)/10.0
+!       print*,numberuniquer,petchange1(k),petchange2(k)
+                      else
+                          petchange2(k)=1.0
+!       print*,numberuniquer,petchange1(k),petchange2(k)
+                       endif
+ !                     print*,k,i,j,petchange1(k),petchange2(k)
+                  endif
+              enddo
+          enddo
+          enddo
+
+          changePETfile=trim(basedir)//trim(pefile)
+          tempPEtfile=trim(basedir)//'temp-PET.csv'
+
+          OPEN(121,FILE=changePETfile,STATUS='OLD')
+          OPEN(122,FILE=tempPEtfile)
+          Read(121,*) 
+          Write(122,*) 'Urban PET. ReducedPET in urban areas.',
+     $            ' inceased PET with extra forest layer'              
+
+          do i=1,1000000
+         
+          read(121,*,IOSTAT=io) (pet(j),j=1,numberuniquer)
+          if (io < 0) then
+               EXIT
+          else
+            write(122,'(*(f6.2, ", "))')
+     $       (pet(j)*petchange2(j),j=1,numberuniquer)
+          endif
+          enddo
+          rewind(121)
+          rewind(122)
+          Read(122,*) 
+          Write(121,*) 'Urban PET. ReducedPET in urban areas.',
+     $            ' inceased PET with extra forest layer'              
+
+          do i=1,1000000
+         
+          read(122,*,IOSTAT=io) (pet(j),j=1,numberuniquer)
+          if (io < 0) then
+               EXIT
+          else
+            write(121,'(*(f6.2, ", "))') (pet(j),j=1,numberuniquer)
+          endif
+          enddo
+
+          close(121)
+          close(122)
+           
+
 *forest layers types 4-13 depending on percent cover
       do i=4,13
   
@@ -3328,7 +3414,7 @@ c      str=20.0
 
         AFORM(1) = FORM(PLAI)
 *forest fraction cstcap
-        AFORM(2) = FORM(incstcap(1)+3*incstcap(1)*(i-2)/10.0)
+        AFORM(2) = FORM(incstcap(1))
         AFORM(3) = FORM(CK)
         AFORM(4) = FORM(CB)
         AFORM(5) = FORM(clai)
@@ -3378,13 +3464,14 @@ c      str=20.0
         PS1(5)=-10
         PS1(6)=-1
         PS1(7)=-0.1
-        FET(1)=0.0*(inaepe(1)+0.6*(i-3)/10.0)
-        FET(2)=0.05*(inaepe(1)+0.6*(i-3)/10.0)
-        FET(3)=0.20*(inaepe(1)+0.6*(i-3)/10.0)
-        FET(4)=0.50*(inaepe(1)+0.6*(i-3)/10.0)
-        FET(5)=0.80*(inaepe(1)+0.6*(i-3)/10.0)
-        FET(6)=1.00*(inaepe(1)+0.6*(i-3)/10.0)
-        FET(7)=1.00*(inaepe(1)+0.6*(i-3)/10.0)
+!        FET(1)=0.0*(inaepe(1)/(i-3)/5.0)
+        FET(1)=0.0*(inaepe(1)-inaepe(1)*(i-3)/20.0)
+        FET(2)=0.05*(inaepe(1)-inaepe(1)*(i-3)/20.0)
+        FET(3)=0.20*(inaepe(1)-inaepe(1)*(i-3)/20.0)
+        FET(4)=0.50*(inaepe(1)-inaepe(1)*(i-3)/20.0)
+        FET(5)=0.80*(inaepe(1)-inaepe(1)*(i-3)/20.0)
+        FET(6)=1.00*(inaepe(1)-inaepe(1)*(i-3)/20.0)
+        FET(7)=1.00*(inaepe(1)-inaepe(1)*(i-3)/20.0)
         DO J=1,NF
              AFORM(1)=FORM(PS1(J))
              AFORM(2)=FORM(FET(J))

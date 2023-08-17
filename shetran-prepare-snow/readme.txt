@@ -1,3 +1,9 @@
+060423
+******
+
+For NFM storage increase the pet depending on the fraction and reduce the ae/pe ratio. cstcap now kept at normal
+
+
 231222
 ******
 
