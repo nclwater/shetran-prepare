@@ -1,0 +1,34 @@
+Time_varying_canopy_storage  - ratio, time(days) for 1 year from sim start. other years -same pattern
+Number_of_vegetation_types
+3
+Vegetation_type -veg1
+1
+Number_of_points 
+8
+0.07     1.0
+0.07   120.0
+0.33   150.0
+0.66   180.0
+1.00   210.0
+1.00   240.0
+0.07   250.0
+0.07   365.0
+Vegetation_type -bare ground
+2
+Number_of_points 
+0
+Vegetation_type -urban2
+3
+Number_of_points  
+10
+0.07     1.0
+0.07   120.0
+0.33   150.0
+0.66   180.0
+1.00   210.0
+1.00   240.0
+0.66   270.0
+0.33   300.0
+0.07   330.0
+0.07   365.0
+

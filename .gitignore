@@ -9,13 +9,7 @@
 *.sln
 shetran-prepare/program-test
 shetran-prepare/shetran-prepare
-shetran-prepare-sediment/program-test
-shetran-prepare-sediment/shetran-prepare-sediment
-shetran-prepare-snow/program-test
-shetran-prepare-snow/shetran-prepare-snow
 shetran-prepare/examples-test
-shetran-prepare-sediment/examples-test
-shetran-prepare-snow/examples-test
 *.exe
 *.zip
 *.u2d
