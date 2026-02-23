@@ -398,9 +398,9 @@ module PrepareMod
       finaldel2= index(xmlfilefull, Delimeter2, .TRUE.)
       basedir=xmlfilefull(1:max(finaldel,finaldel2))
       write(*,*)
-      write(*,*),"The working folder is:"
-      write(*,*),basedir
-      write(*,*)
+!      write(*,*),"The working folder is:"
+!      write(*,*),basedir
+!      write(*,*)
 
       FILLOG = trim(basedir)//'input_'//trim(catchmentname(1))//'_log.txt'
       open(logfile,FILE=FILLOG,recl=200)
