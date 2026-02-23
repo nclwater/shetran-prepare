@@ -21,6 +21,8 @@ Executables to convert parameter and map data to Shetran input files format
 
 - compiled with Intel ifort 2021 compiler on VS 2019
 
+- It is backwards compatiable. All old xml files should still work (apart from the issue with rain and potential evaporation map files (see below).
+
 - It now correctly reads the xml file. so it searches for the start and end tag and takes the data between the tags. This means that the order of the lines is not important and optional lines can be omitted.
 - The compulsory lines that are needed are the following:
 ```
