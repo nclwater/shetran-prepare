@@ -10,6 +10,7 @@
 shetran-prepare/program-test
 shetran-prepare/shetran-prepare
 shetran-prepare/examples-test
+shetran-prepare-release
 *.exe
 *.zip
 *.u2d
