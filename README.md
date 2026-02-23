@@ -1,4 +1,4 @@
-# shetran-prepare
+# SHETRAN-Prepare
 Executables to convert parameter and map data to Shetran input files format
 
 ## Features
