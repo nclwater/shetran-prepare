@@ -72,8 +72,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,1,1,0
- PRODUCTVERSION 2,1,1,0
+ FILEVERSION 3,0,1,0
+ PRODUCTVERSION 3,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -89,13 +89,13 @@ BEGIN
         BLOCK "080904b0"
         BEGIN
             VALUE "CompanyName", "Newcastle University"
-            VALUE "FileDescription", "Shetran-prepare"
-            VALUE "FileVersion", "2.1.1"
+            VALUE "FileDescription", "SHETRAN-Prepare"
+            VALUE "FileVersion", "3.0.1"
             VALUE "InternalName", "Resource1.rc"
             VALUE "LegalCopyright", "Copyright (C) 2026"
             VALUE "OriginalFilename", "Resource1.rc"
-            VALUE "ProductName", "Shetran-prepare Hydrological Model"
-            VALUE "ProductVersion", "2.1.1"
+            VALUE "ProductName", "SHETRAN-Prepare Hydrological Model"
+            VALUE "ProductVersion", "3.0.1"
         END
     END
     BLOCK "VarFileInfo"
