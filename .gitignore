@@ -7,7 +7,7 @@
 #sb added- test
 *.dll
 *.sln
-shetran-prepare/examples-test
+Shetran-prepare/examples-test
 shetran-prepare-release
 *.exe
 *.zip
