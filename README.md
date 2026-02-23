@@ -17,7 +17,7 @@ Executables to convert parameter and map data to Shetran input files format
 - the command line format is the executable name followed by the xml file name
 - e.g if both execuutable and xml library file are in the same folder  type "shetran-prepare.exe Foston_Beck_at_Foston_MillLibraryFile.xml"
 
-## Updates 23-02-2026
+## Updates 23-02-2026 - V3.0.1
 
 - compiled with Intel ifort 2021 compiler on VS 2019
 
