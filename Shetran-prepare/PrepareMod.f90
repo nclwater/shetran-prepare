@@ -398,12 +398,12 @@ module PrepareMod
       finaldel2= index(xmlfilefull, Delimeter2, .TRUE.)
       basedir=xmlfilefull(1:max(finaldel,finaldel2))
       write(*,*)
-!      write(*,*),"The working folder is:"
-!      write(*,*),basedir
+!      write(*,*) "The working folder is:"
+!      write(*,*) basedir
 !      write(*,*)
 
       FILLOG = trim(basedir)//'input_'//trim(catchmentname(1))//'_log.txt'
-      open(logfile,FILE=FILLOG,recl=200)
+      open(logfile,FILE=FILLOG,recl=300)
 
       write (logfile,*) 'XML Filename = ', trim(xmlfilefull)
       write (logfile,*)      
@@ -594,7 +594,7 @@ module PrepareMod
       
       
 ! open and read mean DEM file      
-      OPEN(InDemMean,FILE=demmeanname,STATUS='OLD',IOSTAT=io)
+      OPEN(InDemMean,FILE=demmeanname(1),STATUS='OLD',IOSTAT=io)
           if (io /=0) then
               write (*,'(3A)') 'The mean DEM file ',trim(demmeanname(1)), ' specified in the tag DEMMeanFileName does not exist. Please correct this error and try again'
               write(*,*)
@@ -648,6 +648,7 @@ module PrepareMod
       !array size for number of met and rainfall station set to nrowsmax * ncolsmax
       allocate (numbermet(ncolsmax*nrowsmax))
       allocate (elementnumber(nrowsmax,ncolsmax))     
+      allocate (streamsize(ncolsmax*nrowsmax))
 !      allocate (peall(ncolsmax*nrowsmax))
 !      allocate (peunique(ncolsmax*nrowsmax))
 !      allocate (rainall(ncolsmax*nrowsmax))
@@ -675,7 +676,8 @@ module PrepareMod
       accum=0
       numbermet=0
       elementnumber = 0
- !     peall=0
+      streamsize=0
+!     peall=0
  !     peunique=0
  !     rainall=0
  !     rainunique=0
@@ -719,7 +721,6 @@ module PrepareMod
       allocate (cornerdone(nrowsmax+1,ncolsmax+1))
       allocate (savecornerdone(nrowsmax+1,ncolsmax+1))
       allocate (cornerdonep(nrowsmax+1,ncolsmax+1))
-      allocate (streamsize(ncolsmax*nrowsmax))
       linkew=.false.
       linkns=.false.
       savelinkew=.false.
@@ -728,7 +729,6 @@ module PrepareMod
       cornerdone=.false.
       savecornerdone=.false.
       cornerdonep=.false.
-      streamsize=.false.
 
       read(InDemMean,*) axllcorner,xllcorner
       read(InDemMean,*) ayllcorner,yllcorner
@@ -748,7 +748,7 @@ module PrepareMod
       
       
 ! open and read mask file      
-      OPEN(InMask,FILE=maskname,STATUS='OLD',IOSTAT=io)
+      OPEN(InMask,FILE=maskname(1),STATUS='OLD',IOSTAT=io)
           if (io /=0) then
               write (*,'(3A)') 'The mask file ',trim(maskname(1)), ' specified in the tag DEMMMaskFileName does not exist. Please correct this error and try again'
               write(*,*)
@@ -758,14 +758,14 @@ module PrepareMod
           endif
       read(InMask,*) acols,ncols2
       if (ncols.ne.ncols2) then
-          write(*,*),'Number of columns not equal in the elevation and catchment grids' 
+          write(*,*) 'Number of columns not equal in the elevation and catchment grids' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
           stop
      endif
      read(InMask,*) arows,nrows2
      if (nrows.ne.nrows2) then
-          write(*,*),'Number of rows not equal in the elevation and catchment grids' 
+          write(*,*) 'Number of rows not equal in the elevation and catchment grids' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
          stop
@@ -792,15 +792,15 @@ module PrepareMod
                 if ((catch(i-1,j).eq.novalue).and.(catch(i+1,j).eq.novalue).and.(catch(i,j+1).eq.novalue).and.(catch(i,j-1).eq.novalue)) then
                     write(*,*)
 
-                    write(*,*),'*********************************'
+                    write(*,*) '*********************************'
 
-                    write(*,*), 'There is grid square in the mask not adjacent horizontally or vertically to another grid square. This grid square has been removed'
-                    write(*,*),'the issue is in row ',i-1,'column ',j-1
+                    write(*,*)  'There is grid square in the mask not adjacent horizontally or vertically to another grid square. This grid square has been removed'
+                    write(*,*) 'the issue is in row ',i-1,'column ',j-1
 
                     write(*,*)
 
                     write (logfile,*)
-                    write (logfile,*), 'There is grid square in the mask not adjacent horizontally or vertically to another grid square. This grid square has been removed'
+                    write (logfile,*) 'There is grid square in the mask not adjacent horizontally or vertically to another grid square. This grid square has been removed'
                     write (logfile,*) 'The issue is in row ',i-1,'column ',j-1
                     write (logfile,*)
    
@@ -816,7 +816,7 @@ module PrepareMod
       
       
  ! open and read min DEM file      
-      OPEN(InDemMin,FILE=demminname,STATUS='OLD',IOSTAT=io)
+      OPEN(InDemMin,FILE=demminname(1),STATUS='OLD',IOSTAT=io)
           if (io /=0) then
               write (*,'(3A)') 'The DEM minimum file ',trim(demminname(1)), ' specified in the tag DEMminFileName does not exist. Please correct this error and try again'
               write(*,*)
@@ -826,14 +826,14 @@ module PrepareMod
           endif
       read(InDemMin,*) acols,ncols3
       if (ncols.ne.ncols3) then
-          write(*,*),'Number of columns not equal in the elevation grids' 
+          write(*,*) 'Number of columns not equal in the elevation grids' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
           stop
       endif
       read(InDemMin,*) arows,nrows3
       if (nrows.ne.nrows3) then
-          write(*,*), 'Number of rows not equal in the elevation grids' 
+          write(*,*)  'Number of rows not equal in the elevation grids' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
       stop
@@ -891,93 +891,93 @@ module PrepareMod
 
 !***************************check start and end dates**************************
       if (year<1950) then 
-          write(*,*),'The starting year must be great than or equal to 1950' 
+          write(*,*) 'The starting year must be great than or equal to 1950' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
           stop
       endif
        if (month<1.or.month>12) then 
-          write(*,*),'The starting month must be between 1 and 12' 
+          write(*,*) 'The starting month must be between 1 and 12' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
           stop
       endif
        if (day<1.or.day>31) then 
-          write(*,*),'The starting day must be between 1 and 31' 
+          write(*,*) 'The starting day must be between 1 and 31' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
           stop
       endif
        if (hour<0) then 
-          write(*,*),'The starting hour must be greater than or equal to 0' 
-          write(*,*),'The value has been set to 0' 
+          write(*,*) 'The starting hour must be greater than or equal to 0' 
+          write(*,*) 'The value has been set to 0' 
           hour = 0
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
      endif
        if (hour>23) then 
-          write(*,*),'The starting hour must be less than or equal to 23' 
-          write(*,*),'The value has been set to 23' 
+          write(*,*) 'The starting hour must be less than or equal to 23' 
+          write(*,*) 'The value has been set to 23' 
           hour = 23
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
       endif
        if (minute<0) then 
-          write(*,*),'The starting minute must be greater than or equal to 0' 
-          write(*,*),'The value has been set to 0' 
+          write(*,*) 'The starting minute must be greater than or equal to 0' 
+          write(*,*) 'The value has been set to 0' 
           minute = 0
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
      endif
        if (minute>59) then 
-          write(*,*),'The starting day must be less than or equal to 59' 
-          write(*,*),'The value has been set to 59' 
+          write(*,*) 'The starting day must be less than or equal to 59' 
+          write(*,*) 'The value has been set to 59' 
           minute = 59
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
      endif
        if (endyear<1950) then 
-          write(*,*),'The ending year must be great than or equal to 1950' 
+          write(*,*) 'The ending year must be great than or equal to 1950' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
           stop
       endif
        if (endmonth<1.or.endmonth>12) then 
-          write(*,*),'The ending month must be between 1 and 12' 
+          write(*,*) 'The ending month must be between 1 and 12' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
           stop
       endif
        if (endday<1.or.endday>31) then 
-          write(*,*),'The ending day must be between 1 and 31' 
+          write(*,*) 'The ending day must be between 1 and 31' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
           stop
        endif
        if (endhour<0) then 
-          write(*,*),'The ending hour must be greater than or equal to 0' 
-          write(*,*),'The value has been set to 0' 
+          write(*,*) 'The ending hour must be greater than or equal to 0' 
+          write(*,*) 'The value has been set to 0' 
           endhour = 0
           write(*,'(''paused, type [enter] to continue'')')
            read (*,*)
      endif
        if (endhour>23) then 
-          write(*,*),'The ending hour must be less than or equal to 23' 
-          write(*,*),'The value has been set to 23' 
+          write(*,*) 'The ending hour must be less than or equal to 23' 
+          write(*,*) 'The value has been set to 23' 
           endhour = 23
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
       endif
        if (endminute<0) then 
-          write(*,*),'The ending minute must be greater than or equal to 0' 
-          write(*,*),'The value has been set to 0' 
+          write(*,*) 'The ending minute must be greater than or equal to 0' 
+          write(*,*) 'The value has been set to 0' 
           endminute = 0
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
       endif
        if (endminute>59) then 
-          write(*,*),'The ending day must be less than or equal to 59' 
-          write(*,*),'The value has been set to 59' 
+          write(*,*) 'The ending day must be less than or equal to 59' 
+          write(*,*) 'The value has been set to 59' 
           endminute = 59
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
@@ -986,7 +986,7 @@ module PrepareMod
        EndFrom1950 = hour_from_date(endyear, endmonth, endday, endhour, endminute)
        simulationTimeHours=EndFrom1950-StartFrom1950
        if (simulationTimeHours<1) then
-          write(*,*),'The end simulation time is before or equal to the start simulation time' 
+          write(*,*) 'The end simulation time is before or equal to the start simulation time' 
           write(*,'(''paused, type [enter] to continue'')')
           read (*,*)
           stop
@@ -1283,7 +1283,7 @@ endif
       close(NFMForest)
 
 !***************************** PE Types ************************
-      OPEN(InPE,FILE=pename,STATUS='OLD',IOSTAT=io)
+      OPEN(InPE,FILE=pename(1),STATUS='OLD',IOSTAT=io)
           if (io /=0) then
               write (*,'(3A)') 'The potential evaporation distribution map file ',trim(pename(1)), ' specified in the tag PeMap does not exist. Please correct this error and try again'
               write(*,*)
@@ -1307,7 +1307,7 @@ endif
 
 !****************************** rain Types ************************
 
-      OPEN(InPrec,FILE=precipname,STATUS='OLD',IOSTAT=io)
+      OPEN(InPrec,FILE=precipname(1),STATUS='OLD',IOSTAT=io)
           if (io /=0) then
               write (*,'(3A)') 'The precipitation distribution map file ',trim(precipname(1)), ' specified in the tag PrecipMap does not exist. Please correct this error and try again'
               write(*,*)
@@ -1869,7 +1869,7 @@ endif
       if (rivergridacci.ge.int(real(number)/2.0)) then 
          rivergridacci=int(real(number)/2.0)-1
          write(*,*)
-         write(*,*), "flow accumulation parameter reduced to ", rivergridacci
+         write(*,*)  "flow accumulation parameter reduced to ", rivergridacci
          write(*,*)
 
       endif
@@ -2606,7 +2606,7 @@ endif
          write(logfile,*) 'Number of river chanel sinks = ',count
          if (countiteration.eq.1000) then
             write(*,*)
-            write(*,*),'there is a problem finding a downward flow path, please check poistion of river channels in SHETRAN Results Viewer'
+            write(*,*) 'there is a problem finding a downward flow path, please check poistion of river channels in SHETRAN Results Viewer'
             write(*,*)
             write(*,'(''paused, type [enter] to continue'')')
             read (*,*)
@@ -3104,7 +3104,7 @@ endif
 !***************************** Vegetation Types ************************
 !
       if (icountveg.gt.1) then
-         OPEN(InVeg,FILE=vegname,STATUS='OLD',IOSTAT=io)
+         OPEN(InVeg,FILE=vegname(1),STATUS='OLD',IOSTAT=io)
           if (io /=0) then
               write (*,'(3A)') 'The Vegetation map file ',trim(vegname(1)), 'specified in the tag VegMap does not exist. Please correct this error and try again'
               write(*,*)
@@ -3789,7 +3789,7 @@ endif
 !************************ Title *****************************************      
 
 !      if (icountsoil.gt.1) then
-      OPEN(InSoil,FILE=soilname,STATUS='OLD')
+      OPEN(InSoil,FILE=soilname(1),STATUS='OLD')
 !      endif
 
       write (MSG,9601)

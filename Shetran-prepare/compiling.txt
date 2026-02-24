@@ -1,0 +1,1 @@
+In properites | Fortran | Libraries make runtime Library Multithreaded to include libraries within the executable

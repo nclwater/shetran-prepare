@@ -11,11 +11,11 @@
 
 
         write(*,*)
-        write(*,*), 'SHETRAN Prepare'
-        write(*,*), '***************'
+        write(*,*)  'SHETRAN Prepare'
+        write(*,*)  '***************'
         write(*,*) 
-        write(*,*), 'This executable reads an xml file and the corresponding map file (ASC format)'  
-        write(*,*), 'and produces the SHETRAN input files'    
+        write(*,*)  'This executable reads an xml file and the corresponding map file (ASC format)'  
+        write(*,*)  'and produces the SHETRAN input files'    
         write(*,*) 
 
 !      old way of getting command line argument
@@ -56,7 +56,7 @@
         call PrepareInputFiles(xmlfilefull)
     
         write(*,*) 
-        write(*,*), 'This executable has successfully compelted'    
+        write(*,*)  'This executable has successfully compelted'    
 
     
     
