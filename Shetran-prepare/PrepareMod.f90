@@ -6,14 +6,14 @@ module PrepareMod
    use ReadShetranXmlMod,           only: vegtypes,cstcap,lai,rootingdepth,aepe,stricklerveg 
    use ReadShetranXmlMod,           only: soilcats,soillayers,soilnumbers2,soiltypes,soildepth
    use ReadShetranXmlMod,           only: thsat,thres,ksat,vgn,vga,specstor
-   use ReadShetranXmlMod,           only: extradischarge
+   use ReadShetranXmlMod,           only: extradischarge,extrawatertable
    use ReadShetranXmlMod,           only: bfbcats
    use ReadShetranXmlMod,           only: initialpsl,prectmstep,petmstep
    use ReadShetranXmlMod,           only: day,month,year,endday,endmonth,endyear
    use ReadShetranXmlMod,           only: hour,minute,endhour,endminute
 ! icountveg is the maximum VegType isn the xml file, icountsoil is the maximum SoilType in the xml file and icountsoilcat is the maximum Soil category type in the XML file
-   use ReadShetranXmlMod,           only: icountveg,icountsoil,icountsoilcat,icountbfb,icountdischargepoints
-   use ReadShetranXmlMod,           only: issnow,issediment,isbanks,issolute,IsMeteorologicalDataIncludeDate,isspatialpsl,isextradischarge
+   use ReadShetranXmlMod,           only: icountveg,icountsoil,icountsoilcat,icountbfb,icountdischargepoints,icountwatertablepoints
+   use ReadShetranXmlMod,           only: issnow,issediment,isbanks,issolute,IsMeteorologicalDataIncludeDate,isspatialpsl,isextradischarge,isextrawatertable
 
 !  rivergridacc is the number of upstreamg rid squares needed to produce a river link
 !  channeldp is drop from grid elevation to channel depth elevation
@@ -79,6 +79,7 @@ module PrepareMod
   integer, parameter :: InPrecTS = 43
   integer, parameter :: InPeTS = 44
   integer, parameter :: OutElmNum = 45
+  integer, parameter :: InWaterTable = 46
   integer, parameter :: logfile = 51
 
   
@@ -102,7 +103,7 @@ module PrepareMod
       character*1, allocatable             :: vismask(:,:)
       character*7, allocatable             :: aform(:)
       CHARACTER*200 FILEO1
-      CHARACTER*200 filecstcap,filespatialpsl,filespatialpslout,filespatialpslout2
+      CHARACTER*200 filecstcap,filespatialpsl,filespatialpslout,filespatialpslout2,filewatertable,filewatertable2
       CHARACTER*200 NFMStorageName,NFMForestName
       CHARACTER*200 precfilescaler,pefilescaler
       CHARACTER*200 precfile2,pefile2
@@ -320,6 +321,8 @@ module PrepareMod
  9748 FORMAT('48: visualisation plan ------VISUALISATION OUTPUT')
  9749 FORMAT('49: check visulisation plan')
  9750 FORMAT('50: HDF output')
+ 9751 FORMAT('51: Weir data')
+ 9752 FORMAT('52: Water Table Depth Output locations')
  9901 FORMAT('SM01: snow')
  9903 FORMAT('SM03: ddf, rhos, tsin, nsd, msm ')
  9907 FORMAT('SM07: uniform depth')
@@ -1130,6 +1133,25 @@ endif
 !******************************************************
 
 
+!*****************Water Table Depth*******
+!******************************************************
+! this is optional. If water table depths time series  text files are needed these are proeduced here
+if (isextrawatertable) then
+
+    filewatertable=trim(basedir)//'input_'//trim(catchmentname(1))//'_water_table_depth.txt'
+    filewatertable2='input_'//trim(catchmentname(1))//'_water_table_depth.txt'
+    open(InWaterTable,FILE=filewatertable)
+    write(InWaterTable,'(A)') 'Water Table Depth output for specific points. The file contains the number of points and then a list of the SHETRAN element numbers. There will be a file called output_CATCHNAME_water_table_depth.txt with depth in meters below ground'
+    write(InWaterTable,'(A,I0)') 'Number_of_Point ',icountwatertablepoints
+    do i = 1, icountwatertablepoints
+        write(InWaterTable,'(I0)') extrawatertable(i)
+    enddo
+
+
+    close(InWaterTable)
+endif
+!*****************Endo of  water table depths time series  text files
+!******************************************************
 
       
 
@@ -4377,6 +4399,22 @@ endif
 
       write (MSG2,9200) FILHDF
       write (outrun,9200) MSG2
+      
+      write (MSG2,9751)
+      write (outrun,9200) MSG2
+      write (outrun,*) 
+
+      write (MSG2,9752)
+      write (outrun,9200) MSG2
+
+      if (isextrawatertable) then
+          write (MSG2,9200) filewatertable2
+          write (outrun,9200) MSG2
+      else
+          write (outrun,*)
+      endif
+
+
 
 !****************visulisation-plan**************************************      
 !************************ Title *****************************************   

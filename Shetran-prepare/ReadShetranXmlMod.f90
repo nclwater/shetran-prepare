@@ -17,9 +17,9 @@ module ReadShetranXmlMod
     integer                               :: day,month,year,endday,endmonth,endyear
     integer                               :: hour,minute,endhour,endminute
     integer                               :: icountveg,icountsoil,icountsoilcat,icountsoilcatmax,icountsoilcatmax1,icountbfb
-    integer, allocatable                  :: extradischarge(:)
-    integer                               :: icountdischargepoints
-    logical                               :: issnow,Issediment,IsBanks,IsSolute,IsMeteorologicalDataIncludeDate,isspatialpsl,isextradischarge
+    integer, allocatable                  :: extradischarge(:),extrawatertable(:)
+    integer                               :: icountdischargepoints,icountwatertablepoints
+    logical                               :: issnow,Issediment,IsBanks,IsSolute,IsMeteorologicalDataIncludeDate,isspatialpsl,isextradischarge,isextrawatertable
     character(len=characterlength),allocatable      :: soiltypes(:)
     character(len=characterlength),allocatable      :: vegtypes(:)
     character(len=characterlength), dimension(1:1)    :: tmaxfile,tminfile
@@ -57,7 +57,7 @@ module ReadShetranXmlMod
    character(len=characterlength), dimension(1:1)     :: simulateddischargetimestepa
    character(len=characterlength), dimension(1:1)     :: maxrainfalltimestepa,standardtimestepa, increasingtimestepa
    character(len=characterlength), dimension(1:1)     :: standardh5outputa,threedimensionalh5outputa
-   character(len=characterlength), dimension(1:1)     :: snowddfa,extradischargea
+   character(len=characterlength), dimension(1:1)     :: snowddfa,extradischargea,extrawatertablea
    character(len=characterlength), dimension(1:1)     :: baseflowboundarya
    integer                                :: no_data
    integer                                :: icount,soilnumber,numbersoiltypes,icountbfbmax
@@ -1495,28 +1495,32 @@ soiltypes='Dummy'
 !********Extra Discharge points array sizes - optional******************  
    call xml_open( info, xmlfilefull, .true. )
    call xml_options( info, report_details = .false. )
-   
-    isextradischarge=.false.
-    icountdischargepoints=0
 
- 
-    do
-! The extra discharge points can be in any order
-        call xml_get(info,tag,endtag,attribs,no_attribs,data,no_data) 
-        if (.not. xml_ok(info)) exit ! exit the loop at the end of the xml structure
+   isextradischarge=.false.
+   icountdischargepoints=0
 
-        if (tag=="ExtraDischargePoints" .and. .not. endtag) then
-                 isextradischarge=.true.
-                 icountdischargepoints=icountdischargepoints+1
-        endif
-    
-    
-    enddo
-   
+
+   do
+       ! The extra discharge points can be in any order
+       call xml_get(info,tag,endtag,attribs,no_attribs,data,no_data)
+       if (.not. xml_ok(info)) exit ! exit the loop at the end of the xml structure
+
+       if (tag=="ExtraDischargePoints" .and. .not. endtag) then
+           isextradischarge=.true.
+           line=data(1)
+           lenline = len_trim(line)
+           ! An extra ExtraDischargePoints with a FALSE tag is read at the end of this section of data. If it is blank then we have reached the end of ExtraDischargePoints
+           if (lenline==0) exit
+           icountdischargepoints=icountdischargepoints+1
+       endif
+
+
+   enddo
+
    call xml_close(info)
-   
- allocate (extradischarge(icountdischargepoints))
-  
+
+   allocate (extradischarge(icountdischargepoints))
+
    
  !********End of Extra Discharge points array sizes - optional******************  
 
@@ -1525,28 +1529,97 @@ soiltypes='Dummy'
 !********Extra Discharge points - optional******************  
    call xml_open( info, xmlfilefull, .true. )
    call xml_options( info, report_details = .false. )
+
+   isextradischarge=.false.
+   icountdischargepoints=0
+
+
+   do
+       ! The extra discharge points can be in any order
+       call xml_get(info,tag,endtag,attribs,no_attribs,data,no_data)
+       if (.not. xml_ok(info)) exit ! exit the loop at the end of the xml structure
+
+       if (tag=="ExtraDischargePoints" .and. .not. endtag) then
+           isextradischarge=.true.
+           extradischargea = data(1)
+           lenline = len_trim(extradischargea(1))
+           ! An extra ExtraDischargePoints with a FALSE tag is read at the end of this section of data. If it is blank then we have reached the end of ExtraDischargePoints
+           if (lenline==0) exit
+           icountdischargepoints=icountdischargepoints+1
+           read(extradischargea(1),*,err=999,end=999) extradischarge(icountdischargepoints)
+       endif
+
+
+   enddo
+!********End of Extra Discharge points - optional******************
+
    
-    isextradischarge=.false.
-    icountdischargepoints=0
+      
+   
+!********Extra Water Table Deopth Ouput array sizes - optional******************  
+   call xml_open( info, xmlfilefull, .true. )
+   call xml_options( info, report_details = .false. )
 
- 
-    do
-! The extra discharge points can be in any order
-        call xml_get(info,tag,endtag,attribs,no_attribs,data,no_data) 
-        if (.not. xml_ok(info)) exit ! exit the loop at the end of the xml structure
+   isextrawatertable=.false.
+   icountwatertablepoints=0
 
-        if (tag=="ExtraDischargePoints" .and. .not. endtag) then
-                 isextradischarge=.true.
-                 icountdischargepoints=icountdischargepoints+1
-                 extradischargea = data(1)
-                 read(extradischargea(1),*,err=999,end=999) extradischarge(icountdischargepoints)
-        endif
-    
-    
-    enddo
+
+   do
+       ! The extra water table points can be in any order
+       call xml_get(info,tag,endtag,attribs,no_attribs,data,no_data)
+       if (.not. xml_ok(info)) exit ! exit the loop at the end of the xml structure
+
+       if (tag=="WaterTableDepthPoint" .and. .not. endtag) then
+           isextrawatertable=.true.
+           line=data(1)
+           lenline = len_trim(line)
+           ! An extra WaterTableDepthPoint with a FALSE tag is read at the end of this section of data. If it is blank then we have reached the end of WaterTableDepthPoint
+           if (lenline==0) exit
+           icountwatertablepoints=icountwatertablepoints+1
+       endif
+
+
+   enddo
+
+   call xml_close(info)
+
+   allocate (extrawatertable(icountwatertablepoints))
+
+   
+ !********End of Extra Water Table points array sizes - optional******************  
+
+   
+   
+!********Extra Water Table points - optional******************  
+   call xml_open( info, xmlfilefull, .true. )
+   call xml_options( info, report_details = .false. )
+
+   isextrawatertable=.false.
+   icountwatertablepoints=0
+
+
+   do
+       ! The extra water table points can be in any order
+       call xml_get(info,tag,endtag,attribs,no_attribs,data,no_data)
+       if (.not. xml_ok(info)) exit ! exit the loop at the end of the xml structure
+
+       if (tag=="WaterTableDepthPoint" .and. .not. endtag) then
+           isextrawatertable=.true.
+           extrawatertablea = data(1)
+           lenline = len_trim(extrawatertablea(1))
+           ! An extra WaterTableDepthPoint with a FALSE tag is read at the end of this section of data. If it is blank then we have reached the end of WaterTableDepthPoint
+           if (lenline==0) exit
+           icountwatertablepoints=icountwatertablepoints+1
+           read(extrawatertablea(1),*,err=999,end=999) extrawatertable(icountwatertablepoints)
+       endif
+
+
+   enddo
+
+   
+   
    
    call xml_close(info)
- !********End of Extra Discharge points - optional******************  
 
   
 
