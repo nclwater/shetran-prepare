@@ -1188,7 +1188,7 @@ endif
 
 
 !************************ Title *****************************************      
-      write (MSG,9301)
+      write (MSG,'(A)') trim(catchmentname(1))
       write (OUTFRD,9200) MSG
 
 !********* Number of Grid Squares ***************************************      
@@ -1372,10 +1372,10 @@ endif
       if (trim(precfilescaler).eq.'Empty') then
 ! if no precipitation data then use the sample data  
 ! use the correct number of value (to the nearest year) and write it to the prd file
-         precfilescaler =trim(basedir)//'input_'//'sample_prd.txt'
+         precfilescaler =trim(basedir)//'TimeSeries_'//'Precipitation_sample.txt'
          open(SamplePRD,FILE=precfilescaler)
          write(SamplePRD,*) 'Sample Precipitation Data. Daily Values with units of mm/day'
-         filprd ='input_'//'sample_prd.txt'
+         filprd ='TimeSeries_'//'Precipitation_sample.txt'
          call PrecipTest(PrecipTestData)
          do i = 1,int(simulationTimeHours/8760)+1
              do j=1,365
@@ -1428,10 +1428,10 @@ endif
       if (trim(pefilescaler).eq.'Empty') then
 ! if no  PET data then use the sample data       
 ! use the correct number of values and write it to the epd file
-         pefilescaler = trim(basedir)//'input_'//'sample_epd.txt'
+         pefilescaler = trim(basedir)//'TimeSeries_'//'PET_sample.txt'
          OPEN(SampleEPD,FILE=pefilescaler)
          write(SampleEPD,*) 'Sample Potential Evaporation Data. Daily Values with units of mm/day'
-         filepd ='input_'//'sample_epd.txt'
+         filepd ='TimeSeries_'//'PET_sample.txt'
          call PetTest(PetTestData)
          do i = 1,int(simulationTimeHours/8760)+1
              do j=1,365

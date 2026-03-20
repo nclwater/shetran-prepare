@@ -11,36 +11,37 @@
 
 
         write(*,*)
+        write(*,*)  '***************'
         write(*,*)  'SHETRAN Prepare'
         write(*,*)  '***************'
         write(*,*) 
-        write(*,*)  'This executable reads an xml file and the corresponding map file (ASC format)'  
-        write(*,*)  'and produces the SHETRAN input files'    
+        write(*,*)  'This executable reads an XML (library) file together with the corresponding map'  
+        write(*,*)  ' (asc format) and time series files. It produces the SHETRAN input files'    
         write(*,*) 
 
 !      old way of getting command line argument
 !      n1=1
 !      CALL GETARG(n1,xmlfilename)
 
-     !  nargs = command_argument_count()
-     !
-     !  if (nargs < 1) then
-     !       print *, "Error: No command-line argument provided."
-     !       write(*,'(''paused, type [enter] to continue'')')
-     !       read (*,*)
-     !     stop
-     ! endif
-     !
-     ! call get_command_argument(1, xmlfilename)
-     !
-     ! if (len_trim(xmlfilename) == 0) then
-     !     print *, "Error: Command-line argument is empty."
-     !     write(*,'(''paused, type [enter] to continue'')')
-     !     read (*,*)
-     !     stop
-     !endif
+        nargs = command_argument_count()
+
+        if (nargs < 1) then
+            print *, "Error: No command-line argument provided."
+            write(*,'(''paused, type [enter] to continue'')')
+            read (*,*)
+            stop
+        endif
+
+        call get_command_argument(1, xmlfilename)
+
+        if (len_trim(xmlfilename) == 0) then
+            print *, "Error: Command-line argument is empty."
+            write(*,'(''paused, type [enter] to continue'')')
+            read (*,*)
+            stop
+        endif
  
-       xmlfilename = "C:\Users\steve\Documents\shetran-prepare\Shetran-prepare\examples-test\Aire_at_Kildwick_Bridge-simple\Aire_at_Kildwick_BridgeLibraryFile_simple.xml"
+!       xmlfilename = "C:\Users\steve\Documents\shetran-prepare\Shetran-prepare\examples-test\Aire_at_Kildwick_Bridge-simple\Aire_at_Kildwick_BridgeLibraryFile_simple.xml"
         
         xmlfilefull = trim(xmlfilename)
         open(XmlFileNumber,FILE=xmlfilefull,iostat=istatus,status='old')
