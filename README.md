@@ -17,6 +17,18 @@ Executables to convert parameter and map data to Shetran input files format
 - the command line format is the executable name followed by the xml file name
 - e.g if both execuutable and xml library file are in the same folder  type "shetran-prepare.exe Foston_Beck_at_Foston_MillLibraryFile.xml"
 
+## Linux Verison
+
+- Uses the same source code. Compiled using gfortran. 
+gfortran -c XmlParseMod.f90
+gfortran -c -ffree-line-length-none RestMod.f90   (option needed as some lines are too long seems to work OK on PC)
+gfortran -c -ffree-line-length-none ReadShetranXmlMod.f90
+gfortran -c -ffree-line-length-none PrepareMod.f90
+gfortran -c ShetranPrepare.f90
+
+gfortran XmlParseMod.o RestMod.o ReadShetranXmlMod.o PrepareMod.o ShetranPrepare.o -static -o SHETRAN-prepare.exe   (-static option needed to include libraries within executable)
+ 
+
 ## Updates 23-02-2026 - V3.0.1
 
 - compiled with Intel ifort 2021 compiler on VS 2019
@@ -47,6 +59,8 @@ The column numbers into the EvaporationTimeSeriesData should correspond with tho
 ```
 1980-01-01T00:00:00,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ```
+- If rainfall and potential evaporation data is not included sample data is produced of the correct length using data from Foston catchment in Yorkshire,UK for 1/1/1980-1/1/1981
+
 
 The date must be iso 8601 format
 To use this option the following line must be present in the XML file
