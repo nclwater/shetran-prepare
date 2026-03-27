@@ -21,9 +21,13 @@ Executables to convert parameter and map data to Shetran input files format
 
 - Uses the same source code. Compiled using gfortran. 
 gfortran -c XmlParseMod.f90
+
 gfortran -c -ffree-line-length-none RestMod.f90   (option needed as some lines are too long seems to work OK on PC)
+
 gfortran -c -ffree-line-length-none ReadShetranXmlMod.f90
+
 gfortran -c -ffree-line-length-none PrepareMod.f90
+
 gfortran -c ShetranPrepare.f90
 
 gfortran XmlParseMod.o RestMod.o ReadShetranXmlMod.o PrepareMod.o ShetranPrepare.o -static -o SHETRAN-prepare.exe   (-static option needed to include libraries within executable)
