@@ -554,9 +554,9 @@ module PrepareMod
       OPEN (OUTRUN,FILE=FILRUN)
       FILRIV = trim(basedir)//'input_'//trim(catchmentname(1))//'_river_network.asc'
       OPEN (OUTRIV,FILE=FILRIV)
-      FILRIVLOC = trim(basedir)//'input_'//trim(catchmentname(1))//'_river_location.txt'
+      FILRIVLOC = trim(basedir)//'input_'//trim(catchmentname(1))//'_river_location.csv'
       OPEN (OutRivLoc,FILE=FILRIVLOC)
-      write(OutRivLoc,*) 'channel number, x value, y value, elevation'
+      write(OutRivLoc,'(A)') 'Channel_number,x_value,y_value,elevation(m),width(m),Strickler_Coeff'
       FILELMNUM = trim(basedir)//'input_'//trim(catchmentname(1))//'_element_number.asc'
       OPEN (OutElmNum,FILE=FILELMNUM)
       FILDISPOINT = trim(basedir)//'input_'//trim(catchmentname(1))//'_discharge_points.txt'
@@ -1719,33 +1719,31 @@ endif
       
 !     Find min elevation within the catchment
 !     This must be at the catchment outlet
-      do
-      demmin=2.0e10
-         do i=1,nrows
-            do j=1,ncols
-                if (dem(i,j).lt.demmin) then
-                  demmin=dem(i,j)
-                  colposmin=j
-                  rowposmin=i
-                endif
-           enddo
-         enddo
+      isok = .false.
+      do while (.not. isok)
+          demmin=2.0e10
+          do i=1,nrows
+              do j=1,ncols
+                  if (dem(i,j).lt.demmin) then
+                      demmin=dem(i,j)
+                      colposmin=j
+                      rowposmin=i
+                  endif
+              enddo
+          enddo
 
-!     test to see if min at catchment boundary ?
-         demn=dem(rowposmin,colposmin-1)
-         dems=dem(rowposmin,colposmin+1)
-         deme=dem(rowposmin+1,colposmin)
-         demw=dem(rowposmin-1,colposmin)
-         if ((demn.gt.0.99e10).or.(dems.gt.0.99e10).or.(deme.gt.0.99e10).or.(demw.gt.0.99e10)) then
-            isok=.true.
-         endif
+          !     test to see if min at catchment boundary ?
+          demn=dem(rowposmin,colposmin-1)
+          dems=dem(rowposmin,colposmin+1)
+          deme=dem(rowposmin+1,colposmin)
+          demw=dem(rowposmin-1,colposmin)
+          if ((demn.gt.0.99e10).or.(dems.gt.0.99e10).or.(deme.gt.0.99e10).or.(demw.gt.0.99e10)) then
+              isok=.true.
+          else
+              !     if not at boundary add 1.0m to min. elevation and try again
+              dem(rowposmin,colposmin)=demmin+1.0
+          endif
 
-!     if not at boundary add 1.0m to min. elevation and try again
-         if (.not.isok) then
-            dem(rowposmin,colposmin)=demmin+1.0
-         else
-            exit
-         endif
       enddo
 
 
@@ -2649,8 +2647,6 @@ endif
          if (linkew(i,j)) then
             k=k+1
             linkelv(k)= ellinkew(i,j)
-!               write(OutRivLoc,'(I0,A,F12.2,A,F12.2,A,F10.2,A,I0,1x,I0,1x,I0)') k,',',xllcorner+((j-1.5)*cellsize),',',yllcorner+((nrows-i)*cellsize),',',linkelv(k),', E,',cornerval(i,j-1),cornerval(i,j),cornerval(i,j+1)
-               write(OutRivLoc,'(I0,A,F12.2,A,F12.2,A,F10.2)') k,',',xllcorner+((j-2.0)*cellsize),',',yllcorner+((nrows-i-0.5)*cellsize),',',linkelv(k)
                do m=1,icountdischargepoints
                    if (extradischarge(m)==k) then
                        if (cornerval(i,j+1).ge.cornerval(i,j)) then
@@ -2683,8 +2679,6 @@ endif
             if (linkns(i,j)) then
                 k=k+1
                 linkelv(k)= ellinkns(i,j)
-!               write(OutRivLoc,'(I0,A,F12.2,A,F12.2,A,F10.2,A,I0,1x,I0,1x,I0)') k,',',xllcorner+((j-2)*cellsize),',',yllcorner+((nrows-0.5-i)*cellsize),',',linkelv(k),', N, ',cornerval(i-1,j),cornerval(i,j),cornerval(i+1,j)
-               write(OutRivLoc,'(I0,A,F12.2,A,F12.2,A,F10.2)') k,',',xllcorner+((j-2.0)*cellsize),',',yllcorner+((nrows-i-0.5)*cellsize),',',linkelv(k)
                 do m=1,icountdischargepoints
                    if (extradischarge(m)==k) then
                        if (cornerval(i+1,j).ge.cornerval(i,j)) then
@@ -2713,8 +2707,6 @@ endif
             if (linkew(i,j)) then
                k=k+1
                linkelv(k)= ellinkew(i,j)
-!               write(OutRivLoc,'(I0,A,F12.2,A,F12.2,A,F10.2,A,I0,1x,I0,1x,I0)') k,',',xllcorner+((j-1.5)*cellsize),',',yllcorner+((nrows-i)*cellsize),',',linkelv(k),', E,',cornerval(i,j-1),cornerval(i,j),cornerval(i,j+1)
-               write(OutRivLoc,'(I0,A,F12.2,A,F12.2,A,F10.2)') k,',',xllcorner+((j-1.5)*cellsize),',',yllcorner+((nrows-i)*cellsize),',',linkelv(k)
                  do m=1,icountdischargepoints
                    if (extradischarge(m)==k) then
                        if (cornerval(i,j+1).ge.cornerval(i,j)) then
@@ -2906,56 +2898,72 @@ endif
          k=nrows-i+2
          write (outfrd,9109) k,(alinkew(i,j),j=1,ncols)
       enddo  
-!                
+
       do i=1,nrows
             do l=1,10
                 do j=1,ncols
                     do k =1,10
                        if  (catch(i,j).eq.0) then
-                           catchgeometry((i-1)*10+l,(j-1)*10+k) = 0
+                           catchgeometry((i-1)*10+l,(j-1)*10+k) = -9999
                        else 
-                           catchgeometry((i-1)*10+l,(j-1)*10+k) = 1
+                           catchgeometry((i-1)*10+l,(j-1)*10+k) = 0
                        endif
                     enddo
                 enddo
            enddo
       enddo
-
-      do i=1,nrows
-        do l=1,10
-           do j=1,ncols+1
-             if (linkns(i,j)) then
-                catchgeometry((i-1)*10+l,(j-1)*10-1) = 2
-                catchgeometry((i-1)*10+l,(j-1)*10) = 2
-                catchgeometry((i-1)*10+l,(j-1)*10+1) = 2
-            endif
-          enddo
-        enddo
-      enddo  
-      do I = 1,nrows+1
-          do j=1,ncols
+      
+      !                
+      k=0
+      i=nrows+1
+      do j=1,ncols
+          if (linkew(i,j)) then
+              k=k+1
               do l=1,10
-                 if (linkew(i,j)) then
-                     catchgeometry((i-1)*10-1,(j-1)*10+l) = 2
-                     catchgeometry((i-1)*10,(j-1)*10+l) = 2
-                     catchgeometry((i-1)*10+1,(j-1)*10+l) = 2
-                endif
+                  catchgeometry((i-1)*10+l,(j-1)*10-1) = k
+                  catchgeometry((i-1)*10+l,(j-1)*10) = k
+                  catchgeometry((i-1)*10+l,(j-1)*10+1) = k
               enddo
+          endif
+
+      enddo
+      do i=nrows,1,-1
+          do j=1,ncols+1
+              if (linkns(i,j)) then
+                  k=k+1
+                  do l=1,10
+                      catchgeometry((i-1)*10+l,(j-1)*10-1) = k
+                      catchgeometry((i-1)*10+l,(j-1)*10) = k
+                      catchgeometry((i-1)*10+l,(j-1)*10+1) = k
+                  enddo
+              endif
+
           enddo
-      enddo 
+          do j=1,ncols
+              if (linkew(i,j)) then
+                  k=k+1
+                  do l=1,10
+                      catchgeometry((i-1)*10-1,(j-1)*10+l) = k
+                      catchgeometry((i-1)*10,(j-1)*10+l) = k
+                      catchgeometry((i-1)*10+1,(j-1)*10+l) = k
+                  enddo
+              endif
+          enddo
+      enddo
+
       write(OUTRIV,'(A5,a4,i8)') 'ncols','    ',ncols*10
       write(OUTRIV,'(A5,a4,i8)') 'nrows','    ',nrows*10
-      write(OUTRIV,'(A9,a4,f12.2)') 'xllcorner','    ',xllcorner-cellsize
-      write(OUTRIV,'(A9,a4,f12.2)') 'yllcorner','    ',yllcorner-cellsize
+      write(OUTRIV,'(A9,a4,f12.2)') 'xllcorner','    ',xllcorner-0.95*cellsize
+      write(OUTRIV,'(A9,a4,f12.2)') 'yllcorner','    ',yllcorner-1.05*cellsize
       write(OUTRIV,'(A8,a4,f10.1)') 'cellsize','    ',cellsize/10.0
-      write(OUTRIV,'(A12,a4,i8)') 'NODATA_value','    ',0
+      write(OUTRIV,'(A12,a4,i8)') 'NODATA_value','    ',-9999
       do I = 1,nrows*10
          write(OUTRIV,'(*(I0,1x))') (catchgeometry(i,j),j=1,ncols*10)
       enddo 
       write(OUTELMNUM,'(A5,a4,i8)') 'ncols','    ',ncols
       write(OUTELMNUM,'(A5,a4,i8)') 'nrows','    ',nrows
-      write(OUTELMNUM,'(A9,a4,f12.2)') 'xllcorner','    ',xllcorner-cellsize
-      write(OUTELMNUM,'(A9,a4,f12.2)') 'yllcorner','    ',yllcorner-cellsize
+      write(OUTELMNUM,'(A9,a4,f12.2)') 'xllcorner','    ',xllcorner-0.95*cellsize
+      write(OUTELMNUM,'(A9,a4,f12.2)') 'yllcorner','    ',yllcorner-1.05*cellsize
       write(OUTELMNUM,'(A8,a4,f10.1)') 'cellsize','    ',cellsize
       write(OUTELMNUM,'(A12,a4,i8)') 'NODATA_value','    ',0
       if (isbanks) then
@@ -3504,6 +3512,40 @@ endif
              AFORM(4)=FORM(linkelv(i)-1.0)
              write (outocd,9206) ifACE,AFORM(1),AFORM(2),AFORM(3),AFORM(4)
           endif
+      enddo
+
+! Output location of river channels,elevations and widths
+      k=0
+      linkelvmin=1.0e10
+      i=nrows+1
+      do j=1,ncols
+          if (linkew(i,j)) then
+              k=k+1
+              linkelv(k)= ellinkew(i,j)
+              streamwidth1=streamsize(k)*maffactor
+              streamwidth2=channelwidthfactor*(streamwidth1**channelwidthpower)
+                  write(OutRivLoc,'(I0,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,F0.2)') k,',',xllcorner+((j-1.5)*cellsize),',',yllcorner+((nrows-i)*cellsize),',',linkelv(k),',',streamwidth2,',',linkstr(k)
+          endif
+      enddo
+      do i=nrows,1,-1
+          do j=1,ncols+1
+              if (linkns(i,j)) then
+                  k=k+1
+                  linkelv(k)= ellinkns(i,j)
+                  streamwidth1=streamsize(k)*maffactor
+                  streamwidth2=channelwidthfactor*(streamwidth1**channelwidthpower)
+                  write(OutRivLoc,'(I0,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,F0.2)') k,',',xllcorner+((j-2.0)*cellsize),',',yllcorner+((nrows-i-0.5)*cellsize),',',linkelv(k),',',streamwidth2,',',linkstr(k)
+              endif
+          enddo
+          do j=1,ncols
+              if (linkew(i,j)) then
+                  k=k+1
+                  linkelv(k)= ellinkew(i,j)
+                  streamwidth1=streamsize(k)*maffactor
+                  streamwidth2=channelwidthfactor*(streamwidth1**channelwidthpower)
+                  write(OutRivLoc,'(I0,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,F0.2)') k,',',xllcorner+((j-1.5)*cellsize),',',yllcorner+((nrows-i)*cellsize),',',linkelv(k),',',streamwidth2,',',linkstr(k)
+              endif
+          enddo
       enddo
 
 

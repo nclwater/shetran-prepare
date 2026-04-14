@@ -24,16 +24,16 @@
 !      CALL GETARG(n1,xmlfilename)
 
         nargs = command_argument_count()
-
+        
         if (nargs < 1) then
             print *, "Error: No command-line argument provided."
             write(*,'(''paused, type [enter] to continue'')')
             read (*,*)
             stop
         endif
-
+        
         call get_command_argument(1, xmlfilename)
-
+        
         if (len_trim(xmlfilename) == 0) then
             print *, "Error: Command-line argument is empty."
             write(*,'(''paused, type [enter] to continue'')')
@@ -41,7 +41,7 @@
             stop
         endif
  
-!       xmlfilename = "C:\Users\steve\Documents\shetran-prepare\Shetran-prepare\examples-test\Aire_at_Kildwick_Bridge-simple\Aire_at_Kildwick_BridgeLibraryFile_simple.xml"
+!       xmlfilename = "C:\Users\steve\Documents\shetran-prepare\Shetran-prepare\examples-test\BengawanSolo_2km-withSRID\bengawan-solo-2km.xml"
         
         xmlfilefull = trim(xmlfilename)
         open(XmlFileNumber,FILE=xmlfilefull,iostat=istatus,status='old')

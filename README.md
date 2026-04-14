@@ -2,9 +2,9 @@
 Executables to convert parameter and map data to Shetran input files format
 
 ## Features
-- This uses the xml library file which contains the parameter values and calls to the map data
-- There is map data for the Mean DEM, Minimum DEM, soil, land, precipitation stations, PET stations
-- There is precipitation and PET time series data
+- This uses the xml library file which contains the parameter values and calls to the map data and time series data
+- There is map data for the Mean DEM, Minimum DEM, soil, land, precipitation stations, PET stations in ascii grid format
+- There is time series data for precipitation and potential evaporation in CSV format
 - After running the executable the full set of Shetran input files are produced together with a controlling rundata file
 
 ## Installation
