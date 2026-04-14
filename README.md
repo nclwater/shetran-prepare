@@ -3,8 +3,8 @@ Executables to convert parameter and map data to Shetran input files format
 
 ## Features
 - This uses the xml library file which contains the parameter values and calls to the map data and time series data
-- There is map data for the Mean DEM, Minimum DEM, soil, land, precipitation stations, PET stations in ascii grid format
-- There is time series data for precipitation and potential evaporation in CSV format
+- There is map data for the Mean elevation (DEM), Minimum elevation (DEM), soil, land, precipitation stations and potential evaporation stations in ascii grid format
+- There is time series data for precipitation and potential evaporation data in CSV format
 - After running the executable the full set of Shetran input files are produced together with a controlling rundata file
 
 ## Installation
@@ -36,7 +36,7 @@ gfortran XmlParseMod.o RestMod.o ReadShetranXmlMod.o PrepareMod.o ShetranPrepare
 
 ## Updates 23-02-2026 - V3.0.1
 
-- compiled with Intel ifort 2021 compiler on VS 2019
+- compiled with Intel ifort 2025 compiler on VS 2022
 
 - It is backwards compatiable. All old xml files should still work (apart from the issue with rain and potential evaporation map files (see below).
 
