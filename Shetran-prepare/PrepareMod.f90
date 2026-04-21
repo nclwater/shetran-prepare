@@ -379,7 +379,9 @@ module PrepareMod
  9276 FORMAT(A1,A2,I2,A2,I3,A40)
  9277 FORMAT(A1,A2,I3,A2,I2,A40)
  9404 FORMAT(10(A7,1x))
- 9405 FORMAT(a7,i7,a7,a7)
+ 9405  FORMAT(a7,i7,a7,a7)
+ 9406 FORMAT(5a7,i7,2a7)
+
  
       
      call read_xml_file(xmlfilefull)
@@ -405,7 +407,7 @@ module PrepareMod
 !      write(*,*) basedir
 !      write(*,*)
 
-      FILLOG = trim(basedir)//'input_'//trim(catchmentname(1))//'_log.txt'
+      FILLOG = trim(basedir)//'info_'//trim(catchmentname(1))//'_SHETRAN_Prepare_log.txt'
       open(logfile,FILE=FILLOG,recl=300)
 
       write (logfile,*) 'XML Filename = ', trim(xmlfilefull)
@@ -552,17 +554,19 @@ module PrepareMod
       FILVSD2 = 'input_'//trim(catchmentname(1))//'_vsd.txt'
       FILRUN = trim(basedir)//'rundata_'//trim(catchmentname(1))//'.txt'
       OPEN (OUTRUN,FILE=FILRUN)
-      FILRIV = trim(basedir)//'input_'//trim(catchmentname(1))//'_river_network.asc'
+      FILRIV = trim(basedir)//'info_'//trim(catchmentname(1))//'_river_network.asc'
       OPEN (OUTRIV,FILE=FILRIV)
-      FILRIVLOC = trim(basedir)//'input_'//trim(catchmentname(1))//'_river_location.csv'
+      FILRIVLOC = trim(basedir)//'info_'//trim(catchmentname(1))//'_river_location.csv'
       OPEN (OutRivLoc,FILE=FILRIVLOC)
-      write(OutRivLoc,'(A)') 'Channel_number,x_value,y_value,elevation(m),width(m),Strickler_Coeff'
-      FILELMNUM = trim(basedir)//'input_'//trim(catchmentname(1))//'_element_number.asc'
+      write(OutRivLoc,'(A)') 'Channel_number,x_value,y_value,elevation(m),width(m),Strickler_Coeff,Upstream_Accumulated_River_Grid_Cells'
+      FILELMNUM = trim(basedir)//'info_'//trim(catchmentname(1))//'_element_number.asc'
       OPEN (OutElmNum,FILE=FILELMNUM)
       FILDISPOINT = trim(basedir)//'input_'//trim(catchmentname(1))//'_discharge_points.txt'
-      OPEN (OutDischargePoints,FILE=FILDISPOINT)
-      write(OutDischargePoints,'(A)') 'Extra discharge points. These will be included in the output_CATCHNAME_discharge_sim_regulartimestep.txt file. The format is SHETRAN element number and face number (1= E, 2=N, 3=W, 4=S)'
-      write(OutDischargePoints,'(A,I0)') 'Number_of_points ',icountdischargepoints
+      if (icountdischargepoints > 0) then
+          OPEN (OutDischargePoints,FILE=FILDISPOINT)
+          write(OutDischargePoints,'(A)') 'Extra discharge points. These will be included in the output_CATCHNAME_discharge_sim_regulartimestep.txt file. The format is SHETRAN element number and face number (1= E, 2=N, 3=W, 4=S). The face with the highest discharge is automatically selected'
+          write(OutDischargePoints,'(A,I0)') 'Number_of_points ',icountdischargepoints
+      endif
       FILDISPOINT2 = 'input_'//trim(catchmentname(1))//'_discharge_points.txt'
       FILVIS = trim(basedir)//'input_'//trim(catchmentname(1))// '_visualisation_plan.txt'
       OPEN (OUTVIS,FILE=FILVIS)
@@ -3524,7 +3528,7 @@ endif
               linkelv(k)= ellinkew(i,j)
               streamwidth1=streamsize(k)*maffactor
               streamwidth2=channelwidthfactor*(streamwidth1**channelwidthpower)
-                  write(OutRivLoc,'(I0,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,F0.2)') k,',',xllcorner+((j-1.5)*cellsize),',',yllcorner+((nrows-i)*cellsize),',',linkelv(k),',',streamwidth2,',',linkstr(k)
+                  write(OutRivLoc,'(I0,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,I0)') k,',',xllcorner+((j-1.5)*cellsize),',',yllcorner+((nrows-i)*cellsize),',',linkelv(k),',',streamwidth2,',',linkstr(k),',',streamsize(k)
           endif
       enddo
       do i=nrows,1,-1
@@ -3534,7 +3538,7 @@ endif
                   linkelv(k)= ellinkns(i,j)
                   streamwidth1=streamsize(k)*maffactor
                   streamwidth2=channelwidthfactor*(streamwidth1**channelwidthpower)
-                  write(OutRivLoc,'(I0,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,F0.2)') k,',',xllcorner+((j-2.0)*cellsize),',',yllcorner+((nrows-i-0.5)*cellsize),',',linkelv(k),',',streamwidth2,',',linkstr(k)
+                  write(OutRivLoc,'(I0,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,I0)') k,',',xllcorner+((j-2.0)*cellsize),',',yllcorner+((nrows-i-0.5)*cellsize),',',linkelv(k),',',streamwidth2,',',linkstr(k),',',streamsize(k)
               endif
           enddo
           do j=1,ncols
@@ -3543,7 +3547,7 @@ endif
                   linkelv(k)= ellinkew(i,j)
                   streamwidth1=streamsize(k)*maffactor
                   streamwidth2=channelwidthfactor*(streamwidth1**channelwidthpower)
-                  write(OutRivLoc,'(I0,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,F0.2)') k,',',xllcorner+((j-1.5)*cellsize),',',yllcorner+((nrows-i)*cellsize),',',linkelv(k),',',streamwidth2,',',linkstr(k)
+                  write(OutRivLoc,'(I0,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,F0.2,A,I0)') k,',',xllcorner+((j-1.5)*cellsize),',',yllcorner+((nrows-i)*cellsize),',',linkelv(k),',',streamwidth2,',',linkstr(k),',',streamsize(k)
               endif
           enddo
       enddo
@@ -4115,7 +4119,7 @@ endif
 
 ! base flow boundary additional output     
      if (icountbfb /= 0) then
-         write (OUTVSD,9104) '0','0','0','0','0','1','0','0'
+         write (OUTVSD,9406) '0','0','0','0','0',maxcatnumber,'0','0'
          if (isbanks) then
 ! extra output needed in vsd file if there are banks. All links given first category type
              write (MSG,9612)
@@ -4164,7 +4168,7 @@ endif
          do i =1,icountbfb
              baseflowboundary2(bfbcats(i)) = baseflowboundary(i)
          enddo
-         write (OUTBFB,'(5I7,*(1X,A7))') endyear+1,endmonth,endday,endhour,endminute, (form(baseflowboundary2(i)),i=1,maxcatnumber)
+         write (OUTBFB,'(5I7,*(1X,A7))') endyear+1,endmonth,endday,endhour,endminute, (form(baseflowboundary2(i)/86400/1000),i=1,maxcatnumber)
 
      else
          write (OUTVSD,9104) '0','0','0','0','0','0','0','0'

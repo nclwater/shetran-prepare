@@ -60,15 +60,14 @@ The column numbers into the PrecipitationTimeSeriesData should correspond with t
 The column numbers into the EvaporationTimeSeriesData should correspond with those in the PeMap. The first column is for locations with a 1 in the PeMap. The second column is for locations with a 2 in the PeMap etc.
 - All arrays are dynamically allocated and so there are not limits on catchment size
 - If the extra files with addtional storage and forest are used (34008-NFM-storage-and-woodland example) these can now work with any number of exisiting vegetation types. 10 addtional vegetationtypes are added. It is assumed that each grid square has a seperate preciptation and PET category.
-- There is an option to read preciptation and potential evaporation time series data with the first column as dates (there must be a single header data row at the start of these files) e.g
+- There is an option to read preciptation and potential evaporation time series data with the first column as dates (there must be a single header data row at the start of these files). There is an optional "T" between the day and hour. e.g without the "T"
 ```
-1980-01-01T00:00:00,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+1980-01-01 00:00:00,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ```
 - If rainfall and potential evaporation data is not included sample data is produced of the correct length using data from Foston catchment in Yorkshire,UK for 1/1/1980-1/1/1981
 
 
-The date must be iso 8601 format
-To use this option the following line must be present in the XML file
+- The date must be iso 8601 format (although the option without the "T" is usually used to make it easier to display in Excel). To use this option the following line must be present in the XML file
 ```
 <MeteorologicalDataIncludeDate>True</MeteorologicalDataIncludeDate> <!--Does the precipitation and potential evaporation data includes a first column ocntaining dates?-->
 ```
