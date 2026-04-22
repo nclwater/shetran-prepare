@@ -577,7 +577,7 @@ module PrepareMod
       FILDIS = 'output_'//trim(catchmentname(1))//'_discharge_sim_regulartimestep.csv'
       FILDIS2 = 'output_'//trim(catchmentname(1))//'_discharge_sim_everytimestep.csv'
       FILVSE = 'output_'//trim(catchmentname(1))//'_vsi.txt'
-      FILMAS = 'output_'//trim(catchmentname(1))//'_mb.csv'
+      FILMAS = 'output_'//trim(catchmentname(1))//'_mass_balance.csv'
       FILCVI = 'output_'//trim(catchmentname(1))//'_check_vis_plan.txt'
       FILHDF =  'output_'//trim(catchmentname(1))//'_shegraph.h5'
       FILSPR =  'output_'//trim(catchmentname(1))//'_spr.txt'
