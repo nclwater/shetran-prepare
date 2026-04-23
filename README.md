@@ -1,11 +1,11 @@
 # SHETRAN-Prepare
-Executables to convert parameter and map data to Shetran input files format
+Executables to convert parameter and map data to SHETRAN input files format
 
 ## Features
-- This uses the xml library file which contains the parameter values and calls to the map data and time series data
-- There is map data for the Mean elevation (DEM), Minimum elevation (DEM), soil, land, precipitation stations and potential evaporation stations in ascii grid format
-- There is time series data for precipitation and potential evaporation data in CSV format
-- After running the executable the full set of Shetran input files are produced together with a controlling rundata file
+- This uses the xml library file which contains the parameter values together with the map data and time series data.
+- There is map data for the mean elevation (DEM), minimum elevation (DEM), soil, land, precipitation stations and potential evaporation stations in ascii grid format.
+- There is time series data for precipitation and potential evaporation data in CSV format.
+- After running the executable the full set of SHETRAN input files are produced together with a controlling rundata file.
 
 ## Installation
  
@@ -13,9 +13,9 @@ Executables to convert parameter and map data to Shetran input files format
 
 ## Usage
 
-- Can be run on the command line or using the corresponding start executable (which also runs Shetran)
-- the command line format is the executable name followed by the xml file name
-- e.g if both execuutable and xml library file are in the same folder  type "shetran-prepare.exe Foston_Beck_at_Foston_MillLibraryFile.xml"
+- Can be run on the command line or using the corresponding start executable (which also runs SHETRAN).
+- the command line format is the executable name followed by the xml file name.
+- e.g if both executable and xml library file are in the same folder  type "SHETRAN-prepare.exe Foston_Beck_at_Foston_MillLibraryFile.xml".
 
 ## Linux Verison
 
@@ -32,6 +32,10 @@ gfortran -c -ffree-line-length-none PrepareMod.f90
 gfortran -c ShetranPrepare.f90
 
 gfortran XmlParseMod.o RestMod.o ReadShetranXmlMod.o PrepareMod.o ShetranPrepare.o -static -o SHETRAN-prepare.exe   (-static option needed to include libraries within executable)
+
+## Updates 23-04-2026 - V3.0.2
+
+- minor updates to documentation 
  
 
 ## Updates 23-02-2026 - V3.0.1
