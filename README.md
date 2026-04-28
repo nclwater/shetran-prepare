@@ -31,11 +31,12 @@ gfortran -c -ffree-line-length-none PrepareMod.f90
 
 gfortran -c ShetranPrepare.f90
 
-gfortran XmlParseMod.o RestMod.o ReadShetranXmlMod.o PrepareMod.o ShetranPrepare.o -static -o SHETRAN-prepare.exe   (-static option needed to include libraries within executable)
+gfortran XmlParseMod.o RestMod.o ReadShetranXmlMod.o PrepareMod.o ShetranPrepare.o -static -o SHETRAN-Prepare   (-static option needed to include libraries within executable)
 
 ## Updates 23-04-2026 - V3.0.2
 
 - minor updates to documentation 
+- closed files correctly to sort out isssue in Linux
  
 
 ## Updates 23-02-2026 - V3.0.1
