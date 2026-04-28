@@ -1551,6 +1551,7 @@ soiltypes='Dummy'
 
 
    enddo
+   call xml_close(info)
 !********End of Extra Discharge points - optional******************
 
    

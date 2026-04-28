@@ -873,27 +873,27 @@ module PrepareMod
               read (*,*)
               stop
           endif
-          read(InLake,*) 
-          read(InLake,*) 
-          read(InLake,*) 
-          read(InLake,*) 
-          read(InLake,*) 
-          read(InLake,*) 
+          read(InLake,*)
+          read(InLake,*)
+          read(InLake,*)
+          read(InLake,*)
+          read(InLake,*)
+          read(InLake,*)
           do i=2,nrows+1
-          read(InLake,*) (lakedist(i,j),j=2,ncols+1)
-             do j=2,ncols+1
-                 if (lakedist(i,j).lt.0) then 
-                   lakedist(i,j)=0
-                endif
-             enddo
-         enddo
-      close(InLake)
-      else 
-         do i=2,nrows+1
-             do j=2,ncols+1
-                lakedist(i,j)=0
-             enddo
-         enddo
+              read(InLake,*) (lakedist(i,j),j=2,ncols+1)
+              do j=2,ncols+1
+                  if (lakedist(i,j).lt.0) then
+                      lakedist(i,j)=0
+                  endif
+              enddo
+          enddo
+          close(InLake)
+      else
+          do i=2,nrows+1
+              do j=2,ncols+1
+                  lakedist(i,j)=0
+              enddo
+          enddo
       endif
 
 !***************************check start and end dates**************************
@@ -1329,11 +1329,13 @@ endif
          read(InPE,*) (pedist(i,j),j=2,ncols-1)
       enddo
       PeDistMax= maxval(pedist)
+      close(InPE)
 
 
 !****************************** rain Types ************************
 
       OPEN(InPrec,FILE=precipname(1),STATUS='OLD',IOSTAT=io)
+      
           if (io /=0) then
               write (*,'(3A)') 'The precipitation distribution map file ',trim(precipname(1)), ' specified in the tag PrecipMap does not exist. Please correct this error and try again'
               write(*,*)
@@ -1353,6 +1355,7 @@ endif
          read(InPrec,*) (raindist(i,j),j=2,ncols-1)
       enddo
       RainDistMax= maxval(raindist)
+      close(InPrec)
 
        
 ! *************************************************************
@@ -1373,9 +1376,9 @@ endif
 
        
 
-      if (trim(precfilescaler).eq.'Empty') then
-! if no precipitation data then use the sample data  
-! use the correct number of value (to the nearest year) and write it to the prd file
+     if (trim(precfilescaler).eq.'Empty') then
+         ! if no precipitation data then use the sample data
+         ! use the correct number of value (to the nearest year) and write it to the prd file
          precfilescaler =trim(basedir)//'TimeSeries_'//'Precipitation_sample.txt'
          open(SamplePRD,FILE=precfilescaler)
          write(SamplePRD,*) 'Sample Precipitation Data. Daily Values with units of mm/day'
@@ -1383,30 +1386,30 @@ endif
          call PrecipTest(PrecipTestData)
          do i = 1,int(simulationTimeHours/8760)+1
              do j=1,365
-                  write(SamplePRD,'(F8.2)') PrecipTestData(j)
+                 write(SamplePRD,'(F8.2)') PrecipTestData(j)
              enddo
          enddo
          close(SamplePRD)
-      else 
-        filprd=precfile(1)
-      endif
+     else
+         filprd=precfile(1)
+     endif
 
     
       
 
- ! check precipitation time series data exists     
-      OPEN(InPrecTS,FILE=precfilescaler,STATUS='OLD',IOSTAT=io)
-          if (io /=0) then
-              write (*,'(3A)') 'The precipitation time series file ',trim(precfilescaler), ' specified in the tag PrecipitationTimeSeriesData does not exist. Please correct this error and try again'
-              write(*,*)
-              write(*,'(''paused, type [enter] to continue'')')
-              read (*,*)
-              stop
-          endif
+     ! check precipitation time series data exists
+     OPEN(InPrecTS,FILE=precfilescaler,STATUS='OLD',IOSTAT=io)
+     if (io /=0) then
+         write (*,'(3A)') 'The precipitation time series file ',trim(precfilescaler), ' specified in the tag PrecipitationTimeSeriesData does not exist. Please correct this error and try again'
+         write(*,*)
+         write(*,'(''paused, type [enter] to continue'')')
+         read (*,*)
+         stop
+     endif
      write(logfile,'(A,I0,A)') ' The precipitation time series file should have a single header line and then at least ', RainDistMax, ' values (this is the maximum value in the PrecMap file) on each line'
-         
-    close(InPrecTS)
-      
+
+     close(InPrecTS)
+
 
       
         
@@ -1416,22 +1419,22 @@ endif
     
      
      if ((trim(pefile(1)) == "Empty").or.(trim(pefile(1)).eq.('')).or.(trim(pefile(1)).eq.('none'))) then
-          write(logfile,*)
-          write(logfile,*) '***********NOTE*****************************'
-          write (logfile,*) 'Potential Evaporation Time Series File Name = The Potential Evaporation Time Series File is empty in the XML. The tag is "EvaporationTimeSeriesData". Sample potential evaporation data will be used'
-          write(logfile,*) '********************************************'
-          write(logfile,*)
-          pefilescaler='Empty'
+         write(logfile,*)
+         write(logfile,*) '***********NOTE*****************************'
+         write (logfile,*) 'Potential Evaporation Time Series File Name = The Potential Evaporation Time Series File is empty in the XML. The tag is "EvaporationTimeSeriesData". Sample potential evaporation data will be used'
+         write(logfile,*) '********************************************'
+         write(logfile,*)
+         pefilescaler='Empty'
      else
-          pefilescaler=trim(basedir)//trim(pefile(1))
-           write(logfile,*)
+         pefilescaler=trim(basedir)//trim(pefile(1))
+         write(logfile,*)
          write (logfile,*) 'Potential Evaporation Time Series File name = ', trim(pefilescaler)
-     endif          
-       
-      
-      if (trim(pefilescaler).eq.'Empty') then
-! if no  PET data then use the sample data       
-! use the correct number of values and write it to the epd file
+     endif
+
+
+     if (trim(pefilescaler).eq.'Empty') then
+         ! if no  PET data then use the sample data
+         ! use the correct number of values and write it to the epd file
          pefilescaler = trim(basedir)//'TimeSeries_'//'PET_sample.txt'
          OPEN(SampleEPD,FILE=pefilescaler)
          write(SampleEPD,*) 'Sample Potential Evaporation Data. Daily Values with units of mm/day'
@@ -1439,35 +1442,32 @@ endif
          call PetTest(PetTestData)
          do i = 1,int(simulationTimeHours/8760)+1
              do j=1,365
-                  write(SampleEPD,'(F8.2)') PetTestData(j)
+                 write(SampleEPD,'(F8.2)') PetTestData(j)
              enddo
-        enddo
+         enddo
          close(SampleEPD)
-    else 
-        filepd=pefile(1)
-    endif
+     else
+         filepd=pefile(1)
+     endif
 
-       
 
-! check PE time series data exists     
-      OPEN(InPeTS,FILE=pefilescaler,STATUS='OLD',IOSTAT=io)
-          if (io /=0) then
-              write (*,'(3A)') 'The potential evaporation time series file ',trim(pefilescaler), ' specified in the tag EvaporationTimeSeriesData does not exist. Please correct this error and try again'
-              write(*,*)
-              write(*,'(''paused, type [enter] to continue'')')
-              read (*,*)
-              stop
-          endif
-          write(logfile,'(A,I0,A)') ' The potential evaporation time series file should have a single header line and then at least ', PEDistMax, ' values (this is the maximum value in the PEMap file) on each line'
-          write(logfile,*)
-          close(InPeTS)
-   
-       
-      
 
-      
-      
-      
+     ! check PE time series data exists
+     OPEN(InPeTS,FILE=pefilescaler,STATUS='OLD',IOSTAT=io)
+     if (io /=0) then
+         write (*,'(3A)') 'The potential evaporation time series file ',trim(pefilescaler), ' specified in the tag EvaporationTimeSeriesData does not exist. Please correct this error and try again'
+         write(*,*)
+         write(*,'(''paused, type [enter] to continue'')')
+         read (*,*)
+         stop
+     endif
+     write(logfile,'(A,I0,A)') ' The potential evaporation time series file should have a single header line and then at least ', PEDistMax, ' values (this is the maximum value in the PEMap file) on each line'
+     write(logfile,*)
+     close(InPeTS)
+
+
+
+
       
 !********** Number of meteorological stations, raingauges  **************
 !********** vegetation types and soil types(no longer used her) *********
