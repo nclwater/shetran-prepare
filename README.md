@@ -1,5 +1,5 @@
 # SHETRAN-Prepare
-Executables to convert parameter and map data to SHETRAN input files format
+Executable to convert parameter and map data to SHETRAN input files format
 
 ## Features
 - This uses the xml library file which contains the parameter values together with the map data and time series data.
