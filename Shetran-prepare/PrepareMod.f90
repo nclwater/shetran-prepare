@@ -3870,7 +3870,7 @@ endif
 
       write (MSG,9603)
       write (OUTVSD,9200) MSG
-      if (isspatialpslfile) then
+      if (isspatialpslfile.AND.isspatialpsl) then
           write (OUTVSD,9118) icountsoil,'35','0','3'
       else
           write (OUTVSD,9118) icountsoil,'35','0','1'
@@ -4327,7 +4327,7 @@ endif
       write (MSG2,9729)
       write (outrun,9200) MSG2
  
-      if (isspatialpslfile) then
+      if (isspatialpslfile.AND.isspatialpsl) then
           write (MSG2,9200) filespatialpslout2
           write (outrun,9200) MSG2
       else
