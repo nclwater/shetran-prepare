@@ -4232,7 +4232,7 @@ endif
 
       write (MSG2,9714)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
 
       write (MSG2,9715)
       write (outrun,9200) MSG2
@@ -4241,7 +4241,7 @@ endif
          write (MSG2,9200) FILSMD2
           write (outrun,9200) MSG2
       else
-          write (outrun,*) 
+          write (outrun,*) ' '
       endif
 
       write (MSG2,9716)
@@ -4250,7 +4250,7 @@ endif
           write (MSG2,9200) FILBKD2
           write (outrun,9200) MSG2
       else
-          write (outrun,*) 
+          write (outrun,*) ' '
       endif
       write (MSG2,9717)
       write (outrun,9200) MSG2
@@ -4258,7 +4258,7 @@ endif
          write (MSG2,9200) FILSYD2
           write (outrun,9200) MSG2
       else
-          write (outrun,*) 
+          write (outrun,*) ' '
       endif
       write (MSG2,9718)
       write (outrun,9200) MSG2
@@ -4266,11 +4266,11 @@ endif
          write (MSG2,9200) FILCMD2
           write (outrun,9200) MSG2
       else
-          write (outrun,*) 
+          write (outrun,*) ' '
       endif
       write (MSG2,9719)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9720) 
       write (outrun,9200) MSG2
 
@@ -4305,7 +4305,7 @@ endif
          write (MSG2,9200) FILSPR
           write (outrun,9200) MSG2
       else
-          write (outrun,*) 
+          write (outrun,*) ' '
       endif
       write (MSG2,9725)
       write (outrun,9200) MSG2
@@ -4313,17 +4313,17 @@ endif
          write (MSG2,9200) FILCPR
           write (outrun,9200) MSG2
       else
-          write (outrun,*) 
+          write (outrun,*) ' '
       endif
       write (MSG2,9726)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9727)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9728)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9729)
       write (outrun,9200) MSG2
  
@@ -4331,46 +4331,46 @@ endif
           write (MSG2,9200) filespatialpslout2
           write (outrun,9200) MSG2
       else
-         write (outrun,*) 
+         write (outrun,*) ' '
       endif
       write (MSG2,9730)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9731)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9732)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9733)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9734)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9735)
       write (outrun,9200) MSG2
       if (icountbfb /= 0) then
           write (MSG2,9200) FILBFB2
           write (outrun,9200) MSG2
       else
-          write (outrun,*) 
+          write (outrun,*) ' '
       endif
       write (MSG2,9736)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9737)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9738)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9739)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
       write (MSG2,9740)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
  
       write (MSG2,9741)
       write (outrun,9200) MSG2
@@ -4422,7 +4422,7 @@ endif
 !          write (MSG2,9200) FILDISPOINT2
 !          write (outrun,9200) MSG2
 ! the file is not written out to the rundata file  if there are no extra discharge points. If it is present then regular simulated discharge output produces an extra line
-         write (outrun,*) 
+         write (outrun,*) ' '
       endif
 
       write (MSG2,9748)
@@ -4448,7 +4448,7 @@ endif
       
       write (MSG2,9751)
       write (outrun,9200) MSG2
-      write (outrun,*) 
+      write (outrun,*) ' '
 
       write (MSG2,9752)
       write (outrun,9200) MSG2
